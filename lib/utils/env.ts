@@ -1,0 +1,7 @@
+'use client';
+
+export const env = {
+  isServer: typeof window === 'undefined',
+  isDev: process.env.NODE_ENV === 'development',
+  isProd: process.env.NODE_ENV === 'production'
+};

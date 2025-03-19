@@ -1,0 +1,21 @@
+# xmatch.pro robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://xmatch.pro/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 10
+
+# Disallow paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/ 
+
+# Allow models directory
+Allow: /models/
+
+# Allow specific paths
+Allow: /search
+Allow: /blog
