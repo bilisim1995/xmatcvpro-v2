@@ -4,7 +4,7 @@ import Script from 'next/script';
 
 export function Analytics() {
   return (
-    <>
+    <> 
       <Script 
         src="https://www.googletagmanager.com/gtag/js?id=G-HTHLVEFBEE" 
         strategy="afterInteractive"
