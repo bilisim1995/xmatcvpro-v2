@@ -1,28 +1,30 @@
 /** @type {import('next').NextConfig} */
+
+// Build türünü ENV ile belirle (örneğin: export veya server)
+const isExport = process.env.EXPORT_BUILD === 'true';
+
 const nextConfig = {
   webpack: (config, { isServer, dev }) => {
-    config.resolve.fallback = { fs: false }
-    return config
+    config.resolve.fallback = { fs: false };
+    return config;
   },
+
   experimental: {
     esmExternals: true,
-    middleware: true,
+    middleware: !isExport,  // middleware export modunda çalışmaz
   },
+
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
+
   env: {
     MONGODB_URI: process.env.MONGODB_URI,
     MONGODB_DB: process.env.MONGODB_DB
   },
-  trailingSlash: false,
-  // Configure server settings
-  serverRuntimeConfig: {
-    hmr: {
-      protocol: 'ws',
-      hostname: 'localhost',
-      port: 3001
-    }
-  },
-  images: { 
+
+  output: isExport ? 'export' : undefined,
+
+  images: {
+    unoptimized: isExport ? true : false,
     remotePatterns: [
       {
         protocol: 'https',
@@ -46,7 +48,22 @@ const nextConfig = {
       }
     ]
   },
+
+  trailingSlash: false,
+
+  serverRuntimeConfig: !isExport
+    ? {
+        hmr: {
+          protocol: 'ws',
+          hostname: 'localhost',
+          port: 3001
+        }
+      }
+    : undefined,
+
+  // rewrites ve headers export modunda kullanılmaz!
   async rewrites() {
+    if (isExport) return [];
     return [
       {
         source: '/sitemap.xml',
@@ -62,7 +79,9 @@ const nextConfig = {
       }
     ];
   },
+
   async headers() {
+    if (isExport) return [];
     return [
       {
         source: '/api/models/:path*',
@@ -91,35 +110,10 @@ const nextConfig = {
             value: 'public, max-age=31536000, immutable'
           }
         ]
-      },
-      {
-        source: '/api/models/:path*',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*'
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, OPTIONS'
-          },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, must-revalidate'
-          },
-          {
-            key: 'Content-Type',
-            value: 'application/octet-stream'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          }
-        ]
       }
     ];
   },
-  // Model dosyalarını optimize et
+
   compress: true,
   poweredByHeader: false
 };
