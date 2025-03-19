@@ -8,10 +8,11 @@ const nextConfig = {
     config.resolve.fallback = { fs: false };
     return config;
   },
-
+  output: 'standalone',
   experimental: {
     esmExternals: true,
     middleware: !isExport,  // middleware export modunda çalışmaz
+    appDir: true
   },
 
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
