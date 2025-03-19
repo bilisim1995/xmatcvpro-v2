@@ -1,3 +1,5 @@
-name = "nextjs-app"
-compatibility_date = "2025-03-19"
-pages_build_output_dir = ".vercel/output/static"
+name = "xmatchpro-v2"                   # Projenin adı
+account_id = "8cde582aa48fd560a3efdce8faa7b551"   # Cloudflare hesabının Account ID'si
+compatibility_date = "2024-03-19"       # Cloudflare Workers runtime ile uyumluluk tarihi
+
+pages_build_output_dir = ".next"        # Next.js build çıktısı (SSG/ISR için genellikle .next)
