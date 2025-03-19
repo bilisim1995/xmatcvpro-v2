@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
 "scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
-  "export": "EXPORT_BUILD=true next build && next export"
+  "dev": "NODE_OPTIONS='--inspect' next dev -p 3001",
+  "build": "NODE_ENV=production next build",
+  "start": "next start"
 },
   "dependencies": {
     "@radix-ui/react-avatar": "1.0.4",
