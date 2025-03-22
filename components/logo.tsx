@@ -1,15 +1,18 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function Logo() {
   return (
     <Link href="/" className="flex items-center">
-      <img
+      <Image
         src="/logo.png"
         alt="xmatch.pro"
-        style={{ width: '120px', height: '28px' }}
+        width={120}
+        height={35}
         className="dark:brightness-200"
+        priority
       />
     </Link>
   );

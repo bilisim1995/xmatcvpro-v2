@@ -9,7 +9,7 @@ const EUCLIDEAN_WEIGHT = 0.25; // Euclidean distance'a daha az ağırlık
 const MIN_CONFIDENCE = 35; // Minimum benzerlik eşiği
 const SIMILARITY_BOOST = 1.35; // Yüksek benzerlik için daha güçlü boost
 const HIGH_SIMILARITY_THRESHOLD = 0.85; // Yüksek benzerlik eşiği
-const PRECISION = 8; // Ondalık hassasiyeti
+const PRECISION = 8; // Ondalık hassasiyet
 
 const COLLECTION_NAME = 'adultmodels';
 
@@ -121,30 +121,35 @@ export async function testConnection() {
   }
 }
 
+// 🔥 SIMILARITY CALCULATION 🔥
 export function calculateSimilarity(descriptor1: number[], descriptor2: number[]): number {
-  // Sabitler
+  // 1. Geçerlilik kontrolleri
   if (!descriptor1?.length || !descriptor2?.length || descriptor1.length !== descriptor2.length) {
-    console.warn("Descriptor boyutları eşleşmiyor!");
+    console.warn("❌ Descriptor boyutları eşleşmiyor!");
     return 0;
   }
 
-  // Birebir aynı descriptor kontrolü
-  const isIdentical = descriptor1.length === descriptor2.length && 
-    descriptor1.every((val, i) => Math.abs(val - descriptor2[i]) < 1e-10);
+  if (descriptor1.some(isNaN) || descriptor2.some(isNaN)) {
+    console.warn("❌ NaN değer tespit edildi!");
+    return 0;
+  }
+
+  // 2. Birebir aynı descriptor kontrolü
+  const isIdentical = descriptor1.every((val, i) => Math.abs(val - descriptor2[i]) < 1e-10);
   if (isIdentical) {
-  
     return 100;
   }
 
-  // 1. Cosine Similarity Hesaplama
+  // 3. Cosine Similarity Hesaplama
   let dotProduct = 0;
   let norm1 = 0;
   let norm2 = 0;
 
+  const factor = Math.pow(10, PRECISION);
+
   for (let i = 0; i < descriptor1.length; i++) {
-    // Hassasiyeti sınırla
-    const d1 = Number(descriptor1[i].toFixed(PRECISION));
-    const d2 = Number(descriptor2[i].toFixed(PRECISION));
+    const d1 = Math.round(descriptor1[i] * factor) / factor;
+    const d2 = Math.round(descriptor2[i] * factor) / factor;
     dotProduct += d1 * d2;
     norm1 += d1 * d1;
     norm2 += d2 * d2;
@@ -159,46 +164,49 @@ export function calculateSimilarity(descriptor1: number[], descriptor2: number[]
   }
 
   const cosineSimilarity = dotProduct / (norm1 * norm2);
-  const cosineScore = Math.max(0, cosineSimilarity); // Negatif değerleri sıfırla
+  const cosineScore = (cosineSimilarity + 1) / 2; // Normalize edilmiş: [0, 1]
 
-  // 2. Euclidean Distance Hesaplama
+  // 4. Euclidean Distance Hesaplama
   let euclideanDistance = 0;
   for (let i = 0; i < descriptor1.length; i++) {
-    const diff = Number(descriptor1[i].toFixed(PRECISION)) - Number(descriptor2[i].toFixed(PRECISION));
+    const d1 = Math.round(descriptor1[i] * factor) / factor;
+    const d2 = Math.round(descriptor2[i] * factor) / factor;
+    const diff = d1 - d2;
     euclideanDistance += diff * diff;
   }
   euclideanDistance = Math.sqrt(euclideanDistance);
 
-  // 3. Normalize ve Boost Euclidean Score
+  // 5. Normalize Euclidean Score
   const normalizedEuclideanScore = Math.max(0, (1 - (euclideanDistance / MAX_DISTANCE)));
 
-  // 4. Weighted Combination ve Boost
+  // 6. Weighted Combination
   const combinedScore = (cosineScore * COSINE_WEIGHT) + (normalizedEuclideanScore * EUCLIDEAN_WEIGHT);
-  
-  // 5. Yüksek skorları daha agresif boost et
+
+  // 7. Boost Mekanizması (Sigmoid/Tanh daha stabil)
   let boostedScore = combinedScore;
+
   if (combinedScore > HIGH_SIMILARITY_THRESHOLD) {
-    boostedScore = Math.min(1, combinedScore * SIMILARITY_BOOST);
+    const boostFactor = 1 + Math.tanh((combinedScore - HIGH_SIMILARITY_THRESHOLD) * 5);
+    boostedScore = Math.min(1, combinedScore * boostFactor);
   } else if (combinedScore > 0.75) {
-    // 0.75-0.85 arası için daha az boost
     const scaledBoost = 1 + ((combinedScore - 0.75) * (SIMILARITY_BOOST - 1));
     boostedScore = Math.min(1, combinedScore * scaledBoost);
   }
-  
-  // 6. Final skoru hesapla ve sınırla
+
+  // 8. Final skoru yüzde olarak hesapla
   let finalPercent = Number((boostedScore * 100).toFixed(1));
-  
-  // 7. Yüksek skorlar arasındaki farkı vurgula
+
+  // 9. Yüksek skorları daha belirgin vurgula
   if (finalPercent > 90) {
-    // 90-100 arası skorları daha belirgin şekilde ayır
     const emphasis = Math.pow((finalPercent - 90) / 10, 1.5) * 10;
     finalPercent = Math.min(100, Number((90 + emphasis).toFixed(1)));
   }
-  
-  finalPercent = Math.min(100, Math.max(0, finalPercent)); // 0-100 arasına sınırla
 
- 
+  // 10. Skoru normalize et ve minimum güven skorunu uygula
+  const dynamicMinConfidence = HIGH_SIMILARITY_THRESHOLD * 100 * 0.4;
+  const minThreshold = Math.max(MIN_CONFIDENCE, dynamicMinConfidence);
 
-  // Minimum güven skoru kontrolü
-  return finalPercent >= MIN_CONFIDENCE ? finalPercent : 0;
+  finalPercent = Math.min(100, Math.max(0, finalPercent));
+
+  return finalPercent >= minThreshold ? finalPercent : 0;
 }

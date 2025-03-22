@@ -65,15 +65,6 @@ export function ConsentBanner() {
                 </Button>
               </div>
             </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleDecline}
-              className="flex-shrink-0"
-            >
-              <X className="w-4 h-4" />
-            </Button>
           </div>
         </Card>
       </DialogContent>
