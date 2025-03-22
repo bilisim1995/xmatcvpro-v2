@@ -8,8 +8,6 @@ import { Document } from 'mongoose';
 
 export const dynamic = 'force-dynamic';
 
-const SIMILARITY_THRESHOLD = 30; // Minimum similarity score (%)
-const MAX_RESULTS = 16; // Maximum number of results
 const REQUEST_TIMEOUT = 30000; // 30 seconds timeout
 
 interface ModelDocument {
@@ -114,7 +112,6 @@ export async function POST(req: Request) {
       const models = await AdultModel
         .find(query)
         .select('name slug profile_image link age height weight cup_size nationality ethnicity hair_color eye_color tattoos piercings face_data')
-        .limit(MAX_RESULTS * 2)
         .lean()
         .exec() as unknown as ModelDocument[];
 
@@ -158,10 +155,9 @@ export async function POST(req: Request) {
         })
         .filter((result): result is SearchResult => result !== null)
         .filter((result): result is SearchResult & { confidence: number } => 
-          typeof result.confidence === 'number' && result.confidence >= SIMILARITY_THRESHOLD
+          typeof result.confidence === 'number' && result.confidence > 0
         )
-        .sort((a, b) => b.confidence - a.confidence)
-        .slice(0, MAX_RESULTS);
+        .sort((a, b) => b.confidence - a.confidence);
 
       return NextResponse.json(results);
 
