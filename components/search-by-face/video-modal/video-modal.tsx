@@ -58,7 +58,7 @@ export function VideoModal({ modelName, videoUrl, trigger }: VideoModalProps) {
             size="sm"
             className="w-full bg-red-600 hover:bg-red-700 text-white"
           >
-            <Video className="w-4 h-4 mr-2" />
+            <Video className="w-4 h-4" />
             Videos
           </Button>
         )}
