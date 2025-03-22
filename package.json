@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "npx next-on-pages",
-    "deploy": "wrangler deploy .vercel/output/static/_worker.js --name xmatchpro-v2"
+     "dev": "next dev",
+  "build": "next build"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "1.1.2",
