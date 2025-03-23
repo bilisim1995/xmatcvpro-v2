@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 
 export function PremiumBanner() {
   const stats = [
-    { icon: Users, value: '1M+', label: 'Monthly Users' },
+    { icon: Users, value: '250K+', label: 'Monthly Users' },
     { icon: TrendingUp, value: '50K+', label: 'Daily Searches' },
     { icon: BarChart, value: '99%', label: 'Accuracy Rate' }
   ];

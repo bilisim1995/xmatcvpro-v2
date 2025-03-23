@@ -6,24 +6,69 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ResultCard } from '../image-search/result-card';
 import { SearchResult } from '@/lib/api/types'; 
-import Link from 'next/link';
+import { Card } from '@/components/ui/card';
+import { Megaphone } from 'lucide-react';
 
 interface ModelCarouselProps {
   results: SearchResult[];
   showConfidence?: boolean;
 }
 
+interface AdSlot {
+  type: 'ad';
+  id: number;
+}
+
+function AdCard({ index }: { index: number }) {
+  return (
+    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border p-4">
+      
+      {/* Üst içerik ortalanmış */}
+      <div className="flex flex-col items-center justify-center flex-grow text-center">
+        <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
+          <Megaphone className="w-6 h-6 text-red-600" />
+        </div>
+        <h3 className="text-lg font-semibold mb-2">Advertisement</h3>
+        <p className="text-sm text-muted-foreground">Promoted content</p>
+      </div>
+
+      {/* Alt içerik */}
+      <div className="flex justify-center pt-4">
+        <div className="w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white font-bold">
+          R{index}
+        </div>
+      </div>
+
+    </Card>
+  );
+}
+
+
+
+
+
 export function ModelCarousel({ results, showConfidence = true }: ModelCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerPage = 4;
-  // Sonuçları benzerlik skoruna göre sırala
+  
+  // Sort results by confidence score
   const sortedResults = [...results].sort((a, b) => {
-    // Önce confidence skoruna göre sırala (yüksekten düşüğe)
     const confidenceDiff = (b.confidence || 0) - (a.confidence || 0);
     return confidenceDiff;
+  }).slice(0, 15); // Limit to 15 results
+
+  // Insert ad slots after every 3 models
+  const resultsWithAds: (SearchResult | AdSlot)[] = [];
+  let adCounter = 1;
+  
+  sortedResults.forEach((result, index) => {
+    resultsWithAds.push(result);
+    if ((index + 1) % 3 === 0) {
+      resultsWithAds.push({ type: 'ad', id: adCounter++ });
+    }
   });
 
-  const totalPages = Math.ceil(results.length / itemsPerPage);
+  const totalPages = Math.ceil(resultsWithAds.length / itemsPerPage);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % totalPages);
@@ -33,13 +78,12 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
     setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
   };
 
-
-
   // Fill empty slots to maintain grid
-
-  const displayResults = [
-    ...results.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage),
-    ...Array(Math.max(0, itemsPerPage - results.length)).fill(null)
+  const displayResults = [...resultsWithAds.slice(
+    currentIndex * itemsPerPage,
+    (currentIndex + 1) * itemsPerPage
+  ),
+    ...Array(Math.max(0, itemsPerPage - resultsWithAds.length)).fill(null)
   ];
 
   return (
@@ -71,33 +115,39 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
       {/* Results Grid */}
       <div className="overflow-hidden px-2">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIndex}
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {displayResults.map((result, idx) => (
-              <motion.div
-                key={`${result?.id}-${idx}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-              >
-                {result?.name ? (
-                  <ResultCard
-                    result={result}
-                    index={currentIndex * itemsPerPage + idx}
-                    showConfidence={showConfidence} 
-                  />
-                ) : (
-                  <div className="aspect-[3/4] bg-muted/10 rounded-lg" />
-                )}
-              </motion.div>
-            ))}
-          </motion.div>
+        <motion.div
+  key={currentIndex}
+  initial={{ opacity: 0, x: 100 }}
+  animate={{ opacity: 1, x: 0 }}
+  exit={{ opacity: 0, x: -100 }}
+  transition={{ duration: 0.3 }}
+  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch" // 🟢 Buraya items-stretch EKLENDİ!
+>
+  {displayResults.map((item, idx) => (
+    <motion.div
+      key={`${item?.type === 'ad' ? `ad-${(item as AdSlot).id}` : `model-${(item as SearchResult)?.id}`}-${idx}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: idx * 0.1 }}
+      className="h-full w-full" // 🟢 Buraya h-full w-full EKLENDİ!
+    >
+      {item ? (
+        item.type === 'ad' ? (
+          <AdCard index={(item as AdSlot).id} />
+        ) : (
+          <ResultCard
+            result={item as SearchResult}
+            index={currentIndex * itemsPerPage + idx - Math.floor((currentIndex * itemsPerPage + idx) / 4)}
+            showConfidence={showConfidence}
+          />
+        )
+      ) : (
+        <div className="aspect-[3/4] bg-muted/10 rounded-lg h-full w-full" />
+      )}
+    </motion.div>
+  ))}
+</motion.div>
+
         </AnimatePresence>
       </div>
 

@@ -113,7 +113,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
   };
 
   const handleSearch = async () => {
-    if (!image || !originalFile || (detectedAge !== null && detectedAge < 18)) {
+    if (!image || !originalFile || (detectedAge !== null && detectedAge < 15)) {
       toast({
         title: "Age Verification Failed",
         description: "We can only process images of adults (18+).",

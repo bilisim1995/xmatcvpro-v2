@@ -38,19 +38,16 @@ interface ModelDetailPageProps {
 
 export function ModelDetailPage({ model }: ModelDetailPageProps) {
   const [suggestedModels, setSuggestedModels] = useState<SearchResult[]>([]);
-  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
   useEffect(() => {
     const fetchSuggestedModels = async () => {
       try {
-        setIsLoadingSuggestions(true);
-
         // Fetch models with similar attributes
         const params = new URLSearchParams({
-          ...(model.ethnicity && { ethnicity: model.ethnicity }),
-          ...(model.age && { age: model.age.toString() }),
-          ...(model.hair && { hair_color: model.hair }),
-          ...(model.eyes && { eye_color: model.eyes })
+          ethnicity: model.ethnicity || '',
+          age: model.age?.toString() || '',
+          hair_color: model.hair || '',
+          eye_color: model.eyes || ''
         });
 
         const response = await fetch(`/api/models?${params.toString()}`);
@@ -59,14 +56,12 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
         const data = await response.json();
         // Filter out the current model and limit to 5 suggestions
         const filtered = data
-          .filter((m: SearchResult) => m.id !== model.id && m.image)
+          .filter((m: SearchResult) => m.id !== model.id)
           .slice(0, 5);
 
         setSuggestedModels(filtered);
       } catch (error) {
         console.error('Error fetching suggested models:', error);
-      } finally {
-        setIsLoadingSuggestions(false);
       }
     };
 
@@ -279,9 +274,7 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
         </div>
 
         {/* Suggested Models */}
-        {!isLoadingSuggestions && suggestedModels.length > 0 && (
-          <SuggestedModels models={suggestedModels} />
-        )}
+        <SuggestedModels models={suggestedModels} />
       </div>
     </div>
   );
