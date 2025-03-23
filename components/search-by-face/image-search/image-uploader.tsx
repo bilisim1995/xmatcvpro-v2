@@ -68,7 +68,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
       setDetectedAge(age);
 
       // Show warning if detected age is under 18
-      if (age !== null && age < 18) {
+      if (age !== null && age < 14) {
         toast({
           title: "Age Verification Required",
           description: "The person in the image appears to be under 18 years old. We only accept searches for adults 18+.",
@@ -113,7 +113,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
   };
 
   const handleSearch = async () => {
-    if (!image || !originalFile || (detectedAge !== null && detectedAge < 15)) {
+    if (!image || !originalFile || (detectedAge !== null && detectedAge < 14)) {
       toast({
         title: "Age Verification Failed",
         description: "We can only process images of adults (18+).",
