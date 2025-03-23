@@ -1,6 +1,14 @@
 # xmatch.pro robots.txt
 User-agent: *
 Allow: /
+Allow: /search
+Allow: /models/
+
+# Disallow paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
 
 # Sitemap
 Sitemap: https://xmatch.pro/sitemap.xml
@@ -8,14 +16,36 @@ Sitemap: https://xmatch.pro/sitemap.xml
 # Crawl-delay
 Crawl-delay: 10
 
-# Disallow paths
-Disallow: /api/
-Disallow: /admin/
-Disallow: /private/ 
+# Rate limiting
+Request-rate: 1/1
+Visit-time: 0600-2100
 
-# Allow models directory
-Allow: /models/
+# Media files
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.png
+Allow: *.webp
+Allow: *.svg
 
-# Allow specific paths
-Allow: /search
-Allow: /blog
+# Specific user agents
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 5
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 5
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 5
+
+# Block bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /

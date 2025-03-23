@@ -3,12 +3,14 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ImageIcon, Upload, Search, Loader2, Info } from 'lucide-react';
+import { ImageIcon, Upload, Search, Loader2, Info, AlertTriangle } from 'lucide-react';
 import { initializeFaceApi } from '@/lib/face-detection/initialize';
 import { findMatches } from '@/lib/face-detection/face-matcher';
+import { detectGenderAndAge } from '@/lib/face-detection/gender';
 import { motion } from 'framer-motion';
 import { toast } from '@/components/ui/use-toast';
 import { SearchResult } from '@/lib/api/types';
+import { UploadAnimation } from './upload-animation';
 
 interface ImageUploaderProps {
   onSearchStart?: () => void;
@@ -24,6 +26,9 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
   const [dragActive, setDragActive] = useState(false);
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isMale, setIsMale] = useState(false);
+  const [detectedAge, setDetectedAge] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const validateFile = (file: File) => {
@@ -40,9 +45,41 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
     if (!file) return;
     
     try {
+      setIsProcessing(true);
       validateFile(file);
       setOriginalFile(file);
       
+      // Create image element for gender detection
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+
+      // Initialize face-api if needed
+      if (!isInitialized) {
+        await initializeFaceApi();
+        setIsInitialized(true);
+      }
+
+      // Detect gender
+      const { gender, age } = await detectGenderAndAge(img);
+      setIsMale(gender === 'male');
+      setDetectedAge(age);
+
+      // Show warning if detected age is under 18
+      if (age !== null && age < 18) {
+        toast({
+          title: "Age Verification Required",
+          description: "The person in the image appears to be under 18 years old. We only accept searches for adults 18+.",
+          variant: "destructive",
+        });
+        setImage(null);
+        setOriginalFile(null);
+        return;
+      }
+
+      // Set image preview
       const reader = new FileReader();
       reader.onload = (e) => setImage(e.target?.result as string);
       reader.onerror = () => {
@@ -52,6 +89,9 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to process file";
       toast({ title: "Error", description: message, variant: "destructive" });
+    }
+    finally {
+      setIsProcessing(false);
     }
   };
 
@@ -73,7 +113,14 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
   };
 
   const handleSearch = async () => {
-    if (!image || !originalFile) return;
+    if (!image || !originalFile || (detectedAge !== null && detectedAge < 18)) {
+      toast({
+        title: "Age Verification Failed",
+        description: "We can only process images of adults (18+).",
+        variant: "destructive"
+      });
+      return;
+    }
     
     setIsUploading(true);
     onSearchStart?.();
@@ -144,6 +191,10 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
               <Info className="w-4 h-4" />
               <p>Uploaded images are not stored and will be deleted immediately after processing</p>
             </div>
+            <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+              <AlertTriangle className="w-4 h-4" />
+              <p>Only upload images of adults (18+)</p>
+            </div>
           </div>
 
           <Button 
@@ -162,12 +213,14 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
           <div 
             className={`
               border-2 border-dashed rounded-xl p-8 h-full transition-colors duration-300 flex items-center justify-center
+              relative
               ${dragActive 
                 ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10 scale-[0.99]' 
                 : 'border-muted hover:border-red-500/50'
               }
             `}
           >
+            {isProcessing && <UploadAnimation />}
             <motion.div 
               className="relative w-48 h-48 rounded-lg overflow-hidden bg-muted/50 flex items-center justify-center group"
               whileHover={{ scale: 1.05 }}
@@ -242,7 +295,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
               ) : (
                 <>
                   <Search className="w-5 h-5 mr-2" />
-                  Search
+                  Search {isMale && ' Immm.. 😅'}
                 </>
               )}
             </Button>
