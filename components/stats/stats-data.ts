@@ -4,7 +4,7 @@ export const statsData = {
   metrics: [
     {
       title: "Total Models",
-      value: "10+",
+      value: "10K+",
       icon: Users,
       description: "Total number of models in database"
     },
