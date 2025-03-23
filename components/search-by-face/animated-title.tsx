@@ -38,12 +38,12 @@ export function AnimatedTitle() {
   return (
     <div className="text-center mb-12">
       <motion.h1 
-        className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 flex flex-wrap justify-center gap-x-4 gap-y-2"
+        className="text-4xl sm:text-5xl md:text-5xl font-bold mb-4 flex flex-wrap justify-center gap-x-4 gap-y-2"
         variants={container}
         initial="hidden"
         animate="visible"
       >
-        {['SEARCH', 'BY', 'FACE', 'WITH', 'AI'].map((word) => (
+        {['PORNSTAR','SEARCH', 'BY', 'FACE', 'WITH', 'AI'].map((word) => (
           <motion.span
             key={word}
             variants={item}

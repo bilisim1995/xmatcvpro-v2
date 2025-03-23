@@ -1,22 +1,53 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { SearchSkeleton } from '../search-skeleton';
 import { ShareModal } from '../share-modal';
-import { Card } from '@/components/ui/card';
 import { SearchResult } from '@/lib/api/types';
 import { ModelCarousel } from '../model-carousel';
 import { LoadingAnimation } from '../loading-animation';
 import { motion } from 'framer-motion';
-import { Search, LayoutGrid, Images } from 'lucide-react';
+import { Search, LayoutGrid, Images, Megaphone } from 'lucide-react';
 import { useState } from 'react';
 import { ResultCard } from './result-card';
 
-interface SearchResultsProps {
+interface AdSlot {
+  type: 'ad';
+  id: string | number;
+}
+
+function AdCard({ index }: { index: string | number }) {
+  return (
+    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border p-4">
+      <div className="flex flex-col items-center justify-center flex-grow px-4 pt-6 text-center">
+        <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
+          <Megaphone className="w-6 h-6 text-red-600" />
+        </div>
+        <h3 className="text-lg font-semibold mb-2">Advertisement</h3>
+        <p className="text-sm text-muted-foreground">Promoted content</p>
+      </div>
+
+      <div className="flex justify-center pb-4">
+        <div className="w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white font-bold">
+          {`R${index}`}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+type ResultItem = SearchResult | AdSlot;
+
+interface SearchResultsProps { 
   results: SearchResult[];
   isLoading: boolean;
   searchImage?: string | null;
   onSearchAgain: () => void;
+}
+
+function isAdSlot(item: ResultItem): item is AdSlot {
+  return 'type' in item && item.type === 'ad';
 }
 
 export function SearchResults({ 
@@ -26,9 +57,22 @@ export function SearchResults({
   onSearchAgain 
 }: SearchResultsProps) {
   const [viewMode, setViewMode] = useState<'carousel' | 'grid'>('carousel');
+  
+  // Sort results and limit to 15
+  const sortedResults = [...results]
+    .sort((a, b) => (b.confidence || 0) - (a.confidence || 0))
+    .slice(0, 15);
 
-  // Sort results by confidence once and memoize
-  const sortedResults = [...results].sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
+  // Insert ad slots after every 3 models
+  const resultsWithAds: ResultItem[] = [];
+  let adCounter = 1;
+
+  sortedResults.forEach((result, index) => {
+    resultsWithAds.push(result);
+    if ((index + 1) % 3 === 0) {
+      resultsWithAds.push({ type: 'ad', id: `${adCounter++}` });
+    }
+  });
 
   if (isLoading) {
     return (
@@ -90,13 +134,17 @@ export function SearchResults({
           <ModelCarousel results={sortedResults} showConfidence />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {sortedResults.map((result, index) => (
-              <ResultCard
-                key={result.id}
-                result={result}
-                index={index}
-                showConfidence
-              />
+            {resultsWithAds.map((item, idx) => (
+              isAdSlot(item) ? (
+                <AdCard key={`${item.id}`} index={item.id} />
+              ) : (
+                <ResultCard
+                  key={item.id}
+                  result={item}
+                  index={idx - Math.floor(idx / 4)}
+                  showConfidence
+                />
+              )
             ))}
           </div>
         )}

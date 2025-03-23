@@ -115,7 +115,7 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
       {/* Results Grid */}
       <div className="overflow-hidden px-2">
         <AnimatePresence mode="wait">
-        <motion.div
+         <motion.div
   key={currentIndex}
   initial={{ opacity: 0, x: 100 }}
   animate={{ opacity: 1, x: 0 }}
@@ -146,7 +146,7 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
       )}
     </motion.div>
   ))}
-</motion.div>
+         </motion.div>
 
         </AnimatePresence>
       </div>
