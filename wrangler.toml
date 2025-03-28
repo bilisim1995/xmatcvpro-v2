@@ -1,4 +1,0 @@
-name = "xmatchpro-v2"
-account_id = "8cde582aa48fd560a3efdce8faa7b551"
-compatibility_date = "2024-03-19"
-main = ".vercel/output/static/_worker.js"

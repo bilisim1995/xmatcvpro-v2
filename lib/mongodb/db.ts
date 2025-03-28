@@ -99,6 +99,7 @@ const modelSchema = new mongoose.Schema<IModel>({
   }
 });
 
+
 // Create model
 export const AdultModel = mongoose.models.AdultModel || mongoose.model<IModel>('AdultModel', modelSchema, COLLECTION_NAME);
 
@@ -120,6 +121,7 @@ export async function testConnection() {
     await disconnect();
   }
 }
+
 
 // 🔥 SIMILARITY CALCULATION 🔥
 export function calculateSimilarity(descriptor1: number[], descriptor2: number[]): number {

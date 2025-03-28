@@ -5,13 +5,11 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer/index';
 import { Analytics } from '@/components/analytics';
-import { LoadingScreen } from '@/components/loading';
 import { ConsentBanner } from '@/components/gdpr/consent-banner';
 import { AgeVerification } from '@/components/age-verification/age-verification';
 import { ScrollToTop } from '@/components/scroll-to-top';
 import { Toaster } from '@/components/ui/toaster';
 import { Suspense } from 'react';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 import Script from 'next/script';
 
 const inter = Inter({
@@ -58,7 +56,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LoadingScreen />
+       
           <Suspense fallback={null}>
             <Navbar />
           </Suspense>
@@ -70,7 +68,6 @@ export default function RootLayout({
           <ScrollToTop />
           <ConsentBanner />
           <AgeVerification />
-          <SpeedInsights/>
           <Toaster />
         </ThemeProvider>
         <Analytics />

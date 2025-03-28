@@ -53,7 +53,7 @@ export async function detectGenderAndAge(imageElement: HTMLImageElement): Promis
       .withAgeAndGender();
 
     if (!detection) {
-      console.log('No face detected for gender analysis');
+     
       return { gender: null, age: null };
     }
 

@@ -2,15 +2,16 @@ import { NextResponse } from 'next/server';
 import { AdultModel } from '@/lib/mongodb/db';
 import { connect, disconnect } from '@/lib/mongodb/connection';
 import { calculateSimilarity } from '@/lib/mongodb/db';
-import { SearchResult } from '@/lib/api/types';
-import { Types } from 'mongoose';
-import { Document } from 'mongoose';
+import { SearchResult, ModelFilters } from '@/lib/api/types';
+import { Types, Document } from 'mongoose';
 
 export const dynamic = 'force-dynamic';
 
-const REQUEST_TIMEOUT = 30000; // 30 seconds timeout
+const REQUEST_TIMEOUT = 60000; // 60 seconds timeout
+const BATCH_SIZE = 100; // Process models in batches
+const MIN_CONFIDENCE = 35; // Minimum confidence threshold
 
-interface ModelDocument {
+interface ModelDocument extends Document {
   _id: Types.ObjectId;
   name: string;
   slug?: string;
@@ -24,7 +25,7 @@ interface ModelDocument {
   ethnicity?: string;
   hair_color?: string;
   eye_color?: string;
-  tattoos?: { has_tattoos: boolean };
+  tattoos?: { has_tattoos: boolean; };
   piercings?: { has_piercings: boolean };
   face_data?: {
     descriptor: number[];
@@ -63,6 +64,7 @@ export async function POST(req: Request) {
     }
 
     const { descriptor, filters } = await req.json() as SearchRequestBody;
+  
 
     if (!descriptor || !Array.isArray(descriptor)) {
       return NextResponse.json(
@@ -107,73 +109,127 @@ export async function POST(req: Request) {
           }
         });
       }
-
+  
       // Find models and calculate similarity scores
-      const models = await AdultModel
+      const totalModels = await AdultModel
         .find(query)
-        .select('name slug profile_image link age height weight cup_size nationality ethnicity hair_color eye_color tattoos piercings face_data')
-        .lean()
-        .exec() as unknown as ModelDocument[];
+        .countDocuments();
+      
 
-      if (!models.length) {
+      if (totalModels === 0) {
         return NextResponse.json(
           { message: 'No models found' },
           { status: 404 }
         );
       }
 
-      // Calculate similarity scores and sort results
-      const results = models
-        .filter(model => model.face_data?.descriptor)
-        .map((model) => {
-          // Safely access face_data.descriptor with type guard
-          if (!model.face_data?.descriptor) {
-            return null;
-          }
-          
-          const similarity = calculateSimilarity(descriptor, model.face_data.descriptor);
-          const result: SearchResult = {
-            id: model._id.toString(),
-            name: model.name,
-            slug: model.slug || model.name.toLowerCase().replace(/\s+/g, '-'),
-            image: model.profile_image,
-            link1: model.link,
-            age: model.age,
-            height: model.height?.value,
-            weight: model.weight?.value,
-            cup_size: model.cup_size,
-            nationality: Array.isArray(model.nationality) ? model.nationality[0] : model.nationality,
-            ethnicity: model.ethnicity,
-            hair: model.hair_color,
-            eyes: model.eye_color,
-            tats: model.tattoos?.has_tattoos ? 'yes' : 'no',
-            piercings: model.piercings?.has_piercings ? 'yes' : 'no',
-            confidence: similarity
-          } as const;
-          
-          return result;
-        })
-        .filter((result): result is SearchResult => result !== null)
-        .filter((result): result is SearchResult & { confidence: number } => 
-          typeof result.confidence === 'number' && result.confidence > 0
-        )
-        .sort((a, b) => b.confidence - a.confidence);
+      // Process models in batches
+      const allResults: SearchResult[] = [];
+      const projection = 'name slug profile_image link age height weight cup_size nationality ethnicity hair_color eye_color tattoos piercings face_data';
+      
+      let processedModels = 0;
+      for (let skip = 0; skip < totalModels; skip += BATCH_SIZE) {
+        const batchModels = await AdultModel.find(query)
+          .select(projection)
+          .skip(skip)
+          .limit(BATCH_SIZE)
+          .lean<ModelDocument[]>();
 
-      return NextResponse.json(results);
+        if (!Array.isArray(batchModels)) {
+          console.error('Invalid batch results format');
+          continue;
+        }
+
+        const validBatchModels = batchModels.filter((model): model is ModelDocument => {
+          return model && typeof model === 'object' && model._id instanceof Types.ObjectId;
+        });
+        
+        // First filter models with valid face data
+        const modelsWithFaceData = validBatchModels
+          .filter(model => {
+            return model.face_data?.descriptor && 
+                   Array.isArray(model.face_data.descriptor) && 
+                   model.face_data.descriptor.length === descriptor.length;
+          });
+
+        // Then map to SearchResult type with null check
+        const batchResults = modelsWithFaceData
+          .map(model => {
+            try {
+              const faceDescriptor = model.face_data?.descriptor;
+              if (!faceDescriptor) return null;
+              
+              const similarity = calculateSimilarity(descriptor, faceDescriptor);
+              if (typeof similarity !== 'number' || similarity < MIN_CONFIDENCE) return null;
+
+              const result: SearchResult = {
+                id: model._id.toString(),
+                name: model.name || 'Unknown',
+                slug: model.slug || model.name?.toLowerCase().replace(/\s+/g, '-') || '',
+                image: model.profile_image,
+                link1: model.link,
+                age: model.age,
+                height: model.height?.value,
+                weight: model.weight?.value,
+                cup_size: model.cup_size,
+                nationality: Array.isArray(model.nationality) ? model.nationality[0] : model.nationality,
+                ethnicity: model.ethnicity,
+                hair: model.hair_color,
+                eyes: model.eye_color,
+                tats: model.tattoos?.has_tattoos === true ? 'yes' : 'no',
+                piercings: model.piercings?.has_piercings === true ? 'yes' : 'no',
+                confidence: similarity
+              };
+              return result;
+            } catch (error) {
+              console.error(`Error processing model ${model._id}:`, error);
+              return null;
+            }
+          })
+          .filter((result): result is SearchResult => {
+            return result !== null && 
+                   typeof result.confidence === 'number' && 
+                   result.confidence >= MIN_CONFIDENCE;
+          });
+
+        allResults.push(...batchResults);
+        processedModels += validBatchModels.length;
+
+        // Early exit if we have enough good matches
+        if (allResults.length >= 16) break;
+      }
+
+      // Sort by confidence and limit results
+      const sortedResults = allResults
+        .sort((a, b) => {
+          const confidenceA = typeof a.confidence === 'number' ? a.confidence : 0;
+          const confidenceB = typeof b.confidence === 'number' ? b.confidence : 0;
+          return confidenceB - confidenceA;
+        })
+        .slice(0, 16);
+
+      
+      return NextResponse.json(sortedResults);
 
     } catch (error) {
-      console.error('Database error:', error);
-      throw error;
+      console.error('Search error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Search failed';
+      console.error('Error details:', errorMessage);
+      return NextResponse.json(
+        { message: errorMessage },
+        { status: 500 }
+      );
+    } finally {
+   
+      clearTimeout(timeoutId);
+      controller.abort();
+      await disconnect();
     }
   } catch (error) {
-    console.error('Search error:', error);
+    console.error('Request processing error:', error);
     return NextResponse.json(
       { message: error instanceof Error ? error.message : 'Search failed' },
       { status: 500 }
     );
-  } finally {
-    clearTimeout(timeoutId);
-    controller.abort();
-    await disconnect();
   }
 }

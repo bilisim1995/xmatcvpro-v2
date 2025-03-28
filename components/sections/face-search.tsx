@@ -83,7 +83,7 @@ export function FaceSearch() {
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-red-600" />
-                <span>1M+ performer database</span>
+                <span>10K+ performer database</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-red-600" />

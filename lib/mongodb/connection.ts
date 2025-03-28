@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { EventEmitter } from 'events';
+
 const MONGODB_URI = process.env.MONGODB_URI || '';
 const CONNECTION_TIMEOUT = 30000; // 30 seconds
 const MAX_RETRIES = 3;
@@ -23,8 +25,8 @@ const options: mongoose.ConnectOptions = {
   ssl: true,
   authSource: 'admin',
   tls: true,
-  tlsAllowInvalidCertificates: false,
-  tlsAllowInvalidHostnames: false,
+  tlsAllowInvalidCertificates: true, // Allow self-signed certificates
+  tlsAllowInvalidHostnames: true, // Allow hostname mismatch
   compressors: ['snappy', 'zlib'],
   bufferCommands: true // Enable command buffering at the schema level
 };
@@ -42,14 +44,14 @@ mongoose.connection.on('error', (error) => {
 });
 
 mongoose.connection.on('disconnected', () => {
- 
+  console.log('MongoDB disconnected');
   isConnected = false;
   client = null;
   connectionPromise = null;
 });
 
 mongoose.connection.on('connected', () => {
-
+  console.log('MongoDB connected successfully');
   isConnected = true;
 });
 
@@ -57,6 +59,8 @@ export async function connect(): Promise<typeof mongoose> {
   try {
     let retryCount = 0;
     let lastError: Error | null = null;
+    
+    console.log(`Attempting MongoDB connection (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
 
     // Return existing connection promise if one is in progress
     if (connectionPromise) {
@@ -65,20 +69,24 @@ export async function connect(): Promise<typeof mongoose> {
 
     // Return existing connection if connected
     if (isConnected && client?.connection.readyState === 1) {
+      console.log('Using existing MongoDB connection');
       return client;
     }
     
     while (retryCount < MAX_RETRIES) {
       try {
         // Create new connection
+        console.log(`Connecting to MongoDB (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
         connectionPromise = mongoose.connect(MONGODB_URI, options);
         client = await connectionPromise;
         isConnected = true;
+        console.log('MongoDB connection successful');
         return client;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Connection failed');
         retryCount++;
         if (retryCount < MAX_RETRIES) {
+          console.log(`Connection failed, retrying in ${RETRY_DELAY}ms...`);
           await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
           continue;
         }
@@ -88,11 +96,12 @@ export async function connect(): Promise<typeof mongoose> {
     }
 
     if (lastError) {
+      console.error('All connection attempts failed');
       throw lastError;
     }
 
-    // Ensure a return statement in all code paths
-    throw new Error('Unexpected error: Unable to establish a MongoDB connection');
+    // Fallback return to satisfy TypeScript
+    throw new Error('Unexpected error: MongoDB connection logic did not return a client');
 
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
@@ -110,7 +119,7 @@ export async function disconnect(): Promise<void> {
   await new Promise(resolve => setTimeout(resolve, 100));
 
   try {
-  
+    console.log('Disconnecting from MongoDB...');
     await mongoose.disconnect();
     isConnected = false;
     client = null;
