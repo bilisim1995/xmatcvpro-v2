@@ -52,6 +52,7 @@ export default function RootLayout({
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#dc2626" />
         <meta name="msapplication-TileColor" content="#dc2626" />
         <meta name="theme-color" content="#dc2626" />
+        <meta name="rating" content="RTA-5042-1996-1400-1577-RTA" />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider
