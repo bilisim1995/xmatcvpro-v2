@@ -10,27 +10,31 @@ import { Card } from '@/components/ui/card';
 
 export default function SearchPage() {
   return (
-    <div className="container mx-auto px-4 pt-24 pb-16">
+    <div className="min-h-screen w-full">
+      <div className="container mx-auto px-4 sm:px-6 pt-24 pb-16">
       <SearchHeader />
 
-      <Card className="max-w-4xl mx-auto p-6 shadow-xl">
-        <SearchTabs />
-      </Card>
+        <div className="max-w-4xl mx-auto">
+          <Card className="w-full p-4 sm:p-6 shadow-xl">
+            <SearchTabs />
+          </Card>
       
-      <div className="max-w-4xl mx-auto mt-16">
-        <HowItWorks />
-      </div>
+          <div className="mt-8 sm:mt-16">
+            <HowItWorks />
+          </div>
       
-      <div className="max-w-4xl mx-auto mt-16">
-        <PremiumBanner />
-      </div>
+          <div className="mt-8 sm:mt-16">
+            <PremiumBanner />
+          </div>
       
-      <div className="max-w-4xl mx-auto mt-16">
-        <BlogSection />
-      </div>
+          <div className="mt-8 sm:mt-16">
+            <BlogSection />
+          </div>
       
-      <div className="max-w-4xl mx-auto">
-        <DevelopmentStatus />
+          <div className="mt-8">
+            <DevelopmentStatus />
+          </div>
+        </div>
       </div>
     </div>
   );

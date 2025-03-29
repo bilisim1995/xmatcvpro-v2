@@ -58,28 +58,28 @@ export function SearchTabs() {
       onValueChange={setActiveTab}
       className="w-full space-y-8"
     >
-      <TabsList className="grid w-full grid-cols-2 h-14 p-1.5 bg-muted/50 rounded-lg">
+      <TabsList className="grid w-full grid-cols-2 h-12 sm:h-14 p-1.5 bg-muted/50 rounded-lg">
         <TabsTrigger 
           value="image" 
-          className="relative h-full text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
+          className="relative h-full text-sm sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
         >
           <TabContent icon={Scan} text="Search by Image" />
         </TabsTrigger>
         <TabsTrigger 
           value="advanced" 
-          className="relative h-full text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
+          className="relative h-full text-sm sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
         >
           <TabContent icon={Search} text="Advanced Search" />
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="image" className="outline-none mt-6">
+      <TabsContent value="image" className="outline-none mt-4 sm:mt-6">
         <Suspense fallback={<div className="h-96 animate-pulse bg-muted rounded-lg" />}>
           <ImageSearchTab />
         </Suspense>
       </TabsContent>
 
-      <TabsContent value="advanced" className="outline-none mt-6">
+      <TabsContent value="advanced" className="outline-none mt-4 sm:mt-6">
         <Suspense fallback={<div className="h-96 animate-pulse bg-muted rounded-lg" />}>
           <AdvancedSearchTab />
         </Suspense>

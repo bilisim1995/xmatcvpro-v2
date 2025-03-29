@@ -42,7 +42,6 @@ export async function POST(req: Request) {
   const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
   try {
-    // Handle preflight
     if (req.method === 'OPTIONS') {
       return new NextResponse(null, {
         status: 204,
@@ -55,7 +54,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Request validation
     if (!req.headers.get('content-type')?.includes('application/json')) {
       return NextResponse.json(
         { message: 'Invalid content type' },
@@ -64,7 +62,6 @@ export async function POST(req: Request) {
     }
 
     const { descriptor, filters } = await req.json() as SearchRequestBody;
-  
 
     if (!descriptor || !Array.isArray(descriptor)) {
       return NextResponse.json(
@@ -74,7 +71,6 @@ export async function POST(req: Request) {
     }
 
     try {
-      // Connect to MongoDB
       await connect();
 
       const query: Record<string, string | number | boolean | { $regex: RegExp }> = {};
@@ -109,118 +105,44 @@ export async function POST(req: Request) {
           }
         });
       }
-  
-      // Find models and calculate similarity scores
-      const totalModels = await AdultModel
-        .find(query)
-        .countDocuments();
-      
 
-      if (totalModels === 0) {
-        return NextResponse.json(
-          { message: 'No models found' },
-          { status: 404 }
-        );
-      }
-
-      // Process models in batches
-      const allResults: SearchResult[] = [];
       const projection = 'name slug profile_image link age height weight cup_size nationality ethnicity hair_color eye_color tattoos piercings face_data';
-      
-      let processedModels = 0;
-      for (let skip = 0; skip < totalModels; skip += BATCH_SIZE) {
-        const batchModels = await AdultModel.find(query)
-          .select(projection)
-          .skip(skip)
-          .limit(BATCH_SIZE)
-          .lean<ModelDocument[]>();
+      const cursor = AdultModel.find(query).select(projection).cursor();
 
-        if (!Array.isArray(batchModels)) {
-          console.error('Invalid batch results format');
-          continue;
+      let allResults: SearchResult[] = [];
+      let batch: ModelDocument[] = [];
+
+      for await (const model of cursor) {
+        if (!model || !(model._id instanceof Types.ObjectId)) continue;
+        batch.push(model);
+
+        if (batch.length === BATCH_SIZE) {
+          const results = processBatch(batch, descriptor);
+          allResults.push(...results);
+          batch = [];
+
+          if (allResults.length >= 16) break;
         }
-
-        const validBatchModels = batchModels.filter((model): model is ModelDocument => {
-          return model && typeof model === 'object' && model._id instanceof Types.ObjectId;
-        });
-        
-        // First filter models with valid face data
-        const modelsWithFaceData = validBatchModels
-          .filter(model => {
-            return model.face_data?.descriptor && 
-                   Array.isArray(model.face_data.descriptor) && 
-                   model.face_data.descriptor.length === descriptor.length;
-          });
-
-        // Then map to SearchResult type with null check
-        const batchResults = modelsWithFaceData
-          .map(model => {
-            try {
-              const faceDescriptor = model.face_data?.descriptor;
-              if (!faceDescriptor) return null;
-              
-              const similarity = calculateSimilarity(descriptor, faceDescriptor);
-              if (typeof similarity !== 'number' || similarity < MIN_CONFIDENCE) return null;
-
-              const result: SearchResult = {
-                id: model._id.toString(),
-                name: model.name || 'Unknown',
-                slug: model.slug || model.name?.toLowerCase().replace(/\s+/g, '-') || '',
-                image: model.profile_image,
-                link1: model.link,
-                age: model.age,
-                height: model.height?.value,
-                weight: model.weight?.value,
-                cup_size: model.cup_size,
-                nationality: Array.isArray(model.nationality) ? model.nationality[0] : model.nationality,
-                ethnicity: model.ethnicity,
-                hair: model.hair_color,
-                eyes: model.eye_color,
-                tats: model.tattoos?.has_tattoos === true ? 'yes' : 'no',
-                piercings: model.piercings?.has_piercings === true ? 'yes' : 'no',
-                confidence: similarity
-              };
-              return result;
-            } catch (error) {
-              console.error(`Error processing model ${model._id}:`, error);
-              return null;
-            }
-          })
-          .filter((result): result is SearchResult => {
-            return result !== null && 
-                   typeof result.confidence === 'number' && 
-                   result.confidence >= MIN_CONFIDENCE;
-          });
-
-        allResults.push(...batchResults);
-        processedModels += validBatchModels.length;
-
-        // Early exit if we have enough good matches
-        if (allResults.length >= 16) break;
       }
 
-      // Sort by confidence and limit results
+      if (batch.length > 0 && allResults.length < 16) {
+        const results = processBatch(batch, descriptor);
+        allResults.push(...results);
+      }
+
       const sortedResults = allResults
-        .sort((a, b) => {
-          const confidenceA = typeof a.confidence === 'number' ? a.confidence : 0;
-          const confidenceB = typeof b.confidence === 'number' ? b.confidence : 0;
-          return confidenceB - confidenceA;
-        })
+        .sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0))
         .slice(0, 16);
 
-      
       return NextResponse.json(sortedResults);
-
     } catch (error) {
       console.error('Search error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Search failed';
-      console.error('Error details:', errorMessage);
       return NextResponse.json(
         { message: errorMessage },
         { status: 500 }
       );
     } finally {
-   
       clearTimeout(timeoutId);
       controller.abort();
       await disconnect();
@@ -232,4 +154,36 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+function processBatch(batch: ModelDocument[], descriptor: number[]): SearchResult[] {
+  return batch
+    .filter(model => 
+      Array.isArray(model.face_data?.descriptor) &&
+      model.face_data.descriptor.length === descriptor.length
+    )
+    .map(model => {
+      const similarity = calculateSimilarity(descriptor, model.face_data!.descriptor);
+      if (similarity < MIN_CONFIDENCE) return null;
+
+      return {
+        id: model._id.toString(),
+        name: model.name || 'Unknown',
+        slug: model.slug || model.name?.toLowerCase().replace(/\s+/g, '-') || '',
+        image: model.profile_image || '/default.png',
+        link1: model.link,
+        age: model.age,
+        height: model.height?.value,
+        weight: model.weight?.value,
+        cup_size: model.cup_size,
+        nationality: Array.isArray(model.nationality) ? model.nationality[0] : model.nationality,
+        ethnicity: model.ethnicity,
+        hair: model.hair_color,
+        eyes: model.eye_color,
+        tats: model.tattoos?.has_tattoos === true ? 'yes' : 'no',
+        piercings: model.piercings?.has_piercings === true ? 'yes' : 'no',
+        confidence: similarity
+      } as SearchResult;
+    })
+    .filter((r): r is SearchResult => r !== null);
 }

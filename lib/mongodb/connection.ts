@@ -1,25 +1,32 @@
 import mongoose from 'mongoose';
-import { EventEmitter } from 'events';
 
 const MONGODB_URI = process.env.MONGODB_URI || '';
 const CONNECTION_TIMEOUT = 30000; // 30 seconds
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 2000;
+const RECONNECT_INTERVAL = 5000;
+const CONNECTION_POOL_SIZE = 10;
 
 if (!MONGODB_URI) {
   throw new Error('MongoDB URI is not defined in environment variables');
 }
 
-mongoose.set('bufferCommands', true); // Enable buffering
+// Configure Mongoose
+mongoose.set('bufferCommands', true);
 mongoose.set('maxTimeMS', CONNECTION_TIMEOUT);
+mongoose.set('autoIndex', true);
+mongoose.set('strictQuery', false);
+mongoose.set('debug', process.env.NODE_ENV === 'development');
 
 const options: mongoose.ConnectOptions = {
-  maxPoolSize: 10,
-  minPoolSize: 5,
+  maxPoolSize: CONNECTION_POOL_SIZE,
+  minPoolSize: 1,
   maxIdleTimeMS: CONNECTION_TIMEOUT,
   connectTimeoutMS: CONNECTION_TIMEOUT,
   socketTimeoutMS: CONNECTION_TIMEOUT,
   serverSelectionTimeoutMS: CONNECTION_TIMEOUT,
+  heartbeatFrequencyMS: 10000,
+  family: 4, // Force IPv4
   retryWrites: true,
   w: 'majority',
   ssl: true,
@@ -28,12 +35,18 @@ const options: mongoose.ConnectOptions = {
   tlsAllowInvalidCertificates: true, // Allow self-signed certificates
   tlsAllowInvalidHostnames: true, // Allow hostname mismatch
   compressors: ['snappy', 'zlib'],
-  bufferCommands: true // Enable command buffering at the schema level
+  autoCreate: true,
+  serverApi: {
+    version: '1',
+    strict: true,
+    deprecationErrors: true
+  }
 };
 
 let isConnected = false;
 let client: typeof mongoose | null = null;
 let connectionPromise: Promise<typeof mongoose> | null = null;
+let reconnectTimer: NodeJS.Timeout | null = null;
 
 // Connection event handlers
 mongoose.connection.on('error', (error) => {
@@ -41,6 +54,13 @@ mongoose.connection.on('error', (error) => {
   isConnected = false;
   client = null;
   connectionPromise = null;
+  
+  // Schedule reconnection
+  if (reconnectTimer) clearTimeout(reconnectTimer);
+  reconnectTimer = setTimeout(() => {
+    console.log('Attempting to reconnect to MongoDB...');
+    connect().catch(console.error);
+  }, RECONNECT_INTERVAL);
 });
 
 mongoose.connection.on('disconnected', () => {
@@ -48,11 +68,22 @@ mongoose.connection.on('disconnected', () => {
   isConnected = false;
   client = null;
   connectionPromise = null;
+  
+  // Schedule reconnection
+  if (reconnectTimer) clearTimeout(reconnectTimer);
+  reconnectTimer = setTimeout(() => {
+    console.log('Attempting to reconnect after disconnect...');
+    connect().catch(console.error);
+  }, RECONNECT_INTERVAL);
 });
 
 mongoose.connection.on('connected', () => {
   console.log('MongoDB connected successfully');
   isConnected = true;
+  if (reconnectTimer) {
+    clearTimeout(reconnectTimer);
+    reconnectTimer = null;
+  }
 });
 
 export async function connect(): Promise<typeof mongoose> {
@@ -60,33 +91,34 @@ export async function connect(): Promise<typeof mongoose> {
     let retryCount = 0;
     let lastError: Error | null = null;
     
-    console.log(`Attempting MongoDB connection (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
+    // Check connection state
+    const readyState = mongoose.connection.readyState;
+    if (isConnected && readyState === 1) {
+      console.log('Using existing MongoDB connection');
+      return mongoose;
+    }
 
-    // Return existing connection promise if one is in progress
+    // Handle connection promise
     if (connectionPromise) {
+      console.log('Connection already in progress, waiting...');
       return connectionPromise;
     }
 
-    // Return existing connection if connected
-    if (isConnected && client?.connection.readyState === 1) {
-      console.log('Using existing MongoDB connection');
-      return client;
-    }
-    
+    console.log('Starting new MongoDB connection...');
+
     while (retryCount < MAX_RETRIES) {
       try {
-        // Create new connection
         console.log(`Connecting to MongoDB (attempt ${retryCount + 1}/${MAX_RETRIES})...`);
         connectionPromise = mongoose.connect(MONGODB_URI, options);
-        client = await connectionPromise;
+        await connectionPromise;
         isConnected = true;
-        console.log('MongoDB connection successful');
-        return client;
+        console.log('MongoDB connection established successfully');
+        return mongoose;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error('Connection failed');
         retryCount++;
         if (retryCount < MAX_RETRIES) {
-          console.log(`Connection failed, retrying in ${RETRY_DELAY}ms...`);
+          console.log(`Connection attempt failed, retrying in ${RETRY_DELAY}ms...`, error);
           await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
           continue;
         }
@@ -99,9 +131,8 @@ export async function connect(): Promise<typeof mongoose> {
       console.error('All connection attempts failed');
       throw lastError;
     }
-
-    // Fallback return to satisfy TypeScript
-    throw new Error('Unexpected error: MongoDB connection logic did not return a client');
+    
+    throw new Error('Failed to connect to MongoDB');
 
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
@@ -113,7 +144,11 @@ export async function connect(): Promise<typeof mongoose> {
 }
 
 export async function disconnect(): Promise<void> {
-  if (!isConnected || !client) return;
+  const readyState = mongoose.connection.readyState;
+  if (!isConnected || readyState !== 1) {
+    console.log('No active connection to disconnect');
+    return;
+  }
 
   // Wait for any pending operations to complete
   await new Promise(resolve => setTimeout(resolve, 100));
@@ -124,6 +159,10 @@ export async function disconnect(): Promise<void> {
     isConnected = false;
     client = null;
     connectionPromise = null;
+    if (reconnectTimer) {
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    }
   } catch (error) {
     console.error('Error disconnecting from MongoDB:', error);
     throw error;

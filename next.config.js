@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-// Build türünü ENV ile belirle (örneğin: export veya server)
-const isExport = process.env.EXPORT_BUILD === 'true';
-
 const nextConfig = {
   webpack: (config, { isServer, dev }) => {
     config.resolve.fallback = { fs: false };
@@ -10,9 +7,13 @@ const nextConfig = {
   },
   experimental: {
     esmExternals: true,
-    middleware: !isExport, 
+    middleware: true,
     appDir: true
   },
+
+  output: 'standalone',
+  reactStrictMode: true,
+  swcMinify: true,
 
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
 
@@ -21,10 +22,8 @@ const nextConfig = {
     MONGODB_DB: process.env.MONGODB_DB
   },
 
-  output: isExport ? 'export' : undefined,
-
   images: {
-    unoptimized: isExport ? true : false,
+    unoptimized: false,
     remotePatterns: [
       {
         protocol: 'https',
@@ -51,19 +50,15 @@ const nextConfig = {
 
   trailingSlash: false,
 
-  serverRuntimeConfig: !isExport
-    ? {
-        hmr: {
-          protocol: 'ws',
-          hostname: 'localhost',
-          port: 3001
-        }
-      }
-    : undefined,
+  serverRuntimeConfig: {
+    hmr: {
+      protocol: 'ws',
+      hostname: 'localhost',
+      port: 3001
+    }
+  },
 
-  // rewrites ve headers export modunda kullanılmaz!
   async rewrites() {
-    if (isExport) return [];
     return [
       {
         source: '/sitemap.xml',
@@ -81,7 +76,6 @@ const nextConfig = {
   },
 
   async headers() {
-    if (isExport) return [];
     return [
       {
         source: '/api/models/:path*',
