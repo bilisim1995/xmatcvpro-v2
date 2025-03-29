@@ -10,7 +10,6 @@ import { AgeVerification } from '@/components/age-verification/age-verification'
 import { ScrollToTop } from '@/components/scroll-to-top';
 import { Toaster } from '@/components/ui/toaster';
 import { Suspense } from 'react';
-import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -44,10 +43,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-       <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta name="theme-color" content="#dc2626" />
-        <link rel="icon" href="/favicon.ico" />
-  
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#dc2626" />
+        <meta name="msapplication-TileColor" content="#dc2626" />
+        <meta name="theme-color" content="#dc2626" />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider
@@ -55,15 +59,13 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        >
-       
+        > 
           <Suspense fallback={null}>
             <Navbar />
           </Suspense>
           <main className="flex-1">
             {children}
-          </main>
-          
+          </main> 
           <Footer />
           <ScrollToTop />
           <ConsentBanner />
@@ -71,7 +73,6 @@ export default function RootLayout({
           <Toaster />
         </ThemeProvider>
         <Analytics />
-       
       </body>
     </html>
   );

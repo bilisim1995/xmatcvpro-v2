@@ -17,6 +17,13 @@ const nextConfig = {
 
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
 
+  headScripts: [
+    {
+      src: 'https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js',
+      async: true,
+    },
+  ],
+
   env: {
     MONGODB_URI: process.env.MONGODB_URI,
     MONGODB_DB: process.env.MONGODB_DB

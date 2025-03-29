@@ -45,7 +45,7 @@ export function AnimatedTitle() {
       >
         {['PORNSTAR','SEARCH', 'BY', 'FACE', 'WITH', 'AI'].map((word) => (
           <motion.span
-            key={word}
+            key={word} 
             variants={item}
             className="bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-400 relative"
           >
