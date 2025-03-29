@@ -7,6 +7,7 @@ import { BlogPost } from '@/lib/mongodb/blog';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/lib/utils';
+import { SponsoredContent } from '@/components/blog/sponsored-content';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
@@ -89,6 +90,8 @@ export default function BlogPostPage({
             className="mt-8 prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-red-600 hover:prose-a:text-red-500 prose-strong:text-foreground prose-code:text-red-600 prose-pre:bg-muted prose-pre:text-foreground"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
+
+          <SponsoredContent />
 
           <footer className="mt-8 pt-8 border-t">
             <div className="flex flex-wrap gap-2">

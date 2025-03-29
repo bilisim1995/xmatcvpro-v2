@@ -6,6 +6,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ResultCard } from '../image-search/result-card';
 import { SearchResult } from '@/lib/api/types';
+import { Megaphone } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+
+interface AdSlot {
+  type: 'ad';
+  id: string | number;
+}
+
+function AdCard({ index }: { index: string | number }) {
+  return (
+    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border p-4">
+      <div className="flex flex-col items-center justify-center flex-grow px-4 pt-6 text-center">
+        <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
+          <Megaphone className="w-6 h-6 text-red-600" />
+        </div>
+        <h3 className="text-lg font-semibold mb-2">Advertisement</h3>
+        <p className="text-sm text-muted-foreground">Promoted content</p>
+      </div>
+
+      <div className="flex justify-center pb-4">
+        <div className="w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white font-bold">
+          {`R${index}`}
+        </div>
+      </div>
+    </Card>
+  );
+}
 
 interface ModelCarouselProps {
   results: SearchResult[];
@@ -16,16 +43,20 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
   const [currentIndex, setCurrentIndex] = useState(0);
   const itemsPerPage = 4;
   
-  // Sort results by confidence score
-  const sortedResults = [...results].sort((a, b) => {
-    const confidenceDiff = (b.confidence || 0) - (a.confidence || 0);
-    if (confidenceDiff === 0) {
-      return a.name.localeCompare(b.name);
+  // Process results to include ads
+  const processedResults = results.slice(0, 15).reduce<(SearchResult | AdSlot)[]>((acc, result, index) => {
+    acc.push(result);
+    if ((index + 1) % 3 === 0 && index < 14) { // Add ad after every 3rd item
+      acc.push({ type: 'ad', id: Math.floor(index / 3) + 1 });
     }
-    return confidenceDiff;
-  });
+    // Add R5 at the end if we have all 15 results
+    if (index === 14) {
+      acc.push({ type: 'ad', id: 5 });
+    }
+    return acc;
+  }, []);
 
-  const totalPages = Math.ceil(results.length / itemsPerPage);
+  const totalPages = Math.ceil(processedResults.length / itemsPerPage);
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % totalPages);
@@ -35,9 +66,11 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
     setCurrentIndex((prev) => (prev - 1 + totalPages) % totalPages);
   };
 
-  const displayResults = [
-    ...sortedResults.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage),
-    ...Array(Math.max(0, itemsPerPage - sortedResults.length)).fill(null)
+  const displayResults = [...processedResults.slice(
+    currentIndex * itemsPerPage,
+    (currentIndex + 1) * itemsPerPage
+  ),
+    ...Array(Math.max(0, itemsPerPage - processedResults.length)).fill(null)
   ];
 
   return (
@@ -83,11 +116,15 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
                 transition={{ delay: idx * 0.1 }}
               >
                 {result ? (
-                  <ResultCard
-                    result={result}
-                    index={currentIndex * itemsPerPage + idx}
-                    showConfidence={showConfidence}
-                  />
+                  'type' in result ? (
+                    <AdCard key={`ad-${result.id}`} index={result.id} />
+                  ) : (
+                    <ResultCard
+                      result={result}
+                      index={currentIndex * itemsPerPage + idx - Math.floor((currentIndex * itemsPerPage + idx) / 4)}
+                      showConfidence={showConfidence}
+                    />
+                  )
                 ) : (
                   <div className="aspect-[3/4] bg-muted/10 rounded-lg" />
                 )}

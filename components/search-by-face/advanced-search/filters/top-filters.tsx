@@ -3,6 +3,7 @@
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ModelFilters } from '@/lib/api/types';
+import { useEffect } from 'react';
 
 interface TopFiltersProps {
   filters: ModelFilters;
@@ -14,12 +15,25 @@ export function TopFilters({ filters, onChange }: TopFiltersProps) {
     onChange({ ...filters, [key]: value });
   };
 
+  useEffect(() => {
+    // Reset select values when filters are cleared
+    const selectElements = document.querySelectorAll('[data-radix-select-trigger]');
+    if (Object.keys(filters).length === 0) {
+      selectElements.forEach((select) => {
+        const value = select.getAttribute('data-value');
+        if (value) {
+          select.setAttribute('data-value', '');
+        }
+      });
+    }
+  }, [filters]);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="space-y-2">
         <Label>Hair Color</Label>
         <Select 
-          value={filters.hair_color} 
+          value={filters.hair_color || ''} 
           onValueChange={value => updateFilter('hair_color', value)}
         >
           <SelectTrigger>
@@ -40,7 +54,7 @@ export function TopFilters({ filters, onChange }: TopFiltersProps) {
       <div className="space-y-2">
         <Label>Eye Color</Label>
         <Select 
-          value={filters.eye_color} 
+          value={filters.eye_color || ''}
           onValueChange={value => updateFilter('eye_color', value)}
         >
           <SelectTrigger>
@@ -60,7 +74,7 @@ export function TopFilters({ filters, onChange }: TopFiltersProps) {
       <div className="space-y-2">
         <Label>Cup Size</Label>
         <Select 
-          value={filters.cup_size} 
+          value={filters.cup_size || ''}
           onValueChange={value => updateFilter('cup_size', value)}
         >
           <SelectTrigger>

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connect, disconnect } from '@/lib/mongodb/connection';
 import { BlogModel } from '@/lib/mongodb/blog';
+import mongoose from 'mongoose';
 import { cache } from 'react';
 
 export const revalidate = 60; // Cache for 60 seconds
@@ -38,6 +39,7 @@ export async function GET(request: Request) {
   let retryCount = 0;
   let lastError: Error | null = null;
   let connection: typeof mongoose | null = null;
+
 
   try {
     while (retryCount < MAX_RETRIES) {
@@ -80,7 +82,7 @@ export async function GET(request: Request) {
     }
 
     // Transform dates to ISO strings for proper JSON serialization
-    const transformedPosts = posts.map(post => ({
+    const transformedPosts = posts.map((post: { _id: any } & Record<string, any>) => ({
       ...post,
       _id: post._id.toString(),
       publish_date: post.publish_date ? post.publish_date.toISOString() : null,

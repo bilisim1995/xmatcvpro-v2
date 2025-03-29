@@ -7,6 +7,7 @@ import { PremiumBanner } from '@/components/advertising/premium-banner';
 import { BlogSection } from '@/components/search-by-face/blog';
 import { DevelopmentStatus } from '@/components/search-by-face/development-status';
 import { Card } from '@/components/ui/card';
+import { CoffeeButton } from '@/components/coffee-button';
 
 export default function SearchPage() {
   return (
@@ -15,23 +16,27 @@ export default function SearchPage() {
       <SearchHeader />
 
         <div className="max-w-4xl mx-auto">
-          <Card className="w-full p-4 sm:p-6 shadow-xl">
+          <Card className="w-full p-4 sm:p-6 shadow-xl mb-8">
             <SearchTabs />
           </Card>
+
+          <div className="m-14 flex justify-center">
+            <CoffeeButton />
+          </div>
       
-          <div className="mt-8 sm:mt-16">
+          <div className="mb-8">
             <HowItWorks />
           </div>
       
-          <div className="mt-8 sm:mt-16">
+          <div className="mb-8">
             <PremiumBanner />
           </div>
       
-          <div className="mt-8 sm:mt-16">
+          <div className="mb-8">
             <BlogSection />
           </div>
       
-          <div className="mt-8">
+          <div>
             <DevelopmentStatus />
           </div>
         </div>

@@ -50,7 +50,7 @@ blogSchema.set('toObject', { virtuals: true });
 // Pre-save middleware to ensure slug uniqueness and format
 blogSchema.pre('save', async function(next) {
   if (this.isModified('title') && !this.slug) {
-    let slug = this.title
+    const baseSlug = this.title
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
@@ -59,10 +59,10 @@ blogSchema.pre('save', async function(next) {
     
     // Check slug uniqueness
     let counter = 0;
-    let uniqueSlug = slug;
+    let uniqueSlug = baseSlug;
     while (await mongoose.models.Blog.findOne({ slug: uniqueSlug })) {
       counter++;
-      uniqueSlug = `${slug}-${counter}`;
+      uniqueSlug = `${baseSlug}-${counter}`;
     }
     this.slug = uniqueSlug;
   }
@@ -78,10 +78,6 @@ blogSchema.post('save', function(error: any, doc: any, next: any) {
   }
 });
 
-// Compound indexes for efficient querying
-blogSchema.index({ category: 1, publish_date: -1 });
-blogSchema.index({ slug: 1 }, { unique: true });
-blogSchema.index({ keywords: 'text', title: 'text' });
-blogSchema.index({ created_at: -1 });
+
 
 export const BlogModel = mongoose.models.Blog || mongoose.model<BlogPost>('Blog', blogSchema);
