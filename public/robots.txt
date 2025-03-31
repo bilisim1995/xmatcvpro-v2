@@ -3,49 +3,40 @@ User-agent: *
 Allow: /
 Allow: /search
 Allow: /models/
-
-# Disallow paths
-Disallow: /api/
-Disallow: /admin/
-Disallow: /_next/
-Disallow: /static/
-
-# Sitemap
-Sitemap: https://xmatch.pro/sitemap.xml
-
-# Crawl-delay
-Crawl-delay: 10
-
-# Rate limiting
-Request-rate: 1/1
-Visit-time: 0600-2100
-
-# Media files
+Allow: /blog/
 Allow: *.jpg
 Allow: *.jpeg
 Allow: *.png
 Allow: *.webp
 Allow: *.svg
 
-# Specific user agents
+# Only block sensitive paths
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemaps
+Sitemap: https://xmatch.pro/sitemap.xml
+Sitemap: https://xmatch.pro/sitemap_blog.xml
+
+# Specific search engine configurations
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 5
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 5
+Crawl-delay: 1
 
 User-agent: DuckDuckBot
 Allow: /
-Crawl-delay: 5
+Crawl-delay: 1
 
-# Block bad bots
-User-agent: MJ12bot
-Disallow: /
-
+# SEO tools are allowed
 User-agent: AhrefsBot
-Disallow: /
+Allow: /
 
 User-agent: SemrushBot
-Disallow: /
+Allow: /
+
+User-agent: Yandexbot
+Allow: /

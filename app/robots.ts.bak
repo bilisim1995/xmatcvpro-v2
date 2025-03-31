@@ -1,0 +1,25 @@
+import { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: [
+        '/',
+        '/search',
+        '/models',
+        '/blog',
+        '/*.jpg',
+        '/*.jpeg',
+        '/*.png',
+        '/*.webp',
+        '/*.svg'
+      ],
+      disallow: ['/api/*', '/admin/*'],
+    },
+    sitemap: [
+      'https://xmatch.pro/sitemap.xml',
+      'https://xmatch.pro/sitemap_blog.xml'
+    ],
+  };
+}
