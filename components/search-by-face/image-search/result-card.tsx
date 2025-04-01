@@ -38,11 +38,25 @@ export function ResultCard({ result, index, showConfidence = true }: ResultCardP
     <Card className="overflow-hidden group hover:shadow-lg transition-shadow duration-300">
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden">
+        {/* Watermark Background */}
+        <div className="absolute inset-0 pointer-events-none select-none z-10">
+          <div className="w-full h-full flex items-center justify-center opacity-25">
+            <div className="text-3xl font-bold text-white transform rotate-[-30deg] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
+              xmatch.pro
+            </div>
+          </div>
+        </div>
+
+
         <img 
           src={result.image} 
           alt={result.name}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
+        {/* Bottom Watermark */}
+        <div className="absolute bottom-0 right-0 bg-black/50 px-1.5 py-0.5 text-[8px] text-white/70">
+          xmatch.pro
+        </div>
         {/* Ranking Number */}
         <div className="absolute top-2 left-2">
           <div className="w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white font-bold">
@@ -153,7 +167,7 @@ export function ResultCard({ result, index, showConfidence = true }: ResultCardP
         {/* Actions */}
         <div className="grid grid-cols-2 gap-2">
           <Link
-            href={`/models/${result.slug || result.name.toLowerCase().replace(/\s+/g, '-')}`}
+            href={`/models/${result.slug || encodeURIComponent(result.name.toLowerCase().replace(/\s+/g, '-'))}`}
             className="w-full"
           >
             <Button
@@ -174,7 +188,7 @@ export function ResultCard({ result, index, showConfidence = true }: ResultCardP
                 size="sm"
                 className="w-full bg-red-600 hover:bg-red-700 text-white"
               >
-                <Video className="w-4 h-4" />
+                <Video className="w-4 h-4 mr-2" />
                 Videos
               </Button>
             }
