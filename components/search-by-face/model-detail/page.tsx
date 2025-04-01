@@ -38,16 +38,19 @@ interface ModelDetailPageProps {
 
 export function ModelDetailPage({ model }: ModelDetailPageProps) {
   const [suggestedModels, setSuggestedModels] = useState<SearchResult[]>([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
   useEffect(() => {
     const fetchSuggestedModels = async () => {
       try {
+        setIsLoadingSuggestions(true);
+
         // Fetch models with similar attributes
         const params = new URLSearchParams({
-          ethnicity: model.ethnicity || '',
-          age: model.age?.toString() || '',
-          hair_color: model.hair || '',
-          eye_color: model.eyes || ''
+          ...(model.ethnicity && { ethnicity: model.ethnicity }),
+          ...(model.age && { age: model.age.toString() }),
+          ...(model.hair && { hair_color: model.hair }),
+          ...(model.eyes && { eye_color: model.eyes })
         });
 
         const response = await fetch(`/api/models?${params.toString()}`);
@@ -56,12 +59,14 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
         const data = await response.json();
         // Filter out the current model and limit to 5 suggestions
         const filtered = data
-          .filter((m: SearchResult) => m.id !== model.id)
+          .filter((m: SearchResult) => m.id !== model.id && m.image)
           .slice(0, 5);
 
         setSuggestedModels(filtered);
       } catch (error) {
         console.error('Error fetching suggested models:', error);
+      } finally {
+        setIsLoadingSuggestions(false);
       }
     };
 
@@ -107,12 +112,24 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
             transition={{ duration: 0.4 }}
           >
             <div className="space-y-4 sticky top-24">
-              <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+              <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 relative">
+                {/* Watermark Background */}
+                <div className="absolute inset-0 pointer-events-none select-none z-10">
+                  <div className="w-full h-full flex items-center justify-center opacity-25">
+                    <div className="text-3xl font-bold text-white transform rotate-[-30deg] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
+                      xmatch.pro
+                    </div>
+                  </div>
+                </div>
                 <img 
                   src={model.image} 
                   alt={model.name}
                   className="w-full aspect-[3/4] object-cover"
                 />
+                {/* Bottom Watermark */}
+                <div className="absolute bottom-0 right-0 bg-black/50 px-1.5 py-0.5 text-[8px] text-white/70">
+                  xmatch.pro
+                </div>
               </Card>
               
               {/* Social Media Links */}
@@ -274,7 +291,9 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
         </div>
 
         {/* Suggested Models */}
-        <SuggestedModels models={suggestedModels} />
+        {!isLoadingSuggestions && suggestedModels.length > 0 && (
+          <SuggestedModels models={suggestedModels} />
+        )}
       </div>
     </div>
   );

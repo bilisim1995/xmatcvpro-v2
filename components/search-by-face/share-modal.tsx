@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Share2, Download, MessageCircle, Send } from 'lucide-react';
+import { Share2, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -11,9 +11,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Card } from '@/components/ui/card';
-import { SearchResult } from '@/lib/api/types';
 import { usePreviewDownload } from '@/hooks/use-preview-download';
-import { shareToTelegram, shareToWhatsApp } from '@/lib/utils/share/social';
+import { SearchResult } from '@/lib/api/types';
 import { toast } from '@/components/ui/use-toast';
 
 interface ShareModalProps {
@@ -28,8 +27,9 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
   const { downloadPreview } = usePreviewDownload({
     elementId: 'share-preview',
     filename: 'xmatch-results.png',
-    quality: 1.0,
-    scale: 2
+    quality: 0.95,
+    scale: 3,
+    backgroundColor: '#ffffff'
   });
 
   const handleDownload = async () => {
@@ -51,16 +51,6 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
     } finally {
       setIsProcessing(false);
     }
-  };
-
-  const handleTelegramShare = () => {
-    const text = `Check out my AI-powered search results from xmatch.pro! 🔍✨\n\nFind your matches: https://xmatch.pro`;
-    shareToTelegram(text);
-  };
-
-  const handleWhatsAppShare = () => {
-    const text = `Check out my AI-powered search results from xmatch.pro! 🔍✨\n\nFind your matches: https://xmatch.pro`;
-    shareToWhatsApp(text);
   };
 
   return (
@@ -93,12 +83,24 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
             <div className="grid grid-cols-4 gap-4">
               {/* Source Image */}
               <div className="col-span-1">
-                <div className="aspect-[3/4] rounded-lg overflow-hidden border">
+                <div className="aspect-[3/4] rounded-lg overflow-hidden border relative">
+                  {/* Watermark Background */}
+                  <div className="absolute inset-0 pointer-events-none select-none z-10">
+                    <div className="w-full h-full flex items-center justify-center opacity-25">
+                      <div className="text-3xl font-bold text-white transform rotate-[-30deg] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
+                        xmatch.pro
+                      </div>
+                    </div>
+                  </div>
                   <img 
                     src={searchImage}
                     alt="Search"
                     className="w-full h-full object-cover"
                   />
+                  {/* Bottom Watermark */}
+                  <div className="absolute bottom-0 right-0 bg-black/50 px-1.5 py-0.5 text-[8px] text-white/70">
+                    xmatch.pro
+                  </div>
                 </div>
               </div>
 
@@ -106,12 +108,24 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
               <div className="col-span-3 grid grid-cols-3 gap-4">
                 {results.slice(0, 3).map((result, index) => (
                   <div key={index} className="space-y-2">
-                    <div className="aspect-[3/4] rounded-lg overflow-hidden border">
+                    <div className="aspect-[3/4] rounded-lg overflow-hidden border relative">
+                      {/* Watermark Background */}
+                      <div className="absolute inset-0 pointer-events-none select-none z-10">
+                        <div className="w-full h-full flex items-center justify-center opacity-25">
+                          <div className="text-xl font-bold text-white transform rotate-[-30deg] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
+                            xmatch.pro
+                          </div>
+                        </div>
+                      </div>
                       <img 
                         src={result.image}
                         alt={result.name}
                         className="w-full h-full object-cover"
                       />
+                      {/* Bottom Watermark */}
+                      <div className="absolute bottom-0 right-0 bg-black/50 px-1.5 py-0.5 text-[8px] text-white/70">
+                        xmatch.pro
+                      </div>
                     </div>
                     <div className="space-y-1">
                       <p className="font-medium text-foreground truncate">{result.name}</p>
@@ -137,9 +151,9 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
           </Card>
 
           <div className="grid grid-cols-3 gap-4">
-            <Button
+            <Button 
+              className="w-full col-span-3 gap-2 bg-red-600 hover:bg-red-700 text-white"
               variant="outline"
-              className="w-full gap-2 hover:bg-red-50 dark:hover:bg-red-900/20"
               onClick={handleDownload}
               disabled={isProcessing}
             >
@@ -151,25 +165,9 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
               ) : (
                 <>
                   <Download className="w-4 h-4" />
-                  Download
+                  Download Results
                 </>
               )}
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full gap-2 hover:bg-red-50 dark:hover:bg-red-900/20"
-              onClick={handleWhatsAppShare}
-            >
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full gap-2 hover:bg-red-50 dark:hover:bg-red-900/20"
-              onClick={handleTelegramShare}
-            >
-              <Send className="w-4 h-4" />
-              Telegram
             </Button>
           </div>
         </div>

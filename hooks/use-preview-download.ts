@@ -7,13 +7,15 @@ interface UsePreviewDownloadOptions {
   filename: string;
   quality?: number;
   scale?: number;
+  backgroundColor?: string;
 }
 
 export function usePreviewDownload({ 
   elementId, 
   filename,
   quality = 1.0,
-  scale = 2
+  scale = 2,
+  backgroundColor = '#ffffff'
 }: UsePreviewDownloadOptions) {
   const downloadPreview = async () => {
     try {
@@ -40,15 +42,17 @@ export function usePreviewDownload({
       const canvas = await html2canvas(element, {
         scale,
         useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
+        allowTaint: false,
+        backgroundColor,
         logging: false,
+        removeContainer: true,
         onclone: (clonedDoc) => {
           const clonedElement = clonedDoc.getElementById(elementId);
           if (clonedElement) {
             clonedElement.style.width = `${element.offsetWidth}px`;
             clonedElement.style.height = `${element.offsetHeight}px`;
-            clonedElement.style.transform = 'none';
+            clonedElement.style.margin = '0';
+            clonedElement.style.padding = '20px';
           }
         }
       });
