@@ -1,6 +1,8 @@
 'use client';
 
 const IMAGE_TIMEOUT = 10000; // 10 second timeout
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000;
 
 export async function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
@@ -44,4 +46,28 @@ export function isValidImageFile(file: File): boolean {
   }
   
   return true;
+}
+
+export async function convertImageToBase64(url: string): Promise<string> {
+  let retries = 0;
+  
+  while (retries < MAX_RETRIES) {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      retries++;
+      if (retries === MAX_RETRIES) throw error;
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+    }
+  }
+  
+  throw new Error('Failed to convert image to base64');
 }

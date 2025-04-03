@@ -1,6 +1,7 @@
 'use client';
 
 import html2canvas from 'html2canvas';
+import { convertImageToBase64 } from '@/lib/utils/image';
 
 interface UsePreviewDownloadOptions {
   elementId: string;
@@ -24,25 +25,24 @@ export function usePreviewDownload({
         throw new Error('Preview element not found');
       }
 
-      // Wait for all images to load
+      // Convert all images to base64
       const images = element.getElementsByTagName('img');
-      await Promise.all(
-        Array.from(images).map(img => 
-          img.complete ? 
-            Promise.resolve() : 
-            new Promise((resolve, reject) => {
-              img.onload = resolve;
-              img.onerror = reject;
-              setTimeout(reject, 10000, new Error('Image load timeout'));
-            })
-        )
-      );
+      const imagePromises = Array.from(images).map(async (img) => {
+        try {
+          const base64 = await convertImageToBase64(img.src);
+          img.src = base64;
+        } catch (error) {
+          console.warn('Failed to convert image:', img.src);
+        }
+      });
+      
+      await Promise.all(imagePromises);
 
       // Create canvas with high quality settings
       const canvas = await html2canvas(element, {
         scale,
         useCORS: true,
-        allowTaint: false,
+        allowTaint: true,
         backgroundColor,
         logging: false,
         removeContainer: true,

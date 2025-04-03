@@ -40,12 +40,12 @@ export function SearchTabs() {
   const TabContent = ({ icon: Icon, text }: { icon: typeof Search; text: string }) => {
     return (
       <motion.div
-        className="flex items-center justify-center gap-3 w-full"
+        className="flex items-center justify-center gap-1 sm:gap-3 w-full"
         variants={tabVariants}
         initial="inactive"
         animate="active"
       >
-        <Icon className="w-5 h-5 flex-shrink-0" />
+        <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
         <span>{text}</span>
       </motion.div>
     );
@@ -56,30 +56,30 @@ export function SearchTabs() {
       defaultValue="image" 
       value={activeTab}
       onValueChange={setActiveTab}
-      className="w-full space-y-8"
+      className="w-full space-y-4 sm:space-y-8"
     >
-      <TabsList className="grid w-full grid-cols-2 h-12 sm:h-14 p-1.5 bg-muted/50 rounded-lg">
+      <TabsList className="grid w-full grid-cols-2 h-10 sm:h-14 p-1 sm:p-1.5 bg-muted/50 rounded-lg">
         <TabsTrigger 
           value="image" 
-          className="relative h-full text-sm sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
+          className="relative h-full text-[10px] sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
         >
           <TabContent icon={Scan} text="Search by Image" />
         </TabsTrigger>
         <TabsTrigger 
           value="advanced" 
-          className="relative h-full text-sm sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
+          className="relative h-full text-[10px] sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
         >
           <TabContent icon={Search} text="Advanced Search" />
         </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="image" className="outline-none mt-4 sm:mt-6">
+      <TabsContent value="image" className="outline-none mt-3 sm:mt-6">
         <Suspense fallback={<div className="h-96 animate-pulse bg-muted rounded-lg" />}>
           <ImageSearchTab />
         </Suspense>
       </TabsContent>
 
-      <TabsContent value="advanced" className="outline-none mt-4 sm:mt-6">
+      <TabsContent value="advanced" className="outline-none mt-3 sm:mt-6">
         <Suspense fallback={<div className="h-96 animate-pulse bg-muted rounded-lg" />}>
           <AdvancedSearchTab />
         </Suspense>
