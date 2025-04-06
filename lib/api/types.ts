@@ -12,6 +12,7 @@ export interface ModelFilters {
   tattoos?: string;
   piercings?: string;
   body_type?: string;
+  random?: boolean;
 }
 
 export interface ModelDetails {

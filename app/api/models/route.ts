@@ -6,64 +6,118 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const query: Record<string, any> = {};
-
-    // Build MongoDB query
-    for (const [key, value] of searchParams.entries()) {
-      if (!value) continue;
-
-      switch (key) {
-        case 'age':
-          query.age = Number(value);
-          break;
-        case 'height':
-          query['height.value'] = Number(value);
-          break;
-        case 'weight':
-          query['weight.value'] = Number(value);
-          break;
-        case 'cup_size':
-          query.cup_size = { $regex: new RegExp(`^${value}$`, 'i') };
-          break;
-        case 'nationality':
-          query.nationality = { $regex: new RegExp(value, 'i') };
-          break;
-        case 'ethnicity':
-          query.ethnicity = { $regex: new RegExp(value, 'i') };
-          break;
-        case 'hair_color':
-          query.hair_color = { $regex: new RegExp(value, 'i') };
-          break;
-        case 'eye_color':
-          query.eye_color = { $regex: new RegExp(value, 'i') };
-          break;
-        case 'tattoos':
-          query['tattoos.has_tattoos'] = value === 'yes';
-          break;
-        case 'piercings':
-          query['piercings.has_piercings'] = value === 'yes';
-          break;
+    const isRandom = searchParams.get('random') === 'true';
+    const timestamp = Date.now();
+    
+    // Only build query if not doing random search
+    if (!isRandom) {
+      // Build MongoDB query
+      for (const [key, value] of searchParams.entries()) {
+        if (!value || key === 'random') continue;
+  
+        switch (key) {
+          case 'age':
+            query.age = Number(value);
+            break;
+          case 'height':
+            query['height.value'] = Number(value);
+            break;
+          case 'weight':
+            query['weight.value'] = Number(value);
+            break;
+          case 'cup_size':
+            query.cup_size = { $regex: new RegExp(`^${value}$`, 'i') };
+            break;
+          case 'nationality':
+            query.nationality = { $regex: new RegExp(value, 'i') };
+            break;
+          case 'ethnicity':
+            query.ethnicity = { $regex: new RegExp(value, 'i') };
+            break;
+          case 'hair_color':
+            query.hair_color = { $regex: new RegExp(value, 'i') };
+            break;
+          case 'eye_color':
+            query.eye_color = { $regex: new RegExp(value, 'i') };
+            break;
+          case 'tattoos':
+            query['tattoos.has_tattoos'] = value === 'yes';
+            break;
+          case 'piercings':
+            query['piercings.has_piercings'] = value === 'yes';
+            break;
+        }
       }
     }
 
+    console.log('MongoDB Query:', query);
 
     const collection = await getCollection('adultmodels');
-    let models = await collection.find(query).limit(20).toArray();
+    
+    let models;
+    if (isRandom) {
+      try {
+        const pipeline = [
+          {
+            $match: {
+              profile_image: { $exists: true },
+              ...query
+            }
+          },
+          // Rastgele sıralama
+          { 
+            $addFields: { 
+              random: { 
+                $add: [
+                  { $multiply: [{ $rand: {} }, 100] },
+                  timestamp
+                ]
+              } 
+            } 
+          },
+          { $sort: { random: 1 } },
+          { $limit: 15 }
+        ];
+
+        models = await collection.aggregate(pipeline, {
+          allowDiskUse: true,
+          maxTimeMS: 30000,
+          // Önbelleği devre dışı bırak
+          hint: { _id: 1 }
+        }).toArray();
+        
+        if (!models.length) {
+          throw new Error('No models found in database');
+        }
+
+        // JavaScript tarafında ekstra karıştırma
+        models = models
+          .map(value => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value);
+      } catch (error) {
+        console.error('Random aggregation error:', error);
+        throw error;
+      }
+    } else {
+      models = await collection.find(query).limit(20).toArray();
+    }
 
     if (!models.length) {
       // If no results, try a more relaxed search
-      const relaxedQuery = Object.entries(query).reduce((acc: Record<string, any>, [key, value]) => {
+      const relaxedQuery = Object.entries(query).reduce((acc, [key, value]) => {
         if (typeof value === 'object' && value.$regex) {
           // Make text searches more flexible
-          acc[key] = { $regex: new RegExp(value.$regex.source.replace(/^\^|\$$/g, ''), 'i') };
+          acc[key as string] = { $regex: new RegExp(value.$regex.source.replace(/^\^|\$$/g, ''), 'i') };
         } else if (typeof value === 'number') {
           // Add ±10% range for numeric values
           const range = value * 0.1;
-          acc[key] = { $gte: value - range, $lte: value + range };
+          acc[key as string] = { $gte: value - range, $lte: value + range };
         } else {
-          acc[key] = value;
+          acc[key as string] = value;
         }
         return acc;
-      }, {});
+      }, {} as Record<string, any>);
 
       models = await collection.find(relaxedQuery).limit(20).toArray();
     }

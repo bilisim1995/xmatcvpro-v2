@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Search, X, Images, LayoutGrid, Megaphone } from 'lucide-react';
+import { Search, X, Images, LayoutGrid, Megaphone, Dice1 as Dice, Loader2 } from 'lucide-react';
 import { SearchResult } from '@/lib/api/types';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { TopFilters } from '../advanced-search/filters/top-filters';
@@ -46,11 +47,13 @@ function AdCard({ index }: { index: string | number }) {
 export default function AdvancedSearchTab() {
   const [filters, setFilters] = useState<ModelFilters>({});
   const { search, isLoading, results, error } = useAdvancedSearch();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [viewMode, setViewMode] = useState<'carousel' | 'grid'>('carousel');
   const [topFilters, setTopFilters] = useState<ModelFilters>({});
   const [showAgeVerification, setShowAgeVerification] = useState(false);
+  const [isLoadingRandom, setIsLoadingRandom] = useState(false);
 
   const handleSearch = async () => {
     setShowAgeVerification(true);
@@ -68,6 +71,102 @@ export default function AdvancedSearchTab() {
     setTopFilters({});
     setIsOpen(false);
     setHasSearched(false);
+  };
+
+  const handleRandomSearch = async () => {
+    setHasSearched(true);
+    
+    // Seçenekleri tanımla
+    const options = {
+      cupSizes: ['a', 'b', 'c', 'd', 'dd', 'e', 'f', 'g'],
+      ethnicities: ['caucasian', 'asian', 'ebony', 'latina', 'indian', 'mixed'],
+      hairColors: ['blonde', 'brown', 'black', 'red', 'auburn'],
+      eyeColors: ['blue', 'green', 'brown', 'hazel', 'grey'],
+      nationalities: ['american', 'british', 'canadian', 'australian', 'german', 'french', 'italian', 'spanish', 'russian', 'japanese', 'korean', 'brazilian']
+    };
+
+    // Rastgele seçimler yap
+    const randomCupSize = options.cupSizes[Math.floor(Math.random() * options.cupSizes.length)];
+    const randomEthnicity = options.ethnicities[Math.floor(Math.random() * options.ethnicities.length)];
+    const randomHairColor = options.hairColors[Math.floor(Math.random() * options.hairColors.length)];
+    const randomEyeColor = options.eyeColors[Math.floor(Math.random() * options.eyeColors.length)];
+    const randomNationality = options.nationalities[Math.floor(Math.random() * options.nationalities.length)];
+    
+    // Rastgele filtreler oluştur
+    const randomFilters: ModelFilters = {
+      age: Math.floor(Math.random() * (50 - 18) + 18),
+      height: Math.floor(Math.random() * (190 - 150) + 150),
+      weight: Math.floor(Math.random() * (80 - 45) + 45),
+      cup_size: randomCupSize,
+      ethnicity: randomEthnicity,
+      hair_color: randomHairColor,
+      eye_color: randomEyeColor,
+      nationality: randomNationality,
+      tattoos: Math.random() > 0.5 ? 'yes' : 'no',
+      piercings: Math.random() > 0.5 ? 'yes' : 'no',
+      random: true
+    };
+
+    // Tüm filtreleri güncelle
+    setFilters(randomFilters);
+    
+    // Top filtreleri güncelle
+    setTopFilters({
+      hair_color: randomHairColor,
+      eye_color: randomEyeColor,
+      cup_size: randomCupSize,
+      nationality: randomNationality
+    });
+
+    setShowAgeVerification(true);
+  };
+
+  const handleRandomVerified = async () => {
+    setShowAgeVerification(false);
+    setIsLoadingRandom(true);
+    
+    try {
+      // Rastgele filtreleri URL'ye ekle
+      const params = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+
+      const response = await fetch(`/api/models?${params.toString()}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'X-Timestamp': Date.now().toString()
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch random models');
+      }
+      
+      const data = await response.json();
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error('No random models found');
+      }
+      
+      // Directly update results without filters
+      const shuffledData = data
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+
+      await search({}, shuffledData);
+    } catch (error) {
+      console.error('Random search error:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to fetch random models',
+        variant: 'destructive'
+      });
+    } finally {
+      setIsLoadingRandom(false);
+    }
   };
 
   const hasActiveFilters = Object.keys(filters).length > 0;
@@ -167,11 +266,29 @@ export default function AdvancedSearchTab() {
           <Search className="w-4 h-4 mr-2" />
           Search
         </Button>
+        
+        <Button
+          onClick={handleRandomSearch}
+          disabled={isLoadingRandom}
+          className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+        >
+          {isLoadingRandom ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Loading Random Models...
+            </>
+          ) : (
+            <>
+              <Dice className="w-4 h-4 mr-2 animate-bounce" />
+              I'M FEELING LUCKY
+            </>
+          )}
+        </Button>
       </div>
 
       {hasSearched && (
         <div className="pt-6 border-t">
-          {isLoading ? (
+          {(isLoading || isLoadingRandom) ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="animate-pulse">
@@ -252,7 +369,7 @@ export default function AdvancedSearchTab() {
       <AgeVerificationDialog 
         open={showAgeVerification} 
         onOpenChange={setShowAgeVerification}
-        onVerify={handleVerified}
+        onVerify={filters.random === true ? handleRandomVerified : handleVerified}
       />
     </Card>
   );

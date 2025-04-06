@@ -8,11 +8,17 @@ export function useAdvancedSearch() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const search = async (filters: ModelFilters = {}) => {
+  const search = async (filters: ModelFilters = {}, randomResults?: SearchResult[]) => {
     setIsLoading(true);
     setError(null);
 
     try {
+      // If random results are provided, use them instead of fetching
+      if (randomResults) {
+        setResults(randomResults);
+        return;
+      }
+
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
         if (value) params.append(key, value.toString());
