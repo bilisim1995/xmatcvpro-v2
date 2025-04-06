@@ -99,6 +99,15 @@ const nextConfig = {
         ]
       },
       {
+        source: '/models/:slug', // <= BU YENİ
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, must-revalidate'
+          }
+        ]
+      },
+      {
         source: '/api/:path*',
         headers: [
           { key: 'Access-Control-Allow-Credentials', value: 'true' },
@@ -118,6 +127,7 @@ const nextConfig = {
       }
     ];
   },
+  
 
   compress: true,
   poweredByHeader: false
