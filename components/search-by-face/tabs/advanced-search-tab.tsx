@@ -280,7 +280,7 @@ export default function AdvancedSearchTab() {
           ) : (
             <>
               <Dice className="w-4 h-4 mr-2 animate-bounce" />
-              I'M FEELING LUCKY
+              I&apos;M FEELING LUCKY
             </>
           )}
         </Button>
