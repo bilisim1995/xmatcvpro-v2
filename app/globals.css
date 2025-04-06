@@ -60,6 +60,11 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Prevent horizontal scroll */
+  html, body {
+    @apply overflow-x-hidden max-w-full;
+  }
   
   /* Loading state styles */
   .loading {
@@ -121,6 +126,3 @@
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
 }
-
-
-

@@ -11,11 +11,11 @@ import { CoffeeButton } from '@/components/coffee-button';
 
 export default function SearchPage() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden"> {/* Önemli: Sağ taşmaları önler */}
-      <div className="w-full px-0 sm:container sm:mx-auto sm:px-6 pt-16 sm:pt-24 pb-8 sm:pb-16">
-        <SearchHeader />
+    <div className="min-h-screen w-full overflow-x-hidden">
+      <div className="w-full max-w-full px-2 sm:container sm:mx-auto sm:px-6 pt-16 sm:pt-24 pb-8 sm:pb-16">
+      <SearchHeader />
 
-        <div className="w-full sm:max-w-4xl mx-auto">
+        <div className="w-full sm:max-w-4xl mx-auto overflow-hidden">
           <Card className="w-full p-3 sm:p-6 shadow-xl mb-6 sm:mb-8">
             <SearchTabs />
           </Card>
@@ -23,19 +23,19 @@ export default function SearchPage() {
           <div className="mb-6 sm:mb-8">
             <CoffeeButton />
           </div>
-
+      
           <div className="mb-6 sm:mb-8">
             <HowItWorks />
           </div>
-
+      
           <div className="mb-6 sm:mb-8">
             <PremiumBanner />
           </div>
-
+      
           <div className="mb-6 sm:mb-8">
             <BlogSection />
           </div>
-
+      
           <div>
             <DevelopmentStatus />
           </div>
