@@ -199,12 +199,12 @@ export default function AdvancedSearchTab() {
           <SheetTrigger asChild>
             <div className="flex gap-2">
               <Button variant="outline" className="gap-2 relative">
-              <span>More Filters</span>
-              {hasActiveFilters && (
-                <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
-                  {Object.keys(filters).length}
-                </span>
-              )}
+                <span>More Filters</span>
+                {hasActiveFilters && (
+                  <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
+                    {Object.keys(filters).length}
+                  </span>
+                )}
               </Button>
               {hasActiveFilters && (
                 <Button
@@ -221,7 +221,7 @@ export default function AdvancedSearchTab() {
               )}
             </div>
           </SheetTrigger>
-          <SheetContent side="left" className="w-full sm:max-w-md p-0">
+          <SheetContent side="left" className="w-full sm:max-w-md p-0 overflow-hidden">
             <SheetHeader className="p-6 pb-2">
               <SheetTitle>Advanced Filters</SheetTitle>
             </SheetHeader>
@@ -266,105 +266,109 @@ export default function AdvancedSearchTab() {
           <Search className="w-4 h-4 mr-2" />
           Search
         </Button>
-        
-        <Button
-          onClick={handleRandomSearch}
-          disabled={isLoadingRandom}
-          className="flex-1 bg-red-600 hover:bg-red-700 text-white"
-        >
-          {isLoadingRandom ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Loading Random Models...
-            </>
-          ) : (
-            <>
-              <Dice className="w-4 h-4 mr-2 animate-bounce" />
-              I&apos;M FEELING LUCKY
-            </>
-          )}
-        </Button>
       </div>
 
-      {hasSearched && (
-        <div className="pt-6 border-t">
-          {(isLoading || isLoadingRandom) ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-[3/4] bg-muted rounded-lg mb-4" />
-                  <div className="h-4 bg-muted rounded w-3/4 mb-2" />
-                  <div className="h-3 bg-muted rounded w-1/2" />
-                </div>
-              ))}
-            </div>
-          ) : results.length > 0 ? (
-            <div className="space-y-6">
-              <motion.div 
-                className="flex items-center justify-center gap-4 mb-6"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ 
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 10
-                }}
-              >
-                <motion.h2 
-                  className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-400 mr-2"
-                  initial={{ y: 20 }}
-                  animate={{ y: 0 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  Search Results
-                </motion.h2>
-                <div className="flex gap-1 items-center">
-                  <Button
-                    variant={viewMode === 'carousel' ? 'default' : 'outline'}
-                    size="icon"
-                    onClick={() => setViewMode('carousel')}
-                    className={viewMode === 'carousel' ? 'bg-red-600 hover:bg-red-700 text-white' : 'hover:text-red-600'}
-                  >
-                    <Images className={`w-4 h-4 ${viewMode === 'carousel' ? 'text-white' : ''}`} />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'outline'}
-                    size="icon"
-                    onClick={() => setViewMode('grid')}
-                    className={viewMode === 'grid' ? 'bg-red-600 hover:bg-red-700 text-white' : 'hover:text-red-600'}
-                  >
-                    <LayoutGrid className={`w-4 h-4 ${viewMode === 'grid' ? 'text-white' : ''}`} />
-                  </Button>
-                </div>
-              </motion.div>
-
-              {viewMode === 'carousel' ? (
-                <ModelCarousel 
-                  results={results.slice(0, 15)}
-                  showConfidence={false}
-                />
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {processedResults.map((item, idx) => (
-                    'type' in item ? (
-                      <AdCard key={`ad-${item.id}`} index={item.id} />
-                    ) : (
-                      <ResultCard
-                        key={item.id}
-                        result={item}
-                        index={idx - Math.floor(idx / 4)}
-                        showConfidence={false}
-                      />
-                    )
-                  ))}
-                </div>
-              )}
-            </div>
-          ) : (
-            <NoResults filters={filters} onReset={handleReset} />
-          )}
+      <div className="mt-4">
+        <div className="w-full">
+          <Button
+            onClick={handleRandomSearch}
+            disabled={isLoadingRandom}
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-6"
+          >
+            {isLoadingRandom ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Loading Random Models...
+              </>
+            ) : (
+              <>
+                <Dice className="w-4 h-4 mr-2 animate-bounce" />
+                I&apos;M FEELING LUCKY
+              </>
+            )}
+          </Button>
         </div>
-      )}
+
+        {hasSearched && (
+          <div className="pt-6 border-t">
+            {(isLoading || isLoadingRandom) ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[...Array(4)].map((_, i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="aspect-[3/4] bg-muted rounded-lg mb-4" />
+                    <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                    <div className="h-3 bg-muted rounded w-1/2" />
+                  </div>
+                ))}
+              </div>
+            ) : results.length > 0 ? (
+              <div className="space-y-6">
+                <motion.div 
+                  className="flex items-center justify-center gap-4 mb-6"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ 
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 10
+                  }}
+                >
+                  <motion.h2 
+                    className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-400 mr-2"
+                    initial={{ y: 20 }}
+                    animate={{ y: 0 }}
+                    transition={{ delay: 0.1 }}
+                  >
+                    Search Results
+                  </motion.h2>
+                  <div className="flex gap-1 items-center">
+                    <Button
+                      variant={viewMode === 'carousel' ? 'default' : 'outline'}
+                      size="icon"
+                      onClick={() => setViewMode('carousel')}
+                      className={viewMode === 'carousel' ? 'bg-red-600 hover:bg-red-700 text-white' : 'hover:text-red-600'}
+                    >
+                      <Images className={`w-4 h-4 ${viewMode === 'carousel' ? 'text-white' : ''}`} />
+                    </Button>
+                    <Button
+                      variant={viewMode === 'grid' ? 'default' : 'outline'}
+                      size="icon"
+                      onClick={() => setViewMode('grid')}
+                      className={viewMode === 'grid' ? 'bg-red-600 hover:bg-red-700 text-white' : 'hover:text-red-600'}
+                    >
+                      <LayoutGrid className={`w-4 h-4 ${viewMode === 'grid' ? 'text-white' : ''}`} />
+                    </Button>
+                  </div>
+                </motion.div>
+
+                {viewMode === 'carousel' ? (
+                  <ModelCarousel 
+                    results={results.slice(0, 15)}
+                    showConfidence={false}
+                  />
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {processedResults.map((item, idx) => (
+                      'type' in item ? (
+                        <AdCard key={`ad-${item.id}`} index={item.id} />
+                      ) : (
+                        <ResultCard
+                          key={item.id}
+                          result={item}
+                          index={idx - Math.floor(idx / 4)}
+                          showConfidence={false}
+                        />
+                      )
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <NoResults filters={filters} onReset={handleReset} />
+            )}
+          </div>
+        )}
+      </div>
       
       <AgeVerificationDialog 
         open={showAgeVerification} 
