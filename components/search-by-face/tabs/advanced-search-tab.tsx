@@ -16,6 +16,7 @@ import { NoResults } from '../advanced-search/no-results';
 import { ModelCarousel } from '../shared/model-carousel';
 import { motion } from 'framer-motion';
 import { ResultCard } from '../image-search/result-card';
+import { AgeVerificationDialog } from '@/components/age-verification/age-verification-dialog';
 
 interface AdSlot {
   type: 'ad';
@@ -49,8 +50,14 @@ export default function AdvancedSearchTab() {
   const [hasSearched, setHasSearched] = useState(false);
   const [viewMode, setViewMode] = useState<'carousel' | 'grid'>('carousel');
   const [topFilters, setTopFilters] = useState<ModelFilters>({});
+  const [showAgeVerification, setShowAgeVerification] = useState(false);
 
   const handleSearch = async () => {
+    setShowAgeVerification(true);
+  };
+
+  const handleVerified = async () => {
+    setShowAgeVerification(false);
     setHasSearched(true);
     await search(filters);
     setIsOpen(false);
@@ -241,6 +248,12 @@ export default function AdvancedSearchTab() {
           )}
         </div>
       )}
+      
+      <AgeVerificationDialog 
+        open={showAgeVerification} 
+        onOpenChange={setShowAgeVerification}
+        onVerify={handleVerified}
+      />
     </Card>
   );
 }

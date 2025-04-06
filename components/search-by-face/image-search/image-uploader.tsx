@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import { toast } from '@/components/ui/use-toast';
 import { SearchResult } from '@/lib/api/types';
 import { UploadAnimation } from './upload-animation';
+import { AgeVerificationDialog } from '@/components/age-verification/age-verification-dialog';
 
 interface ImageUploaderProps {
   onSearchStart?: () => void;
@@ -29,6 +30,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
   const [isProcessing, setIsProcessing] = useState(false);
   const [isMale, setIsMale] = useState(false);
   const [detectedAge, setDetectedAge] = useState<number | null>(null);
+  const [showAgeVerification, setShowAgeVerification] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const validateFile = (file: File) => {
@@ -68,7 +70,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
       setDetectedAge(age);
 
       // Show warning if detected age is under 18
-      if (age !== null && age < 14) {
+      if (age !== null && age < 18) {
         toast({
           title: "Age Verification Required",
           description: "The person in the image appears to be under 18 years old. We only accept searches for adults 18+.",
@@ -113,7 +115,13 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
   };
 
   const handleSearch = async () => {
-    if (!image || !originalFile || (detectedAge !== null && detectedAge < 14)) {
+    setShowAgeVerification(true);
+  };
+
+  const handleVerified = async () => {
+    setShowAgeVerification(false);
+
+    if (!image || !originalFile || (detectedAge !== null && detectedAge < 18)) {
       toast({
         title: "Age Verification Failed",
         description: "We can only process images of adults (18+).",
@@ -295,13 +303,19 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
               ) : (
                 <>
                   <Search className="w-5 h-5 mr-2" />
-                  Search {isMale && ' Immm.. 😅'}
+                  Search {isMale && '😅'}
                 </>
               )}
             </Button>
           </motion.div>
         </div>
       )}
+      
+      <AgeVerificationDialog 
+        open={showAgeVerification} 
+        onOpenChange={setShowAgeVerification}
+        onVerify={handleVerified}
+      />
     </Card>
   );
 }
