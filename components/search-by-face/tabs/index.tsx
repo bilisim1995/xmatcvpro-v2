@@ -61,13 +61,13 @@ export function SearchTabs() {
       <TabsList className="grid w-full grid-cols-2 h-10 sm:h-14 p-1 sm:p-1.5 bg-muted/50 rounded-lg">
         <TabsTrigger 
           value="image" 
-          className="relative h-full text-[10px] sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
+          className="relative h-full text-[15px] sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
         >
           <TabContent icon={Scan} text="Search by Image" />
         </TabsTrigger>
         <TabsTrigger 
           value="advanced" 
-          className="relative h-full text-[10px] sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
+          className="relative h-full text-[15px] sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
         >
           <TabContent icon={Search} text="Advanced Search" />
         </TabsTrigger>
