@@ -9,11 +9,12 @@ import { DevelopmentStatus } from '@/components/search-by-face/development-statu
 import { Card } from '@/components/ui/card';
 import { CoffeeButton } from '@/components/coffee-button';
 
+
 export default function SearchPage() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
       <div className="w-full max-w-full px-2 sm:container sm:mx-auto sm:px-6 pt-16 sm:pt-24 pb-8 sm:pb-16">
-      <SearchHeader />
+        <SearchHeader />
 
         <div className="w-full sm:max-w-4xl mx-auto overflow-hidden">
           <Card className="w-full p-3 sm:p-6 shadow-xl mb-6 sm:mb-8">
