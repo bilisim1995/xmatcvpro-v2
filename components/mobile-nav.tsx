@@ -1,12 +1,13 @@
 'use client';
 
-import { Menu } from 'lucide-react';
+import { Menu, Scan, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
 export function MobileNav() {
@@ -20,11 +21,23 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="right" className="w-[300px] sm:w-[400px]">
         <nav className="flex flex-col gap-4">
+          {/* Search by Face */}
           <Link
             href="/search"
-            className="block px-2 py-1 text-lg hover:text-red-600 transition-colors"
+            className="flex items-center gap-2 px-2 py-1 text-lg hover:text-red-600 transition-colors"
           >
+            <Scan className="w-5 h-5" />
             SEARCH BY FACE
+          </Link>
+
+          <Separator />
+
+          <Link
+            href="/top-list"
+            className="flex items-center gap-2 px-2 py-1 text-lg hover:text-red-600 transition-colors"
+          >
+            <Star className="w-5 h-5" />
+            GOLDEN LIST
           </Link>
         </nav>
       </SheetContent>

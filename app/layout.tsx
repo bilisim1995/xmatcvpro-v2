@@ -58,6 +58,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#dc2626" />
         <meta name="theme-color" content="#dc2626" />
         <meta name="rating" content="RTA-5042-1996-1400-1577-RTA" />
+        <meta name="yandex-verification" content="4e50b414c62d2ced" />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider
