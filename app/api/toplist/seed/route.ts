@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { connect, disconnect } from '@/lib/mongodb/connection';
-import { TopListCategoryModel, TopListSiteModel } from '@/lib/mongodb/toplist';
+import { TopListCategoryModel } from '@/lib/mongodb/toplist';
 
 const initialCategories = [
   {
@@ -35,33 +35,13 @@ const initialCategories = [
   }
 ];
 
-const initialSites = [
-  {
-    title: "PornHub",
-    url: "https://pornhub.com",
-    favicon_url: "https://ci.phncdn.com/www-static/favicon.ico",
-    description: "The world's largest adult video site with millions of free videos.",
-    keywords: "porn,videos,xxx,free porn,hd porn",
-    category_id: "free",
-    order: 1
-  },
-  {
-    title: "XVideos",
-    url: "https://xvideos.com",
-    favicon_url: "https://static-ss.xvideos.com/v3/img/skins/default/favicon.ico",
-    description: "Free porn videos with advanced search options.",
-    keywords: "porn,videos,xxx,free porn",
-    category_id: "free",
-    order: 2
-  }
-];
-
 export async function GET() {
   try {
+    console.log('Seeding process started...');
     await connect();
 
     // Insert initial categories
-    const categories = await TopListCategoryModel.insertMany(
+    await TopListCategoryModel.insertMany(
       initialCategories.map(cat => ({
         ...cat,
         created_at: new Date(),
@@ -69,23 +49,12 @@ export async function GET() {
       }))
     );
 
-    // Insert initial sites with correct category IDs
-    const freeCategoryId = categories.find(cat => cat.slug2 === 'free')?._id;
-    if (freeCategoryId) {
-      await TopListSiteModel.insertMany(
-        initialSites.map(site => ({
-          ...site,
-          category_id: freeCategoryId,
-          created_at: new Date(),
-          updated_at: new Date()
-        }))
-      );
-    }
-
-    return NextResponse.json({ message: 'Categories seeded successfully' });
+    console.log('Seeding process completed.');
+    return NextResponse.json({ message: 'Categories seeded successfully, no demo sites added.' });
 
   } catch (error) {
     console.error('Error seeding categories:', error);
+    console.log('Seeding process failed.');
     return NextResponse.json(
       { message: 'Failed to seed categories' },
       { status: 500 }
