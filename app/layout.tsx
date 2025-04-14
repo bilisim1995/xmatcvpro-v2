@@ -10,6 +10,7 @@ import { AgeVerification } from '@/components/age-verification/age-verification'
 import { ScrollToTop } from '@/components/scroll-to-top';
 import { Toaster } from '@/components/ui/toaster';
 import { Suspense } from 'react';
+import { LanguageProvider } from '@/components/contexts/LanguageContext';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -61,6 +62,7 @@ export default function RootLayout({
         <meta name="yandex-verification" content="4e50b414c62d2ced" />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
+      <LanguageProvider>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -80,6 +82,7 @@ export default function RootLayout({
           <Toaster />
         </ThemeProvider>
         <Analytics />
+        </LanguageProvider>
       </body>
     </html>
   );

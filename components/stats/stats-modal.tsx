@@ -14,12 +14,15 @@ import { StatsSection } from './stats-section';
 import { MetricsCard } from './metrics-card';
 import { DistributionBar } from './distribution-bar';
 import { statsData } from './stats-data'; 
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 interface StatsModalProps {
   trigger?: React.ReactNode;
 }
 
 export function StatsModal({ trigger }: StatsModalProps) {
+  const { t } = useLanguage();
+  
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -33,7 +36,7 @@ export function StatsModal({ trigger }: StatsModalProps) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <BarChart3 className="w-5 h-5 text-red-600" />
-            Platform Statistics
+            {t('statsmodal.platform_statistics')}
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-[600px] pr-4">
@@ -46,11 +49,11 @@ export function StatsModal({ trigger }: StatsModalProps) {
             </div>
 
             {/* Demographics */}
-            <StatsSection icon={BarChart3} title="User Demographics">
+            <StatsSection icon={BarChart3} title={t('statsmodal.user_demographics')}>
               <div className="space-y-6">
                 {/* Gender Distribution */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium">Gender Distribution</h4>
+                  <h4 className="text-sm font-medium">{t('statsmodal.gender_distribution')}</h4>
                   <div className="space-y-2">
                     {statsData.demographics.gender.map((item, index) => (
                       <div key={index} className="space-y-1">
@@ -66,7 +69,7 @@ export function StatsModal({ trigger }: StatsModalProps) {
 
                 {/* Age Distribution */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium">Age Distribution</h4>
+                  <h4 className="text-sm font-medium">{t('statsmodal.age_distribution')}</h4>
                   <div className="space-y-2">
                     {statsData.demographics.age.map((item, index) => (
                       <div key={index} className="space-y-1">
@@ -82,7 +85,7 @@ export function StatsModal({ trigger }: StatsModalProps) {
 
                 {/* Country Distribution */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium">Country Distribution</h4>
+                  <h4 className="text-sm font-medium">{t('statsmodal.country_distribution')}</h4>
                   <div className="space-y-2">
                     {statsData.demographics.countries.map((item, index) => (
                       <div key={index} className="space-y-1">
@@ -98,7 +101,7 @@ export function StatsModal({ trigger }: StatsModalProps) {
 
                 {/* Activity Stats */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium">Activity Statistics</h4>
+                  <h4 className="text-sm font-medium">{t('statsmodal.activity_statistics')}</h4>
                   <div className="grid grid-cols-3 gap-4">
                     {statsData.demographics.activity.map((item, index) => (
                       <div key={index} className="p-4 bg-muted rounded-lg">

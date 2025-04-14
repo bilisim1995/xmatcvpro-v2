@@ -1,0 +1,375 @@
+{
+  "features": {
+    "upload_title": "Görsel Yükle",
+    "upload_description": "Görselinizi yüklemek için sürükleyip bırakın veya tıklayın. Tüm önemli görsel formatlarını destekler.",
+    "smart_search_title": "Akıllı Arama",
+    "smart_search_description": "Gelişmiş yapay zeka algoritmalarımız, eşleşen yetişkin içeriğini bulmak için görselleri analiz eder.",
+    "instant_results_title": "Anında Sonuçlar",
+    "instant_results_description": "Saniyeler içinde doğruluk yüzdeleriyle en benzer 3 eşleşmeyi alın."
+  },
+  "additional_features": {
+    "secure_private": "Güvenli ve Özel",
+    "available_247": "7/24 Erişilebilir",
+    "large_database": "Geniş Veritabanı",
+    "fast_processing": "Hızlı İşleme"
+  },
+  "hero": {
+    "description": "Gelişmiş yapay zeka teknolojisini kullanarak benzer yetişkin içeriği bulun. Eşleşen modelleri anında keşfetmek için herhangi bir görseli yükleyin.",
+    "start_search": "Aramaya Başla"
+  },
+  "face_search": {
+    "title": "Yapay Zeka ile Yüz Tanıma ile Porno Yıldızı Ara",
+    "description": "Herhangi bir yüz fotoğrafını yükleyin ve yapay zekamız kapsamlı veritabanımızdan eşleşen yetişkin sanatçıları bulsun.",
+    "advanced_ai": "Gelişmiş yüz tanıma yapay zekası",
+    "database": "10.000+ sanatçı veritabanı",
+    "accuracy": "%99 doğruluk oranı",
+    "button": "Yüz Aramayı Dene"
+  },
+  "faq": {
+    "title": "Sıkça Sorulan Sorular",
+    "q1_title": "Hangi dosya formatları destekleniyor?",
+    "q1_answer": "JPG, PNG ve WEBP formatlarını destekliyoruz.",
+    "q2_title": "Verilerim güvende mi?",
+    "q2_answer": "Tüm yüklemeler şifrelenir ve işlendikten sonra otomatik olarak silinir.",
+    "q3_title": "Sonuçlar ne kadar doğru?",
+    "q3_answer": "Yapay zekamız eşleştirmede %99'a kadar doğruluk sağlar.",
+    "q4_title": "Sonuçlar ne kadar hızlı?",
+    "q4_answer": "Sonuçlar genellikle saniyeler içinde teslim edilir."
+  },
+  "search_header": {
+    "title": "Yapay Zeka ile Yüz Tanıma ile Porno Yıldızı Ara",
+    "description": "Herhangi bir yüz fotoğrafını yükleyin ve yapay zekamız kapsamlı veritabanımızdan eşleşen porno yıldızı modellerini bulsun."
+  },
+  "tabs": {
+    "search_by_image": "Görselle Ara",
+    "advanced_search": "Gelişmiş Arama"
+  },
+  "how_it_works": {
+    "title": "Nasıl Çalışır",
+    "subtitle": "Eşleşmelerinizi bulmak için üç basit adım",
+    "step1_title": "Fotoğrafınızı Yükleyin",
+    "step1_description": "Benzer eşleşmelerini bulmak istediğiniz bir aktris veya modelin fotoğrafını yükleyin.",
+    "step2_title": "Yüz Algılama",
+    "step2_description": "Yapay zeka sistemimiz görselinizdeki yüz özelliklerini otomatik olarak algılar ve analiz eder.",
+    "step3_title": "Sonuçları Alın",
+    "step3_description": "Benzerlik skorlarıyla birlikte sunulan eşleşme listesine göz atın."
+  },
+  "image_uploader": {
+    "upload_photo": "Fotoğrafınızı Yükleyin",
+    "best_results": "En iyi sonuçlar için lütfen yüzü doğrudan gösteren net bir fotoğraf yükleyin.",
+    "jpg_png": "JPG, PNG",
+    "max_5mb": "Maks 5MB",
+    "not_stored": "Yüklenen görseller saklanmaz ve işlendikten hemen sonra silinir.",
+    "only_adults": "Sadece yetişkinlere (18+) ait görseller yükleyin.",
+    "select_image": "Görsel Seç",
+    "drag_drop": "sürükle & bırak veya görsel seç",
+    "change_photo": "Fotoğrafı Değiştir",
+    "searching": "Aranıyor...",
+    "search": "Ara",
+    "error": "Bir hata oluştu",
+    "age_verification_required": "Yaş Doğrulaması Gerekli",
+    "age_verification_description": "Yüklenen kişinin 18+ olduğunu doğrulamanız gerekmektedir.",
+    "age_verification_failed": "Yaş Doğrulaması Başarısız",
+    "adult_images_only": "Sadece yetişkin (18+) görsellerine izin verilir.",
+    "no_matches_found": "Eşleşme Bulunamadı",
+    "adjust_image_quality": "Daha net bir görsel kullanmayı deneyin.",
+    "failed_to_process_image": "Görsel işlenirken bir hata oluştu"
+  },
+  "premium_banner": {
+    "premium_advertising": "Premium Reklam",
+    "banner_title": "Premium Banner Reklamlar",
+    "banner_description": "Platformumuz genelinde yüksek görünürlüklü banner yerleşimleri. Premium reklam alanlarıyla milyonlarca ilgili kullanıcıya ulaşın.",
+    "get_started": "Başlayın",
+    "stats": {
+      "monthly_users": "Aylık Kullanıcı",
+      "daily_searches": "Günlük Arama",
+      "accuracy_rate": "Doğruluk Oranı"
+    }
+  },
+  "blog": {
+    "post1": {
+      "title": "Yüz Tanıma Uygulaması: Porno Yıldızlarına Benzerlikleri Keşfedin!",
+      "excerpt": "Günümüz teknoloji çağında, yüz tanıma teknolojisi kullanılarak görüntüleri analiz etmek ve eşleştirmek mümkün hale geldi. Şimdi, özel olarak tasarlanmış uygulamamız yüz tanıma yeteneklerini kullanarak size eğlenceli ve ilgi çekici bir deneyim sunuyor. İşte - xmatch.pro - uygulamamız!"
+    },
+    "post2": {
+      "title": "Uygulama Nasıl Çalışır?",
+      "excerpt": "Uygulamamızda basit bir arayüzle beğendiğiniz bir kızın veya bir porno yıldızının resmini yükleyin. Uygulama, yüklenen resimdeki yüzü sinir ağları ve yapay zeka ile analiz ederek tanır. Ardından, geniş porno yıldızı arşivimizdeki yüzlerle karşılaştırır ve en benzer ilk 3 yıldızı belirler. Bu profillerin bağlantılarını sizinle paylaşır."
+    },
+    "post3": {
+      "title": "Neden Uygulamamızı Kullanmalısınız?",
+      "excerpt": "Eğlence: Hangi ünlü porno film yıldızlarına benzediğinizi keşfetmek sadece eğlenceli bir deneyim sunmakla kalmaz, aynı zamanda arkadaşlarınız ve ailenizle harika bir sohbet başlatıcısı olabilir. Büyüleyici Sonuçlar: Uygulamamızın güçlü yüz tanıma algoritmaları sayesinde sonuçlar gerçekten etkileyici ve büyüleyici olabilir. Kim bilir, belki de en sevdiğiniz porno film yıldızına benziyorsunuzdur! Öğrenme Fırsatı: Yıldızlarla benzerliklerinizi keşfetmek ilgi alanlarınızı genişletebilir ve farklı porno film türlerini veya oyuncularını keşfetmenize yardımcı olabilir."
+    },
+    "post4": {
+      "title": "xmatch.pro Nedir?",
+      "excerpt": "Gelişmiş yüz tanıma teknolojisinin gücünü keşfedin! Yeni uygulamamız yüklediğiniz fotoğrafları geniş bir yüz veritabanıyla eşleştirerek size benzersiz ve eğlenceli bir deneyim sunar. Uygulamamız Nasıl Çalışır? Fotoğrafınızı Yükleyin: Kendinize ait net bir fotoğraf yükleyerek başlayın. Yüz Analizi: Gelişmiş algoritmalarımız yüzünüzün benzersiz özelliklerini analiz eder. Eşleştirme: Veritabanımızdaki hangi yüzlerin sizin yüzünüze benzediğini öğrenin ve benzerinizi keşfedin. Özellikler: Hızlı ve Doğru Eşleştirme: En son teknolojiyi kullanarak anında sonuçlar alın. Geniş Veritabanı: Ünlülerden anonim kullanıcılara kadar geniş bir yüz veritabanı. Güvenlik ve Gizlilik: Fotoğraflarınız güvendedir; gizliliğinize öncelik veriyoruz ve verilerinizi asla paylaşmıyoruz. Neden Uygulamamızı Kullanmalısınız? Eğlence: Hangi ünlülere veya ilginç insanlara benzediğinizi öğrenmenin keyfini çıkarın. Merak: Benzerlerinizi keşfederek merakınızı giderin. Paylaşım: Sonuçlarınızı arkadaşlarınızla paylaşın ve ilginç sohbetler başlatın. Yüz tanıma uygulamamızla kime benzediğinizi keşfedin ve eğlencenin tadını çıkarın. Fotoğrafınızı şimdi yükleyin ve eşleşmenizi bulun!"
+    },
+    "post5": {
+      "title": "Yapay Zeka Destekli Yüz Tanıma ile Porno Yıldızlarını ve Yetişkin Modellerini Keşfedin",
+      "excerpt": "Yeni nesil yapay zeka destekli yüz tanıma teknolojimiz, bir fotoğraftaki veya videodaki o seksi kızın kim olduğunu öğrenmeyi her zamankinden daha kolay hale getiriyor. İster internette bulduğunuz rastgele bir resim olsun, ister büyüleyici bir güzelin anlık görüntüsü, sadece sistemimize yükleyin. Gelişmiş sinir ağları ve yapay zeka algoritmaları yüzü anında analiz ederek göz şekli, dudaklar, burun ve yüz hatları gibi temel özellikleri tarar. Saniyeler içinde sistem, porno yıldızları, yetişkin modeller ve OnlyFans içerik oluşturucularından oluşan devasa veritabanımızla karşılaştırır. Sonuç mu? Yüklediğiniz yüze en çok benzeyen ilk 16 porno yıldızını veya yetişkin sanatçısını, profillerine, videolarına ve özel içeriklerine doğrudan bağlantılarla birlikte alacaksınız. Bu araç, sadece o porno yıldızının kim olduğunu bilmeniz gereken meraklı anlar için veya keşfedilecek yeni güzellikler aradığınızda mükemmeldir. İster sıradan bir hayran olun ister yetişkin endüstrisi meraklısı, yüz tanıma hizmetimiz sizi arzuladığınız yıldızlara yaklaştırır. Artık tahmin etmeye veya sonsuz aramaya gerek yok—sadece yükleyin, eşleştirin ve porno dünyasında kim kimdir keşfetmenin heyecanının tadını çıkarın. Yüz tanıma yoluyla porno yıldızlarını ve yetişkin modellerini bulma talebi hiç bu kadar yüksek olmamıştı ve sistemimizle her zaman bir adım öndesiniz."
+    },
+    "post6": {
+      "title": "Fotoğrafınız Kime Benziyor? Porno Yıldızı veya OnlyFans İkizinizi Bulun!",
+      "excerpt": "Hiç sizin (veya tanıdığınız birinin) hangi porno yıldızına veya OnlyFans modeline benzediğini merak ettiniz mi? Bir fotoğraf yükleyin ve yapay zekamızın sihrini yapmasına izin verin. Gelişmiş yüz tanıma teknolojimiz, yüklediğiniz yüzün her kıvrımını, her açısını ve her özelliğini tarar. Saniyeler içinde, en ateşli porno yıldızları ve OnlyFans güzellerinden oluşan devasa bir veritabanıyla karşılaştırır. Sizin (veya o seksi kızın) kiminle karıştırılabileceğini merak ediyor musunuz? Size en iyi 3 eşleşmeyi, özel içeriklerine, profillerine ve daha fazlasına doğrudan bağlantılarla göstereceğiz. İster çılgın bir merak gidermek istiyor olun, ister sadece yetişkin endüstrisindeki ikizinizi keşfetmek isteyin, bu araç tam size göre. Tahmin etmeyi bırakın. Bulmaya başlayın. Şimdi yükleyin ve hangi ünlü porno yıldızına veya güzelliğe benzediğinizi görün!"
+    },
+    "post7": {
+      "title": "Yapay Zeka ile Yüz Tanıma Nedir?",
+      "excerpt": "Yapay zeka ile yüz tanıma (veya yüz tanıma teknolojisi), bilgisayarları ve yapay zeka algoritmalarını kullanan bir tür teknolojidir. Bu teknoloji, bir bireyin yüz özelliklerini tanımlamak ve doğrulamak, bu özellikleri analiz etmek ve kişinin yüz görüntüsünü kullanarak kimliğini belirlemek için kullanılır. Yüz tanıma, bir kişinin yüz hatlarını, örneğin yüzünün konturlarını, gözlerinin konumunu, burnunun yapısını, dudaklarının şeklini ve diğer yüz özelliklerini tanıyarak çalışır. Yapay zeka ile yüz tanıma süreci birkaç adımdan oluşur. İlk adım, tipik olarak bir kamera veya görüntü kaynağı kullanılarak bir kişinin yüzünün görüntüsünü yakalamaktır. Bu görüntü daha sonra işlenir ve çeşitli yüz özellikleri çıkarılır. Özellikle, gözler arasındaki mesafe, burun ve ağzın konumları, yüz konturları ve benzeri özellikler hesaplanır. Yüz tanıma teknolojisi daha sonra bu çıkarılan özellikleri bir veritabanındaki kayıtlarla karşılaştırır. Bu veritabanı, bilinen kişilerin yüz özelliklerini içerebilir. Bir eşleşme olasılığını hesaplayarak, teknoloji yakalanan yüzün kimliğini belirler. Bir eşleşme bulunursa, kişi tanınır ve kimliği doğrulanır. Yapay zeka ile yüz tanıma uygulamaları oldukça çeşitlidir. Bu teknoloji güvenlik sistemlerinde, erişim kontrolünde, otomasyon sistemlerinde, sağlık sektöründe, pazarlama analizlerinde ve çeşitli diğer alanlarda kullanılır. Ayrıca akıllı telefonlar gibi cihazlarda kişisel kimlik doğrulama için de kullanılır. Bu teknoloji sayesinde güvenlik artırılır, otomasyon hızlandırılır ve kişisel kimlik doğrulama süreçleri basitleştirilir."
+    },
+    "post8": {
+      "title": "Günlük Kullanım İçin Yüz Tanıma Uygulamalarını Keşfetmek",
+      "excerpt": "Yapay zeka alanındaki gelişmeler sayesinde yüz tanıma uygulamaları günlük hayatta giderek daha popüler hale geliyor. Bu mobil uygulamalar, akıllı telefon kameraları aracılığıyla bireylerin yüzlerini tanımak ve doğrulamak için tasarlanmıştır. Gözler arasındaki mesafe, burun genişliği ve ağız eğriliği gibi yüz işaretlerini analiz ederek, bu uygulamalar saniyeler içinde doğru kimlik doğrulama sağlar. Yüz tanıma uygulamalarının yaygın kullanımları arasında akıllı telefonların kilidini açma, mobil bankacılık uygulamalarını güvenli hale getirme ve sosyal medya deneyimlerini geliştirme yer alır. Bazı uygulamalar eğlence amaçlı tasarlanmıştır ve kullanıcıların ünlü benzerlerini veya hatta oyuncular ve kamu figürleri dahil olmak üzere ünlü kişilikleri bulmalarına olanak tanır. Dahası, işletmeler yüz tanıma uygulamalarını kişiselleştirilmiş alışveriş veya etkinliklerde otomatik giriş gibi müşteri deneyimlerini kolaylaştırmak için kullanır. Gizlilik konusundaki endişelere rağmen, bu uygulamalar çeşitli sektörlerde önemli kolaylık ve güvenlik iyileştirmeleri sunmaktadır."
+    },
+    "post9": {
+      "title": "Hayallerinizdeki Kızın Hangi Porno Yıldızına Benzediğini Öğrenin",
+      "excerpt": "O sizin fantezilerinizde yaşayan kız mı? Belki de sadece bir fotoğraf buldunuz ve porno yıldızları ve OnlyFans modelleri dünyasında kime benzediğini merak etmekten kendinizi alamıyorsunuz. Fotoğrafını şimdi yükleyin ve yapay zeka destekli yüz tanımamızın gerisini halletmesine izin verin. Yüzünü, her kıvrımını ve özelliğini tarayacak ve devasa yetişkin yıldızları veritabanımızla karşılaştıracağız. Sadece saniyeler içinde, en çok benzeyen ilk 3 porno yıldızını veya OnlyFans güzelini keşfedeceksiniz. Ve evet, en ateşli profillerine ve özel içeriklerine doğrudan bağlantıları paylaşacağız. İster fanteziyi kovalıyor olun ister sadece hayallerinizdeki güzelliğin aslında kim olduğunu merak ediyor olun, öğrenmenizi kolaylaştırıyoruz. Hayal etmeyi bırakın. Keşfetmeye başlayın. Bir sonraki takıntınız sadece bir fotoğraf uzakta."
+    },
+    "post10": {
+      "title": "Yüz Tanıma Teknolojisinin Arkasındaki Bilim",
+      "excerpt": "Yapay zeka ile yüz tanıma (veya yüz tanıma teknolojisi), bilgisayarları ve yapay zeka algoritmalarını kullanan bir tür teknolojidir. Bu teknoloji, bir bireyin yüz özelliklerini tanımlamak ve doğrulamak, bu özellikleri analiz etmek ve kişinin yüz görüntüsünü kullanarak kimliğini belirlemek için kullanılır. Yüz tanıma, bir kişinin yüz hatlarını, örneğin yüzünün konturlarını, gözlerinin konumunu, burnunun yapısını, dudaklarının şeklini ve diğer yüz özelliklerini tanıyarak çalışır. Yapay zeka ile yüz tanıma süreci birkaç adımdan oluşur. İlk adım, tipik olarak bir kamera veya görüntü kaynağı kullanılarak bir kişinin yüzünün görüntüsünü yakalamaktır. Bu görüntü daha sonra işlenir ve çeşitli yüz özellikleri çıkarılır. Özellikle, gözler arasındaki mesafe, burun ve ağzın konumları, yüz konturları ve benzeri özellikler hesaplanır. Yüz tanıma teknolojisi daha sonra bu çıkarılan özellikleri bir veritabanındaki kayıtlarla karşılaştırır. Bu veritabanı, bilinen kişilerin yüz özelliklerini içerebilir. Bir eşleşme olasılığını hesaplayarak, teknoloji yakalanan yüzün kimliğini belirler. Bir eşleşme bulunursa, kişi tanınır ve kimliği doğrulanır. Yapay zeka ile yüz tanıma uygulamaları oldukça çeşitlidir. Bu teknoloji güvenlik sistemlerinde, erişim kontrolünde, otomasyon sistemlerinde, sağlık sektöründe, pazarlama analizlerinde ve çeşitli diğer alanlarda kullanılır. Ayrıca akıllı telefonlar gibi cihazlarda kişisel kimlik doğrulama için de kullanılır. Bu teknoloji sayesinde güvenlik artırılır, otomasyon hızlandırılır ve kişisel kimlik doğrulama süreçleri basitleştirilir."
+    }
+  },
+  "toplist": {
+    "title": "En İyi Siteler Listesi | MyProject",
+    "description": "Kullanıcılar tarafından kategorilere ayrılmış en iyi siteleri keşfedin. Göz atın, arayın ve keşfedin!",
+    "visit_site": "Siteyi Ziyaret Et",
+    "all_sites": "Tüm Siteler",
+    "unknown_category": "Bilinmeyen Kategori"
+  },
+  "topfilters": {
+    "filter_by_category": "Kategoriye Göre Filtrele",
+    "sort_by": "Sırala",
+    "newest": "En Yeni",
+    "oldest": "En Eski",
+    "most_popular": "En Popüler",
+    "hair_color": "Saç Rengi",
+    "select_hair_color": "Saç rengi seçin",
+    "eye_color": "Göz Rengi",
+    "select_eye_color": "Göz rengi seçin",
+    "cup_size": "Sütyen Bedeni",
+    "select_cup_size": "Sütyen bedeni seçin",
+    "any": "Herhangi",
+    "blonde": "Sarışın",
+    "brown": "Kahverengi",
+    "black": "Siyah",
+    "red": "Kızıl",
+    "auburn": "Kızıl Kahve",
+    "grey": "Gri",
+    "other": "Diğer",
+    "blue": "Mavi",
+    "green": "Yeşil",
+    "hazel": "Ela",
+    "amber": "Kehribar",
+    "cup_a": "A Cup",
+    "cup_b": "B Cup",
+    "cup_c": "C Cup",
+    "cup_d": "D Cup",
+    "cup_dd": "DD Cup",
+    "cup_ddd": "DDD Cup",
+    "cup_e": "E Cup",
+    "cup_f": "F Cup",
+    "cup_g": "G Cup"
+  },
+  "advancedsearch": {
+    "more_filters": "Daha Fazla Filtre",
+    "advanced_filters": "Gelişmiş Filtreler",
+    "apply_filters": "Filtreleri Uygula",
+    "reset_filters": "Filtreleri Sıfırla",
+    "search": "Ara",
+    "loading_random_models": "Rastgele Modeller Yükleniyor...",
+    "feeling_lucky": "ŞANSLI HİSSEDİYORUM",
+    "search_results": "Arama Sonuçları",
+    "advertisement": "Reklam",
+    "promoted_content": "Öne Çıkan İçerik",
+    "error_title": "Hata",
+    "random_search_error": "Rastgele modeller getirilemedi"
+  },
+  "ageverification": {
+    "title": "Yaş Doğrulaması Gerekli",
+    "subtitle": "Bu içerik yetişkinlere yöneliktir.",
+    "confirm_message": "'18 yaşından büyüğüm'e tıklayarak şunları onaylıyorsunuz:\n• Yetişkin içeriği görüntülemek için yasal yaşta olduğunuzu\n• Bu eylemin yerel yasalarınıza uygun olduğunu\n• Eylemleriniz için tüm sorumluluğu kabul ettiğinizi",
+    "confirm_button": "18 yaşından büyüğüm",
+    "exit_button": "Çıkış",
+    "disclaimer": "Bu doğrulama yasa gereğidir. Herhangi bir kişisel bilgi toplamıyor veya saklamıyoruz."
+  },
+  "apimodal": {
+    "title": "Geliştirici API'si",
+    "coming_soon": "Çok Yakında!",
+    "coming_description": "Güçlü yapay zeka yüz tanıma ve model veri API'miz yakında geliştiricilerin kullanımına sunulacaktır.",
+    "restful_api_title": "RESTful API",
+    "restful_api_description": "Yüz algılama, tanıma ve kapsamlı model veri erişimi için basit ve güçlü REST API.",
+    "extensive_db_title": "Geniş Veritabanı",
+    "extensive_db_description": "Ayrıntılı fiziksel özelliklere ve yapay zeka analizli yüz özelliklerine sahip 100.000'den fazla modelden oluşan büyüyen veritabanımıza erişim.",
+    "available_data_title": "Mevcut Veri",
+    "physical_attributes": "Fiziksel Özellikler",
+    "face_analysis": "Yapay Zeka Yüz Analizi",
+    "get_early_access_title": "Erken Erişim Sağlayın",
+    "get_early_access_description": "Yapay zeka destekli yüz tanıma özelliklerine sahip kapsamlı model veritabanı API'mize erken erişim sağlamak için bekleme listemize katılın.",
+    "contact_button": "Erken Erişim İçin İletişime Geçin"
+  },
+  "statsmodal": {
+    "platform_statistics": "Platform İstatistikleri",
+    "user_demographics": "Kullanıcı Demografisi",
+    "gender_distribution": "Cinsiyet Dağılımı",
+    "age_distribution": "Yaş Dağılımı",
+    "country_distribution": "Ülke Dağılımı",
+    "activity_statistics": "Aktivite İstatistikleri"
+  },
+  "admodal": {
+    "learn_more": "Daha Fazla Bilgi Edinin",
+    "advertise_with_us": "Bizimle Reklam Yapın",
+    "advertising_options": "Reklam Seçenekleri"
+  },
+  "sponsoredcontent": {
+    "sponsored_content": "Sponsorlu İçerik",
+    "premium_banner_ads": "Premium Banner Reklamlar",
+    "premium_banner_description": "Platformumuz genelinde yüksek görünürlüklü banner yerleşimleri. Premium reklam alanlarıyla milyonlarca ilgili kullanıcıya ulaşın.",
+    "get_started": "Başlayın",
+    "monthly_users": "Aylık Kullanıcı",
+    "daily_searches": "Günlük Arama",
+    "accuracy_rate": "Doğruluk Oranı"
+  },
+  "adoptions": {
+    "premium_banner_ads": "Premium Banner Reklamlar",
+    "premium_banner_description": "Platformumuz genelinde yüksek görünürlüklü banner yerleşimleri",
+    "sponsored_content": "Sponsorlu İçerik",
+    "sponsored_content_description": "Arama sonuçlarına entegre edilmiş doğal reklam",
+    "sponsored_videos": "Sponsorlu Videolar",
+    "sponsored_videos_description": "Premium video yerleşimi ve önerileri",
+    "partnership_opportunities": "Ortaklık Fırsatları",
+    "partnership_opportunities_description": "Uzun vadeli işbirliği ve ortak markalaşma seçenekleri"
+  },
+  "adfeatures": {
+    "reach_users": "xmatch.pro üzerindeki stratejik reklam fırsatları aracılığıyla dünya çapında milyonlarca kullanıcıya ulaşın",
+    "targeted_audience": "Hedeflenmiş Kitle",
+    "targeted_audience_description": "Yüksek etkileşimli bir yetişkin eğlence kitlesine erişin",
+    "premium_placement": "Premium Yerleşim",
+    "premium_placement_description": "Maksimum görünürlük için stratejik reklam pozisyonları"
+  },
+  "statsdata": {
+    "total_models": "Toplam Model",
+    "total_models_description": "Veritabanındaki toplam model sayısı",
+    "monthly_visitors": "Aylık Ziyaretçi",
+    "monthly_visitors_description": "Son 30 gündeki benzersiz ziyaretçi sayısı",
+    "daily_searches": "Günlük Arama",
+    "daily_searches_description": "Ortalama günlük arama sayısı",
+    "male": "Erkek",
+    "female": "Kadın",
+    "other": "Diğer",
+    "others": "Diğerleri",
+    "peak_hours": "Yoğun Saatler",
+    "most_active_day": "En Aktif Gün",
+    "saturday": "Cumartesi",
+    "avg_session": "Ort. Oturum"
+  },
+  "contactsection": {
+    "get_in_touch": "İletişime Geçin",
+    "contact_message": "Bizimle reklam yapmak mı istiyorsunuz? Fırsatları ve özel çözümleri görüşmek için ekibimizle iletişime geçin.",
+    "response_time": "24 saat içinde yanıt vereceğiz."
+  },
+  "developmentstatus": {
+    "version": "Geliştirme Sürümü:",
+    "status": "Durum:",
+    "updating_message": "Modeller ve arama teknolojisi sürekli olarak güncellenmekte ve iyileştirilmektedir."
+  },
+  "advancedsearchresults": {
+    "searching": "Model veritabanı aranıyor...",
+    "new_search": "Yeni Arama"
+  },
+  "imagesearchresults": {
+    "analyzing": "Görsel analiz ediliyor ve veritabanı aranıyor...",
+    "search_again": "Görselle Tekrar Ara"
+  },
+  "similar_models": "Benzer Modeller Bulundu",
+  "similar_models_description": "Yüklenen görsele çok benzeyen aşağıdaki modelleri bulduk.",
+  "similarity_score": "Benzerlik Skoru",
+  "view_profile": "Profili Görüntüle",
+  "no_results_found": "Sonuç Bulunamadı",
+  "try_different_image": "Farklı bir görsel deneyin veya filtreleri ayarlayın.",
+  "search_results": {
+    "title": "Arama Sonuçları",
+    "description": "Arama kriterlerinize çok benzeyen aşağıdaki modelleri bulduk.",
+    "no_results_found": "Sonuç bulunamadı. Filtrelerinizi ayarlamayı deneyin."
+  },
+  "search_by_image": {
+    "title": "Görselle Ara",
+    "description": "Benzer modeller bulmak için bir görsel yükleyin."
+  },
+  "footer": {
+    "copyright": "© 2025 xmatch.pro |",
+    "rta": "RTA",
+    "disclaimer": "Yasal Uyarı",
+    "2257": "2257",
+    "dmca": "DMCA",
+    "privacy": "Gizlilik",
+    "terms": "Şartlar",
+    "terms_of_service": "Hizmet Şartları",
+    "privacy_policy": "Gizlilik Politikası",
+    "contact_us": "Bize Ulaşın",
+    "about_us": "Hakkımızda",
+    "follow_us": "Bizi Takip Edin",
+    "social_media": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram"
+    },
+    "noresults": {
+      "title": "Sonuç Bulunamadı",
+      "description": "Seçilen kriterlerinize uygun model bulunamadı. Filtrelerinizi ayarlamayı veya yeni bir arama başlatmayı deneyin.",
+      "active_filters": "Aktif Filtreler:",
+      "reset_filters": "Filtreleri Sıfırla"
+    }
+  },
+  "loadinganimation": {
+    "analyzing": "Görsel analiz ediliyor ve veritabanı aranıyor...",
+    "may_take_time": "Bu birkaç dakika sürebilir",
+    "detailed_description": "Yüz tanıma sistemi, derin öğrenme modelleri kullanılarak yüksek doğruluk ve hızlı eşleştirme için optimize edilmiştir. Benzerliği belirlemek için yüzdeki 64 temel noktayı algılar ve analiz eder."
+  },
+  "searchresults": {
+    "search_results": "Arama Sonuçları",
+    "search_again": "Tekrar Ara"
+  },
+  "sharemodal": {
+    "share_results": "Sonuçları Paylaş",
+    "share_your_results": "Sonuçlarınızı Paylaşın",
+    "ai_powered_results": "Yapay Zeka Destekli Arama Sonuçları",
+    "powered_by_ai": "Yapay Zeka Yüz Tanıma ile Güçlendirilmiştir",
+    "success_title": "Başarılı!",
+    "success_description": "Sonuçlarınız başarıyla indirildi.",
+    "error_title": "İndirme başarısız oldu",
+    "error_description": "Lütfen tekrar deneyin. Sorun devam ederse, farklı bir tarayıcı deneyin.",
+    "processing": "İşleniyor...",
+    "download_results": "Sonuçları İndir"
+  },
+  "modeldetail": {
+    "model_not_found": "Model Bulunamadı",
+    "model_not_found_description": "İstenen model bulunamadı.",
+    "go_back": "Geri Git",
+    "physical_attributes": "Fiziksel Özellikler",
+    "age": "Yaş",
+    "height": "Boy",
+    "weight": "Kilo",
+    "ethnicity": "Etnik Köken",
+    "features": "Özellikler",
+    "cup_size": "Sütyen Bedeni:",
+    "hair": "Saç:",
+    "eyes": "Gözler:",
+    "has_tattoos": "Dövmesi Var",
+    "has_piercings": "Piercingi Var",
+    "biography": "Biyografi",
+    "watch_videos": "Videoları İzle"
+  },
+  "videomodal": {
+    "videos": "Videolar",
+    "adult_content_warning": "Yetişkin İçerik Uyarısı",
+    "warning_message": "{modelName} içeren yetişkin içeriği görüntülemek üzeresiniz. Devam ederek şunları onaylıyorsunuz:\n• Yetişkin içeriği görüntülemek için yasal yaşta olduğunuzu\n• Bu eylemin yerel yasalarınıza uygun olduğunu\n• Eylemleriniz için tüm sorumluluğu kabul ettiğinizi",
+    "platforms": {
+      "xvideos": "En popüler yetişkin içerik platformu",
+      "pornhub": "Premium kalitede videolar",
+      "onlyfans": "Özel içerik"
+    },
+    "cancel": "İptal"
+  },
+  "coffeebutton": {
+    "buy_me_a_coffee": "Bana Bir Prezervatif Ismarla"
+  }
+}

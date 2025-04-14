@@ -12,6 +12,7 @@ import { toast } from '@/components/ui/use-toast';
 import { SearchResult } from '@/lib/api/types';
 import { UploadAnimation } from './upload-animation';
 import { AgeVerificationDialog } from '@/components/age-verification/age-verification-dialog';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 interface ImageUploaderProps {
   onSearchStart?: () => void;
@@ -22,6 +23,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 
 export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploaderProps) {
+  const { t } = useLanguage();
   const [image, setImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -72,8 +74,8 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
       // Show warning if detected age is under 18
       if (age !== null && age < 18) {
         toast({
-          title: "Age Verification Required",
-          description: "The person in the image appears to be under 18 years old. We only accept searches for adults 18+.",
+          title: t('image_uploader.age_verification_required'),
+          description: t('image_uploader.age_verification_description'),
           variant: "destructive",
         });
         setImage(null);
@@ -90,7 +92,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
       reader.readAsDataURL(file);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to process file";
-      toast({ title: "Error", description: message, variant: "destructive" });
+      toast({ title: t('image_uploader.error'), description: message, variant: "destructive" });
     }
     finally {
       setIsProcessing(false);
@@ -123,8 +125,8 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
 
     if (!image || !originalFile || (detectedAge !== null && detectedAge < 18)) {
       toast({
-        title: "Age Verification Failed",
-        description: "We can only process images of adults (18+).",
+        title: t('image_uploader.age_verification_failed'),
+        description: t('image_uploader.adult_images_only'),
         variant: "destructive"
       });
       return;
@@ -143,8 +145,8 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
 
       if (!matches || !matches.length) {
         toast({
-          title: "No matches found",
-          description: "Try another photo or adjust the image quality",
+          title: t('image_uploader.no_matches_found'),
+          description: t('image_uploader.adjust_image_quality'),
           variant: "destructive"
         });
         setIsUploading(false);
@@ -156,8 +158,8 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
       setOriginalFile(null);
     } catch (error) {
       toast({
-        title: "Error",
-        description: error instanceof Error ? error.message : "Failed to process image",
+        title: t('image_uploader.error'),
+        description: error instanceof Error ? error.message : t('image_uploader.failed_to_process_image'),
         variant: "destructive"
       });
     } finally {
@@ -178,30 +180,30 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
         <div className="space-y-6">
           <div>
             <h3 className="text-2xl font-semibold mb-2">
-              Upload Your Photo
+              {t('image_uploader.upload_photo')}
             </h3>
             <p className="text-muted-foreground">
-              For best results, please upload a clear photo showing the face directly.
+              {t('image_uploader.best_results')}
             </p>
           </div>
 
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <span className="text-sm px-3 py-1 rounded-full bg-muted">
-                JPG, PNG
+                {t('image_uploader.jpg_png')}
               </span>
               <span className="text-sm px-3 py-1 rounded-full bg-muted">
-                Max 5MB
+                {t('image_uploader.max_5mb')}
               </span>
             </div>
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Info className="w-4 h-4" />
-              <p>Uploaded images are not stored and will be deleted immediately after processing</p>
+              <p>{t('image_uploader.not_stored')}</p>
             </div>
             <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
               <AlertTriangle className="w-4 h-4" />
-              <p>Only upload images of adults (18+)</p>
+              <p>{t('image_uploader.only_adults')}</p>
             </div>
           </div>
 
@@ -212,7 +214,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
             onClick={() => fileInputRef.current?.click()}
           >
             <Upload className="w-6 h-6" />
-            Select Image
+            {t('image_uploader.select_image')}
           </Button>
         </div>
 
@@ -243,7 +245,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
               ) : (
                 <div className="flex flex-col items-center gap-2">
                   <ImageIcon className="w-16 h-16 text-muted-foreground/40" />
-                  <p className="text-sm text-muted-foreground">drag & drop or select image</p>
+                  <p className="text-sm text-muted-foreground">{t('image_uploader.drag_drop')}</p>
                 </div>
               )}
               {image && (
@@ -262,7 +264,7 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
                       setOriginalFile(null);
                     }}
                   >
-                    Change Photo
+                    {t('image_uploader.change_photo')}
                   </Button>
                 </motion.div>
               )}
@@ -298,12 +300,12 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
               {isUploading ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Searching...
+                  {t('image_uploader.searching')}
                 </>
               ) : (
                 <>
                   <Search className="w-5 h-5 mr-2" />
-                  Search {isMale && '😅'}
+                  {t('image_uploader.search')} {isMale && '😅'}
                 </>
               )}
             </Button>

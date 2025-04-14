@@ -4,6 +4,7 @@ import { ThemeToggle } from './theme-toggle';
 import { Logo } from './logo';
 import { NavMenu } from './nav-menu';
 import { MobileNav } from './mobile-nav';
+import LanguageSwitcher from './language-switcher';
 
 export function Navbar() {
   return (
@@ -12,6 +13,7 @@ export function Navbar() {
         <Logo />
         <NavMenu />
         <div className="flex items-center gap-2 ml-auto">
+          <LanguageSwitcher />
           <ThemeToggle />
           <MobileNav />
         </div>

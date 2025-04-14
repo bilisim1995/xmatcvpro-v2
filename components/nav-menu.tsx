@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Scan, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+
 export function NavMenu() {
   return (
     <div className="hidden md:flex items-center gap-6 ml-12">
@@ -20,6 +21,8 @@ export function NavMenu() {
           GOLDEN LIST
         </Button>
       </Link>
+
+  
     </div>
   );
 }

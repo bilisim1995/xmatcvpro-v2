@@ -1,9 +1,11 @@
-'use client';
+ 'use client';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 import { Brain } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function LoadingAnimation() {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col items-center justify-center py-12">
       {/* AI Brain Animation */}
@@ -40,7 +42,7 @@ export function LoadingAnimation() {
       {/* Loading Text */}
       <div className="mt-8 space-y-2 text-center">
         <h3 className="text-lg font-medium">
-          Analyzing image and searching database...
+          {t('loadinganimation.analyzing')}
         </h3>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -49,7 +51,7 @@ export function LoadingAnimation() {
           className="space-y-3"
         >
           <p className="text-sm text-muted-foreground">
-            This may take a few moments
+            {t('loadinganimation.may_take_time')}
           </p>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -57,8 +59,7 @@ export function LoadingAnimation() {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="text-sm text-muted-foreground/80 max-w-md mx-auto leading-relaxed"
           >
-            The face recognition system is optimized for high accuracy and fast matching using deep learning models. 
-            It detects and analyzes 64 key points on the face to determine similarity.
+            {t('loadinganimation.detailed_description')}
           </motion.p>
         </motion.div>
       </div>

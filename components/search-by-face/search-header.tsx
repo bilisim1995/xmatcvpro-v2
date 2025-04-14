@@ -2,8 +2,11 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 export function SearchHeader() {
+  const { t } = useLanguage();
+
   return (
     <div className="flex items-center justify-center gap-8 mb-12 pt-6 sm:pt-0">
       <div className="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0">
@@ -18,10 +21,10 @@ export function SearchHeader() {
       </div>
       <div className="text-left">
         <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3">
-          Pornstar Search by Face with AI
+          {t('search_header.title')}
         </h1>
         <p className="text-base sm:text-lg text-muted-foreground max-w-md">
-          Upload any face photo and our AI will find matching pornstar models from our extensive database.
+          {t('search_header.description')}
         </p>
       </div>
     </div>

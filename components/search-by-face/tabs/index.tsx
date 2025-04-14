@@ -6,6 +6,7 @@ import { Search, Scan } from 'lucide-react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 const ImageSearchTab = dynamic(
   () => import('./image-search-tab'),
@@ -36,6 +37,7 @@ const tabVariants = {
 
 export function SearchTabs() {
   const [activeTab, setActiveTab] = useState('image');
+  const { t } = useLanguage();
 
   const TabContent = ({ icon: Icon, text }: { icon: typeof Search; text: string }) => {
     return (
@@ -63,13 +65,13 @@ export function SearchTabs() {
           value="image" 
           className="relative h-full text-[15px] sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
         >
-          <TabContent icon={Scan} text="Search by Image" />
+          <TabContent icon={Scan} text={t('tabs.search_by_image')} />
         </TabsTrigger>
         <TabsTrigger 
           value="advanced" 
           className="relative h-full text-[15px] sm:text-base font-medium transition-all rounded-md data-[state=active]:bg-background data-[state=active]:text-red-600 data-[state=active]:shadow-sm"
         >
-          <TabContent icon={Search} text="Advanced Search" />
+          <TabContent icon={Search} text={t('tabs.advanced_search')} />
         </TabsTrigger>
       </TabsList>
 

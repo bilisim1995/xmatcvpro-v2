@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { User, Ruler, Scale, Globe2, Video, Link as LinkIcon, Globe, Instagram, Twitter } from 'lucide-react';
 import { SuggestedModels } from './suggested-models';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 const socialMediaIcons = {
   www: Globe,
@@ -37,6 +38,7 @@ interface ModelDetailPageProps {
 }
 
 export function ModelDetailPage({ model }: ModelDetailPageProps) {
+  const { t } = useLanguage();
   const [suggestedModels, setSuggestedModels] = useState<SearchResult[]>([]);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
 
@@ -84,15 +86,15 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
               <AlertTriangle className="w-8 h-8 text-red-600" />
             </div>
           </div>
-          <h2 className="text-2xl font-bold mb-4">Model Not Found</h2>
+          <h2 className="text-2xl font-bold mb-4">{t('modeldetail.model_not_found')}</h2>
           <p className="text-muted-foreground mb-6">
-            The requested model could not be found.
+            {t('modeldetail.model_not_found_description')}
           </p>
           <Button
             onClick={() => window.history.back()}
             className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white"
           >
-            Go Back
+            {t('modeldetail.go_back')}
           </Button>
         </Card>
       </div>
@@ -187,13 +189,13 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
 
             {/* Physical Attributes Grid */}
             <Card className="p-6 space-y-6">
-              <h2 className="text-xl font-semibold text-foreground">Physical Attributes</h2>
+              <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.physical_attributes')}</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {model.age && (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <User className="w-5 h-5 text-red-600" />
-                      <span className="text-sm font-medium text-muted-foreground">Age</span>
+                      <span className="text-sm font-medium text-muted-foreground">{t('modeldetail.age')}</span>
                     </div>
                     <p className="text-lg font-semibold">{model.age} y/o</p>
                   </div>
@@ -202,7 +204,7 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Ruler className="w-5 h-5 text-red-600" />
-                      <span className="text-sm font-medium text-muted-foreground">Height</span>
+                      <span className="text-sm font-medium text-muted-foreground">{t('modeldetail.height')}</span>
                     </div>
                     <p className="text-lg font-semibold">{model.height} cm</p>
                   </div>
@@ -211,7 +213,7 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Scale className="w-5 h-5 text-red-600" />
-                      <span className="text-sm font-medium text-muted-foreground">Weight</span>
+                      <span className="text-sm font-medium text-muted-foreground">{t('modeldetail.weight')}</span>
                     </div>
                     <p className="text-lg font-semibold">{model.weight} kg</p>
                   </div>
@@ -220,7 +222,7 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Globe2 className="w-5 h-5 text-red-600" />
-                      <span className="text-sm font-medium text-muted-foreground">Ethnicity</span>
+                      <span className="text-sm font-medium text-muted-foreground">{t('modeldetail.ethnicity')}</span>
                     </div>
                     <p className="text-lg font-semibold">{model.ethnicity}</p>
                   </div>
@@ -230,31 +232,31 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
 
             {/* Additional Features */}
             <Card className="p-6 space-y-6">
-              <h2 className="text-xl font-semibold text-foreground">Features</h2>
+              <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.features')}</h2>
               <div className="flex flex-wrap gap-2 text-foreground">
                 {model.cup_size && (
                   <Badge className="px-3 py-1.5 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 text-foreground">
-                    Cup Size: {model.cup_size}
+                    {t('modeldetail.cup_size')} {model.cup_size}
                   </Badge>
                 )}
                 {model.hair && (
                   <Badge className="px-3 py-1.5 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 text-foreground">
-                    Hair: {model.hair}
+                    {t('modeldetail.hair')} {model.hair}
                   </Badge>
                 )}
                 {model.eyes && (
                   <Badge className="px-3 py-1.5 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 text-foreground">
-                    Eyes: {model.eyes}
+                    {t('modeldetail.eyes')} {model.eyes}
                   </Badge>
                 )}
                 {model.tats === 'yes' && (
                   <Badge className="px-3 py-1.5 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 text-foreground">
-                    Has Tattoos
+                    {t('modeldetail.has_tattoos')}
                   </Badge>
                 )}
                 {model.piercings === 'yes' && (
                   <Badge className="px-3 py-1.5 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 text-foreground">
-                    Has Piercings
+                    {t('modeldetail.has_piercings')}
                   </Badge>
                 )}
               </div>
@@ -264,7 +266,7 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
             {model.description && (
               <Card className="p-6 space-y-4">
                 <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-foreground">Biography</h2>
+                  <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.biography')}</h2>
                   <div className="max-h-[300px] overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-red-200 dark:scrollbar-thumb-red-800 scrollbar-track-transparent">
                     <p className="text-foreground/90 leading-relaxed whitespace-pre-wrap">
                       {model.description}
@@ -282,7 +284,7 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
                 trigger={
                   <Button className="flex-1 bg-red-600 hover:bg-red-700 text-white text-lg py-6 shadow-lg hover:shadow-xl transition-all duration-300">
                     <Video className="w-5 h-5 mr-2" />
-                    Watch Videos
+                    {t('modeldetail.watch_videos')}
                   </Button>
                 }
               />

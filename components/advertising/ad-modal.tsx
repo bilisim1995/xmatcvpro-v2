@@ -15,6 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { AdFeatures } from './sections/ad-features';
 import { AdOptions } from './sections/ad-options';
 import { ContactSection } from './sections/contact-section';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 interface AdModalProps {
   trigger?: React.ReactNode;
@@ -22,6 +23,7 @@ interface AdModalProps {
 
 export function AdModal({ trigger }: AdModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -32,7 +34,7 @@ export function AdModal({ trigger }: AdModalProps) {
             className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white"
           >
             <Megaphone className="w-4 h-4 mr-2" />
-            Learn More
+            {t('admodal.learn_more')}
           </Button>
         )}
       </DialogTrigger>
@@ -40,7 +42,7 @@ export function AdModal({ trigger }: AdModalProps) {
         <DialogHeader className="px-6 pt-6 pb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10 border-b">
           <DialogTitle className="text-2xl flex items-center gap-2">
             <Megaphone className="w-6 h-6 text-red-600" />
-            Advertise with Us
+            {t('admodal.advertise_with_us')}
           </DialogTitle>
         </DialogHeader>
         
@@ -53,7 +55,7 @@ export function AdModal({ trigger }: AdModalProps) {
 
             {/* Advertising Options */}
             <section className="space-y-4">
-              <h3 className="text-lg font-semibold">Advertising Options</h3>
+              <h3 className="text-lg font-semibold">{t('admodal.advertising_options')}</h3>
               <AdOptions />
             </section>
 

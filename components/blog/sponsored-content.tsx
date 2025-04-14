@@ -4,8 +4,11 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Megaphone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 export function SponsoredContent() {
+  const { t } = useLanguage();
+
   return (
     <Card className="relative overflow-hidden mt-8">
       {/* Background Pattern */}
@@ -44,7 +47,7 @@ export function SponsoredContent() {
               className="inline-flex items-center gap-2 px-2 py-1 rounded-full bg-red-100 dark:bg-red-900/20 animate-pulse"
             >
               <Megaphone className="w-4 h-4 text-red-600" />
-              <span className="text-sm font-medium text-red-600">Sponsored Content</span>
+              <span className="text-sm font-medium text-red-600">{t('sponsoredcontent.sponsored_content')}</span>
             </motion.div>
 
             <motion.h2
@@ -54,7 +57,7 @@ export function SponsoredContent() {
               transition={{ delay: 0.1 }}
               className="text-xl font-bold"
             >
-              Premium Banner Ads
+              {t('sponsoredcontent.premium_banner_ads')}
             </motion.h2>
 
             <motion.p
@@ -64,7 +67,7 @@ export function SponsoredContent() {
               transition={{ delay: 0.2 }}
               className="text-sm text-muted-foreground line-clamp-2"
             >
-              High-visibility banner placements across our platform. Reach millions of engaged users with premium advertising spots.
+              {t('sponsoredcontent.premium_banner_description')}
             </motion.p>
 
             <motion.div
@@ -78,7 +81,7 @@ export function SponsoredContent() {
                 className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white"
                 onClick={() => window.open('https://t.me/xmatchpro', '_blank')}
               >
-                Get Started
+                {t('sponsoredcontent.get_started')}
               </Button>
             </motion.div>
           </div>
@@ -86,9 +89,9 @@ export function SponsoredContent() {
           {/* Stats */}
           <div className="grid grid-cols-3 gap-2">
             {[
-              { value: '250K+', label: 'Monthly Users' },
-              { value: '50K+', label: 'Daily Searches' },
-              { value: '99%', label: 'Accuracy Rate' }
+              { value: '250K+', label: t('sponsoredcontent.monthly_users') },
+              { value: '50K+', label: t('sponsoredcontent.daily_searches') },
+              { value: '99%', label: t('sponsoredcontent.accuracy_rate') }
             ].map((stat, index) => (
               <motion.div
                 key={index}

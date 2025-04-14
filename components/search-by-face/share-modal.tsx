@@ -14,6 +14,7 @@ import { Card } from '@/components/ui/card';
 import { usePreviewDownload } from '@/hooks/use-preview-download';
 import { SearchResult } from '@/lib/api/types';
 import { toast } from '@/components/ui/use-toast';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 interface ShareModalProps {
   searchImage: string;
@@ -23,6 +24,7 @@ interface ShareModalProps {
 export function ShareModal({ searchImage, results }: ShareModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const { t } = useLanguage();
   
   const { downloadPreview } = usePreviewDownload({
     elementId: 'share-preview',
@@ -39,13 +41,13 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
     try {
       await downloadPreview();
       toast({
-        title: "Success!",
-        description: "Your results have been downloaded successfully.",
+        title: t('sharemodal.success_title'),
+        description: t('sharemodal.success_description'),
       });
     } catch (error) {
       toast({
-        title: "Download failed",
-        description: "Please try again. If the problem persists, try a different browser.",
+        title: t('sharemodal.error_title'),
+        description: t('sharemodal.error_description'),
         variant: "destructive"
       });
     } finally {
@@ -62,14 +64,14 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
           className="gap-2 hover:bg-red-50 dark:hover:bg-red-900/20"
         >
           <Share2 className="w-4 h-4" />
-          Share Results
+          {t('sharemodal.share_results')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-foreground">
             <Share2 className="w-5 h-5 text-red-600" />
-            Share Your Results
+            {t('sharemodal.share_your_results')}
           </DialogTitle>
         </DialogHeader>
 
@@ -77,7 +79,7 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
           <Card id="share-preview" className="p-6 space-y-6 bg-background">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-lg text-foreground">xmatch.pro</span>
-              <span className="text-sm text-muted-foreground">AI-Powered Search Results</span>
+              <span className="text-sm text-muted-foreground">{t('sharemodal.ai_powered_results')}</span>
             </div>
 
             <div className="grid grid-cols-4 gap-4">
@@ -145,7 +147,7 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
             </div>
 
             <div className="flex justify-between items-center pt-4 border-t text-sm text-muted-foreground">
-              <span>Powered by AI Face Recognition</span>
+              <span>{t('sharemodal.powered_by_ai')}</span>
               <span>xmatch.pro</span>
             </div>
           </Card>
@@ -160,12 +162,12 @@ export function ShareModal({ searchImage, results }: ShareModalProps) {
               {isProcessing ? (
                 <>
                   <Download className="w-4 h-4 animate-bounce" />
-                  Processing...
+                  {t('sharemodal.processing')}
                 </>
               ) : (
                 <>
                   <Download className="w-4 h-4" />
-                  Download Results
+                  {t('sharemodal.download_results')}
                 </>
               )}
             </Button>

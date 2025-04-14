@@ -1,13 +1,16 @@
 'use client';
 
 import { Shield, Clock, Users, Zap } from 'lucide-react';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 export function AdditionalFeatures() {
+  const { t } = useLanguage();
+
   const features = [
-    { icon: Shield, text: "Secure & Private" },
-    { icon: Clock, text: "24/7 Available" },
-    { icon: Users, text: "Large Database" },
-    { icon: Zap, text: "Fast Processing" }
+    { icon: Shield, text: t('additional_features.secure_private') },
+    { icon: Clock, text: t('additional_features.available_247') },
+    { icon: Users, text: t('additional_features.large_database') },
+    { icon: Zap, text: t('additional_features.fast_processing') }
   ];
 
   return (

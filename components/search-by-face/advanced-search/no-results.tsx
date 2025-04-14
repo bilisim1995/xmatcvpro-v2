@@ -4,6 +4,7 @@ import { Search, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ModelFilters } from '@/lib/api/types';
 import { motion } from 'framer-motion';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 interface NoResultsProps {
   filters: ModelFilters;
@@ -11,6 +12,8 @@ interface NoResultsProps {
 }
 
 export function NoResults({ filters, onReset }: NoResultsProps) {
+  const { t } = useLanguage();
+
   const activeFilters = Object.entries(filters)
     .filter(([value]) => value !== undefined && value !== '')
     .map(([key, value]) => {
@@ -30,15 +33,15 @@ export function NoResults({ filters, onReset }: NoResultsProps) {
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-lg font-medium">No Results Found</h3>
+        <h3 className="text-lg font-medium">{t('noresults.title')}</h3>
         <p className="text-muted-foreground max-w-md mx-auto">
-          No models match your selected criteria. Try adjusting your filters or start a new search.
+          {t('noresults.description')}
         </p>
       </div>
 
       {activeFilters.length > 0 && (
         <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">Active Filters:</p>
+          <p className="text-sm text-muted-foreground">{t('noresults.active_filters')}</p>
           <div className="flex flex-wrap justify-center gap-2">
             {activeFilters.map((filter, index) => (
               <span 
@@ -58,7 +61,7 @@ export function NoResults({ filters, onReset }: NoResultsProps) {
         className="mt-4"
       >
         <RefreshCw className="w-4 h-4 mr-2" />
-        Reset Filters
+        {t('noresults.reset_filters')}
       </Button>
     </motion.div>
   );

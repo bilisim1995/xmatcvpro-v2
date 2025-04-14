@@ -3,23 +3,26 @@
 import { Upload, Scan, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { StepCard } from './step-card';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 export function HowItWorks() {
+  const { t } = useLanguage();
+
   const steps = [
     {
       icon: Upload,
-      title: "Upload Your Photo",
-      description: "Upload a photo of an actress or model you'd like to find similar matches for."
+      title: t('how_it_works.step1_title'),
+      description: t('how_it_works.step1_description')
     },
     {
       icon: Scan,
-      title: "Face Detection",
-      description: "Our AI system automatically detects and analyzes facial features in your image."
+      title: t('how_it_works.step2_title'),
+      description: t('how_it_works.step2_description')
     },
     {
       icon: Sparkles,
-      title: "Get Results",
-      description: "Browse through a curated list of matches with similarity scores."
+      title: t('how_it_works.step3_title'),
+      description: t('how_it_works.step3_description')
     }
   ];
 
@@ -39,7 +42,7 @@ export function HowItWorks() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
         >
-          How It Works
+          {t('how_it_works.title')}
         </motion.h2>
         <motion.p 
           className="text-muted-foreground"
@@ -48,7 +51,7 @@ export function HowItWorks() {
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
         >
-          Three simple steps to find your matches
+          {t('how_it_works.subtitle')}
         </motion.p>
       </motion.div>
       

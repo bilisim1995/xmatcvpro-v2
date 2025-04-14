@@ -4,6 +4,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ModelFilters } from '@/lib/api/types';
 import { useEffect, useState } from 'react';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 interface TopFiltersProps {
   filters: ModelFilters;
@@ -11,21 +12,21 @@ interface TopFiltersProps {
 }
 
 const cupSizes = [
-  { value: 'a', label: 'A Cup' },
-  { value: 'b', label: 'B Cup' },
-  { value: 'c', label: 'C Cup' },
-  { value: 'd', label: 'D Cup' },
-  { value: 'dd', label: 'DD Cup' },
-  { value: 'ddd', label: 'DDD Cup' },
-  { value: 'e', label: 'E Cup' },
-  { value: 'f', label: 'F Cup' },
-  { value: 'g', label: 'G Cup' }
+  { value: 'a', label: 'cup_a' },
+  { value: 'b', label: 'cup_b' },
+  { value: 'c', label: 'cup_c' },
+  { value: 'd', label: 'cup_d' },
+  { value: 'dd', label: 'cup_dd' },
+  { value: 'ddd', label: 'cup_ddd' },
+  { value: 'e', label: 'cup_e' },
+  { value: 'f', label: 'cup_f' },
+  { value: 'g', label: 'cup_g' }
 ];
 
 export function TopFilters({ filters, onChange }: TopFiltersProps) {
+  const { t } = useLanguage();
   const [selectedCupSize, setSelectedCupSize] = useState(filters.cup_size || 'any');
 
-  // Filters değiştiğinde state'i güncelle
   useEffect(() => {
     setSelectedCupSize(filters.cup_size || 'any');
   }, [filters.cup_size]);
@@ -47,7 +48,6 @@ export function TopFilters({ filters, onChange }: TopFiltersProps) {
   };
 
   useEffect(() => {
-    // Reset select values when filters are cleared
     const selectElements = document.querySelectorAll('[data-radix-select-trigger]');
     if (Object.keys(filters).length === 0) {
       selectElements.forEach((select) => {
@@ -63,62 +63,62 @@ export function TopFilters({ filters, onChange }: TopFiltersProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <div className="space-y-2">
-        <Label>Hair Color</Label>
+        <Label>{t('topfilters.hair_color')}</Label>
         <Select 
           value={filters.hair_color || 'any'}
           onValueChange={value => updateFilter('hair_color', value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select hair color" />
+            <SelectValue placeholder={t('topfilters.select_hair_color')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any</SelectItem>
-            <SelectItem value="blonde">Blonde</SelectItem>
-            <SelectItem value="brown">Brown</SelectItem>
-            <SelectItem value="black">Black</SelectItem>
-            <SelectItem value="red">Red</SelectItem>
-            <SelectItem value="auburn">Auburn</SelectItem>
-            <SelectItem value="grey">Grey</SelectItem>
-            <SelectItem value="other">Other</SelectItem>
+            <SelectItem value="any">{t('topfilters.any')}</SelectItem>
+            <SelectItem value="blonde">{t('topfilters.blonde')}</SelectItem>
+            <SelectItem value="brown">{t('topfilters.brown')}</SelectItem>
+            <SelectItem value="black">{t('topfilters.black')}</SelectItem>
+            <SelectItem value="red">{t('topfilters.red')}</SelectItem>
+            <SelectItem value="auburn">{t('topfilters.auburn')}</SelectItem>
+            <SelectItem value="grey">{t('topfilters.grey')}</SelectItem>
+            <SelectItem value="other">{t('topfilters.other')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="space-y-2">
-        <Label>Eye Color</Label>
+        <Label>{t('topfilters.eye_color')}</Label>
         <Select 
           value={filters.eye_color || 'any'}
           onValueChange={value => updateFilter('eye_color', value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select eye color" />
+            <SelectValue placeholder={t('topfilters.select_eye_color')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any</SelectItem>
-            <SelectItem value="blue">Blue</SelectItem>
-            <SelectItem value="green">Green</SelectItem>
-            <SelectItem value="brown">Brown</SelectItem>
-            <SelectItem value="hazel">Hazel</SelectItem>
-            <SelectItem value="grey">Grey</SelectItem>
-            <SelectItem value="amber">Amber</SelectItem>
+            <SelectItem value="any">{t('topfilters.any')}</SelectItem>
+            <SelectItem value="blue">{t('topfilters.blue')}</SelectItem>
+            <SelectItem value="green">{t('topfilters.green')}</SelectItem>
+            <SelectItem value="brown">{t('topfilters.brown')}</SelectItem>
+            <SelectItem value="hazel">{t('topfilters.hazel')}</SelectItem>
+            <SelectItem value="grey">{t('topfilters.grey')}</SelectItem>
+            <SelectItem value="amber">{t('topfilters.amber')}</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
       <div className="space-y-2">
-        <Label>Cup Size</Label>
+        <Label>{t('topfilters.cup_size')}</Label>
         <Select 
           value={filters.cup_size || 'any'}
           onValueChange={value => updateFilter('cup_size', value)}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select cup size" />
+            <SelectValue placeholder={t('topfilters.select_cup_size')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="any">Any</SelectItem>
+            <SelectItem value="any">{t('topfilters.any')}</SelectItem>
             {cupSizes.map(({ value, label }) => (
               <SelectItem key={value} value={value}>
-                {label}
+                {t(`topfilters.${label}`)}
               </SelectItem>
             ))}
           </SelectContent>

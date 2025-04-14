@@ -11,6 +11,7 @@ import { motion } from 'framer-motion';
 import { Search, LayoutGrid, Images, Megaphone } from 'lucide-react';
 import { useState } from 'react';
 import { ResultCard } from './result-card';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 interface AdSlot {
   type: 'ad';
@@ -56,6 +57,7 @@ export function SearchResults({
   searchImage, 
   onSearchAgain 
 }: SearchResultsProps) {
+  const { t } = useLanguage();
   const [viewMode, setViewMode] = useState<'carousel' | 'grid'>('carousel');
   
   // Sort results and limit to 15
@@ -107,7 +109,7 @@ export function SearchResults({
               animate={{ y: 0 }}
               transition={{ type: "spring", stiffness: 100, damping: 10, delay: 0.1 }}
             >
-              Search Results
+              {t('searchresults.search_results')}
             </motion.h2>
             <div className="flex gap-1">
               <Button
@@ -157,7 +159,7 @@ export function SearchResults({
           className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white"
         >
           <Search className="w-4 h-4 mr-2" />
-          Search Again
+          {t('searchresults.search_again')}
         </Button>
         {searchImage && <ShareModal searchImage={searchImage} results={results} />}
       </div>

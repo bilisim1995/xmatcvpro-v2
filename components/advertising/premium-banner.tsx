@@ -4,12 +4,14 @@ import { motion } from 'framer-motion';
 import { DollarSign, TrendingUp, Users, BarChart } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 export function PremiumBanner() {
+  const { t } = useLanguage();
   const stats = [
-    { icon: Users, value: '250K+', label: 'Monthly Users' },
-    { icon: TrendingUp, value: '50K+', label: 'Daily Searches' },
-    { icon: BarChart, value: '99%', label: 'Accuracy Rate' }
+    { icon: Users, value: '250K+', label: 'monthly_users' },
+    { icon: TrendingUp, value: '50K+', label: 'daily_searches' },
+    { icon: BarChart, value: '99%', label: 'accuracy_rate' }
   ];
 
   return (
@@ -50,7 +52,7 @@ export function PremiumBanner() {
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-100 dark:bg-red-900/20 animate-pulse"
             >
               <DollarSign className="w-4 h-4 text-red-600" />
-              <span className="text-sm font-medium text-red-600">Premium Advertising</span>
+              <span className="text-sm font-medium text-red-600">{t('premium_banner.premium_advertising')}</span>
             </motion.div>
 
             <motion.h2
@@ -60,7 +62,7 @@ export function PremiumBanner() {
               transition={{ delay: 0.1 }}
               className="text-2xl font-bold"
             >
-              Premium Banner Ads
+              {t('premium_banner.banner_title')}
             </motion.h2>
 
             <motion.p
@@ -70,7 +72,7 @@ export function PremiumBanner() {
               transition={{ delay: 0.2 }}
               className="text-muted-foreground"
             >
-              High-visibility banner placements across our platform. Reach millions of engaged users with premium advertising spots.
+              {t('premium_banner.banner_description')}
             </motion.p>
 
             <motion.div
@@ -81,9 +83,8 @@ export function PremiumBanner() {
             >
               <Button 
                 className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white"
-                onClick={() => window.open('https://t.me/xmatchpro', '_blank')}
               >
-                Get Started
+                {t('premium_banner.get_started')}
               </Button>
             </motion.div>
           </div>
@@ -101,7 +102,7 @@ export function PremiumBanner() {
               >
                 <stat.icon className="w-5 h-5 mx-auto mb-1.5 text-red-600" />
                 <div className="text-xl font-bold">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-sm text-muted-foreground">{t(`premium_banner.stats.${stat.label}`)}</div>
               </motion.div>
             ))}
           </div>

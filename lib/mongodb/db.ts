@@ -99,7 +99,6 @@ const modelSchema = new mongoose.Schema<IModel>({
   }
 });
 
-
 // Create model
 export const AdultModel = mongoose.models.AdultModel || mongoose.model<IModel>('AdultModel', modelSchema, COLLECTION_NAME);
 
@@ -122,10 +121,8 @@ export async function testConnection() {
   }
 }
 
-
 // 🔥 SIMILARITY CALCULATION 🔥
 export function calculateSimilarity(descriptor1: number[], descriptor2: number[]): number {
-  // 1. Geçerlilik kontrolleri
   if (!descriptor1?.length || !descriptor2?.length || descriptor1.length !== descriptor2.length) {
     console.warn("❌ Descriptor boyutları eşleşmiyor!");
     return 0;
@@ -136,18 +133,11 @@ export function calculateSimilarity(descriptor1: number[], descriptor2: number[]
     return 0;
   }
 
-  // 2. Birebir aynı descriptor kontrolü
-  const isIdentical = descriptor1.every((val, i) => Math.abs(val - descriptor2[i]) < 1e-10);
-  if (isIdentical) {
-    return 100;
-  }
-
-  // 3. Cosine Similarity Hesaplama
+  const factor = Math.pow(10, descriptor1.length > 128 ? 6 : 8);
   let dotProduct = 0;
   let norm1 = 0;
   let norm2 = 0;
-
-  const factor = Math.pow(10, PRECISION);
+  let euclideanDistance = 0;
 
   for (let i = 0; i < descriptor1.length; i++) {
     const d1 = Math.round(descriptor1[i] * factor) / factor;
@@ -155,56 +145,41 @@ export function calculateSimilarity(descriptor1: number[], descriptor2: number[]
     dotProduct += d1 * d2;
     norm1 += d1 * d1;
     norm2 += d2 * d2;
+    const diff = d1 - d2;
+    euclideanDistance += diff * diff;
   }
 
   norm1 = Math.sqrt(norm1);
   norm2 = Math.sqrt(norm2);
-
   if (norm1 === 0 || norm2 === 0) {
     console.warn("⚠️ Boş vektör tespit edildi!");
     return 0;
   }
 
   const cosineSimilarity = dotProduct / (norm1 * norm2);
-  const cosineScore = (cosineSimilarity + 1) / 2; // Normalize edilmiş: [0, 1]
+  const cosineScore = (cosineSimilarity + 1) / 2;
 
-  // 4. Euclidean Distance Hesaplama
-  let euclideanDistance = 0;
-  for (let i = 0; i < descriptor1.length; i++) {
-    const d1 = Math.round(descriptor1[i] * factor) / factor;
-    const d2 = Math.round(descriptor2[i] * factor) / factor;
-    const diff = d1 - d2;
-    euclideanDistance += diff * diff;
-  }
   euclideanDistance = Math.sqrt(euclideanDistance);
-
-  // 5. Normalize Euclidean Score
   const normalizedEuclideanScore = Math.max(0, (1 - (euclideanDistance / MAX_DISTANCE)));
 
-  // 6. Weighted Combination
-  const combinedScore = (cosineScore * COSINE_WEIGHT) + (normalizedEuclideanScore * EUCLIDEAN_WEIGHT);
+  const cosineWeight = cosineScore > 0.8 ? 0.85 : 0.75;
+  const euclideanWeight = 1 - cosineWeight;
 
-  // 7. Boost Mekanizması (Sigmoid/Tanh daha stabil)
+  const combinedScore = (cosineScore * cosineWeight) + (normalizedEuclideanScore * euclideanWeight);
+
   let boostedScore = combinedScore;
-
   if (combinedScore > HIGH_SIMILARITY_THRESHOLD) {
-    const boostFactor = 1 + Math.tanh((combinedScore - HIGH_SIMILARITY_THRESHOLD) * 5);
-    boostedScore = Math.min(1, combinedScore * boostFactor);
-  } else if (combinedScore > 0.75) {
-    const scaledBoost = 1 + ((combinedScore - 0.75) * (SIMILARITY_BOOST - 1));
-    boostedScore = Math.min(1, combinedScore * scaledBoost);
+    const boostStrength = 1 + (combinedScore - HIGH_SIMILARITY_THRESHOLD) * 10;
+    boostedScore = Math.min(1, combinedScore * boostStrength);
   }
 
-  // 8. Final skoru yüzde olarak hesapla
   let finalPercent = Number((boostedScore * 100).toFixed(1));
 
-  // 9. Yüksek skorları daha belirgin vurgula
   if (finalPercent > 90) {
     const emphasis = Math.pow((finalPercent - 90) / 10, 1.5) * 10;
     finalPercent = Math.min(100, Number((90 + emphasis).toFixed(1)));
   }
 
-  // 10. Skoru normalize et ve minimum güven skorunu uygula
   const dynamicMinConfidence = HIGH_SIMILARITY_THRESHOLD * 100 * 0.4;
   const minThreshold = Math.max(MIN_CONFIDENCE, dynamicMinConfidence);
 

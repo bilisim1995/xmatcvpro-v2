@@ -18,6 +18,7 @@ import { ModelCarousel } from '../shared/model-carousel';
 import { motion } from 'framer-motion';
 import { ResultCard } from '../image-search/result-card';
 import { AgeVerificationDialog } from '@/components/age-verification/age-verification-dialog';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 interface AdSlot {
   type: 'ad';
@@ -25,14 +26,18 @@ interface AdSlot {
 }
 
 function AdCard({ index }: { index: string | number }) {
+  function t(arg0: string): import("react").ReactNode {
+    throw new Error('Function not implemented.');
+  }
+
   return (
     <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border p-4">
       <div className="flex flex-col items-center justify-center flex-grow px-4 pt-6 text-center">
         <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
           <Megaphone className="w-6 h-6 text-red-600" />
         </div>
-        <h3 className="text-lg font-semibold mb-2">Advertisement</h3>
-        <p className="text-sm text-muted-foreground">Promoted content</p>
+        <h3 className="text-lg font-semibold mb-2">{t('advancedsearch.advertisement')}</h3>
+        <p className="text-sm text-muted-foreground">{t('advancedsearch.promoted_content')}</p>
       </div>
 
       <div className="flex justify-center pb-4">
@@ -45,6 +50,7 @@ function AdCard({ index }: { index: string | number }) {
 }
 
 export default function AdvancedSearchTab() {
+  const { t } = useLanguage();
   const [filters, setFilters] = useState<ModelFilters>({});
   const { search, isLoading, results, error } = useAdvancedSearch();
   const { toast } = useToast();
@@ -160,8 +166,8 @@ export default function AdvancedSearchTab() {
     } catch (error) {
       console.error('Random search error:', error);
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to fetch random models',
+        title: t('advancedsearch.error_title'),
+        description: error instanceof Error ? error.message : t('advancedsearch.random_search_error'),
         variant: 'destructive'
       });
     } finally {
@@ -199,7 +205,7 @@ export default function AdvancedSearchTab() {
           <SheetTrigger asChild>
             <div className="flex gap-2">
               <Button variant="outline" className="gap-2 relative">
-                <span>More Filters</span>
+                <span>{t('advancedsearch.more_filters')}</span>
                 {hasActiveFilters && (
                   <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
                     {Object.keys(filters).length}
@@ -223,7 +229,7 @@ export default function AdvancedSearchTab() {
           </SheetTrigger>
           <SheetContent side="left" className="w-full sm:max-w-md p-0 overflow-hidden">
             <SheetHeader className="p-6 pb-2">
-              <SheetTitle>Advanced Filters</SheetTitle>
+              <SheetTitle>{t('advancedsearch.advanced_filters')}</SheetTitle>
             </SheetHeader>
             <Separator />
             <ScrollArea className="h-[calc(100vh-10rem)]">
@@ -241,7 +247,7 @@ export default function AdvancedSearchTab() {
                 className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white"
               >
                 <Search className="w-4 h-4 mr-2" />
-                Apply Filters
+                {t('advancedsearch.apply_filters')}
               </Button>
               {hasActiveFilters && (
                 <Button
@@ -251,7 +257,7 @@ export default function AdvancedSearchTab() {
                   className="w-full"
                 >
                   <X className="w-4 h-4 mr-2" />
-                  Reset Filters
+                  {t('advancedsearch.reset_filters')}
                 </Button>
               )}
             </div>
@@ -264,7 +270,7 @@ export default function AdvancedSearchTab() {
           className="flex-1 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white"
         >
           <Search className="w-4 h-4 mr-2" />
-          Search
+          {t('advancedsearch.search')}
         </Button>
       </div>
 
@@ -278,12 +284,12 @@ export default function AdvancedSearchTab() {
             {isLoadingRandom ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Loading Random Models...
+                {t('advancedsearch.loading_random_models')}
               </>
             ) : (
               <>
                 <Dice className="w-4 h-4 mr-2 animate-bounce" />
-                I&apos;M FEELING LUCKY
+                {t('advancedsearch.feeling_lucky')}
               </>
             )}
           </Button>
@@ -319,7 +325,7 @@ export default function AdvancedSearchTab() {
                     animate={{ y: 0 }}
                     transition={{ delay: 0.1 }}
                   >
-                    Search Results
+                    {t('advancedsearch.search_results')}
                   </motion.h2>
                   <div className="flex gap-1 items-center">
                     <Button

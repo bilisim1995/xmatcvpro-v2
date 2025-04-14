@@ -2,31 +2,34 @@
 
 import { Card } from '@/components/ui/card';
 import { DollarSign, Video } from 'lucide-react';
-
-const adOptions = [
-  {
-    title: 'Premium Banner Ads',
-    description: 'High-visibility banner placements across our platform',
-    icon: DollarSign
-  },
-  {
-    title: 'Sponsored Content',
-    description: 'Native advertising integrated into search results',
-    icon: DollarSign
-  },
-  {
-    title: 'Sponsored Videos',
-    description: 'Premium video placement and recommendations',
-    icon: Video
-  },
-  {
-    title: 'Partnership Opportunities',
-    description: 'Long-term collaboration and co-branding options',
-    icon: DollarSign
-  }
-];
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 export function AdOptions() {
+  const { t } = useLanguage();
+
+  const adOptions = [
+    {
+      title: t('adoptions.premium_banner_ads'),
+      description: t('adoptions.premium_banner_description'),
+      icon: DollarSign
+    },
+    {
+      title: t('adoptions.sponsored_content'),
+      description: t('adoptions.sponsored_content_description'),
+      icon: DollarSign
+    },
+    {
+      title: t('adoptions.sponsored_videos'),
+      description: t('adoptions.sponsored_videos_description'),
+      icon: Video
+    },
+    {
+      title: t('adoptions.partnership_opportunities'),
+      description: t('adoptions.partnership_opportunities_description'),
+      icon: DollarSign
+    }
+  ];
+
   return (
     <div className="space-y-4">
       {adOptions.map((option, index) => (

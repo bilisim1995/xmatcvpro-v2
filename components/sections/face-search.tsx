@@ -4,9 +4,11 @@ import { MoveRight, Scan } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/components/contexts/LanguageContext';
 
 export function FaceSearch() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleStartSearch = () => {
     router.push('/search');
@@ -58,7 +60,7 @@ export function FaceSearch() {
             transition={{ delay: 0.3 }}
             className="text-4xl font-bold"
           >
-            Pornstars Search by Face with AI
+            {t('face_search.title')}
           </motion.h2>
           
           <motion.p
@@ -67,7 +69,7 @@ export function FaceSearch() {
             transition={{ delay: 0.4 }}
             className="text-xl text-muted-foreground"
           >
-            Upload any face photo and our AI will find matching adult performers from our extensive database.
+            {t('face_search.description')}
           </motion.p>
 
           <motion.div
@@ -79,15 +81,15 @@ export function FaceSearch() {
             <ul className="space-y-3">
               <li className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-red-600" />
-                <span>Advanced facial recognition AI</span>
+                <span>{t('face_search.advanced_ai')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-red-600" />
-                <span>10K+ performer database</span>
+                <span>{t('face_search.database')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-2 h-2 rounded-full bg-red-600" />
-                <span>99% accuracy rate</span>
+                <span>{t('face_search.accuracy')}</span>
               </li>
             </ul>
 
@@ -96,7 +98,7 @@ export function FaceSearch() {
               size="lg"
               className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white px-8 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              Try Face Search
+              {t('face_search.button')}
               <MoveRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>
