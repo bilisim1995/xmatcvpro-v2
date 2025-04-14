@@ -198,7 +198,7 @@
     "restful_api_title": "RESTful API",
     "restful_api_description": "Yüz algılama, tanıma ve kapsamlı model veri erişimi için basit ve güçlü REST API.",
     "extensive_db_title": "Geniş Veritabanı",
-    "extensive_db_description": "Ayrıntılı fiziksel özelliklere ve yapay zeka analizli yüz özelliklerine sahip 100.000'den fazla modelden oluşan büyüyen veritabanımıza erişim.",
+    "extensive_db_description": "Ayrıntılı fiziksel özelliklere ve yapay zeka analizli yüz özelliklerine sahip 10.000'den fazla modelden oluşan büyüyen veritabanımıza erişim.",
     "available_data_title": "Mevcut Veri",
     "physical_attributes": "Fiziksel Özellikler",
     "face_analysis": "Yapay Zeka Yüz Analizi",

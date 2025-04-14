@@ -1,0 +1,375 @@
+{
+  "features": {
+    "upload_title": "上传图片",
+    "upload_description": "只需拖放或点击即可上传您的图片。支持所有主流图片格式。",
+    "smart_search_title": "智能搜索",
+    "smart_search_description": "我们先进的 AI 算法分析图像以查找匹配的成人内容。",
+    "instant_results_title": "即时结果",
+    "instant_results_description": "在几秒钟内获得前 3 个最相似的匹配结果，并附带准确率百分比。"
+  },
+  "additional_features": {
+    "secure_private": "安全 & 私密",
+    "available_247": "全天候可用",
+    "large_database": "庞大数据库",
+    "fast_processing": "快速处理"
+  },
+  "hero": {
+    "description": "使用先进的 AI 技术查找相似的成人内容。上传任何图像即可立即发现匹配的模特。",
+    "start_search": "开始搜索"
+  },
+  "face_search": {
+    "title": "通过 AI 人脸搜索色情明星",
+    "description": "上传任何面部照片，我们的 AI 将从我们庞大的数据库中找到匹配的成人表演者。",
+    "advanced_ai": "先进的人脸识别 AI",
+    "database": "超过 1 万表演者数据库",
+    "accuracy": "99% 准确率",
+    "button": "尝试人脸搜索"
+  },
+  "faq": {
+    "title": "常见问题",
+    "q1_title": "支持哪些文件格式？",
+    "q1_answer": "我们支持 JPG、PNG 和 WEBP 格式。",
+    "q2_title": "我的数据安全吗？",
+    "q2_answer": "所有上传均经过加密，并在处理后自动删除。",
+    "q3_title": "结果的准确性如何？",
+    "q3_answer": "我们的 AI 在匹配方面的准确率高达 99%。",
+    "q4_title": "结果有多快？",
+    "q4_answer": "结果通常在几秒钟内送达。"
+  },
+  "search_header": {
+    "title": "通过 AI 人脸搜索色情明星",
+    "description": "上传任何面部照片，我们的 AI 将从我们庞大的数据库中找到匹配的色情明星模特。"
+  },
+  "tabs": {
+    "search_by_image": "以图搜图",
+    "advanced_search": "高级搜索"
+  },
+  "how_it_works": {
+    "title": "工作原理",
+    "subtitle": "三个简单的步骤即可找到您的匹配项",
+    "step1_title": "上传您的照片",
+    "step1_description": "上传您想要查找相似匹配项的女演员或模特的照片。",
+    "step2_title": "人脸检测",
+    "step2_description": "我们的 AI 系统会自动检测和分析您图像中的面部特征。",
+    "step3_title": "获取结果",
+    "step3_description": "浏览包含相似度得分的精选匹配列表。"
+  },
+  "image_uploader": {
+    "upload_photo": "上传您的照片",
+    "best_results": "为获得最佳效果，请上传一张清晰的正面照。",
+    "jpg_png": "JPG, PNG",
+    "max_5mb": "最大 5MB",
+    "not_stored": "上传的图片不会被存储，处理后会立即删除",
+    "only_adults": "仅上传 18 岁以上成人的图片",
+    "select_image": "选择图片",
+    "drag_drop": "拖放或选择图片",
+    "change_photo": "更换照片",
+    "searching": "搜索中...",
+    "search": "搜索",
+    "error": "发生错误",
+    "age_verification_required": "需要年龄验证",
+    "age_verification_description": "您必须验证上传的人员是否年满 18 岁。",
+    "age_verification_failed": "年龄验证失败",
+    "adult_images_only": "仅允许上传成人图片（18 岁以上）。",
+    "no_matches_found": "未找到匹配项",
+    "adjust_image_quality": "尝试使用更清晰的图像。",
+    "failed_to_process_image": "无法处理图像"
+  },
+  "premium_banner": {
+    "premium_advertising": "高级广告",
+    "banner_title": "高级横幅广告",
+    "banner_description": "在我们平台的醒目位置投放横幅广告。通过优质广告位触达数百万活跃用户。",
+    "get_started": "开始使用",
+    "stats": {
+      "monthly_users": "月用户数",
+      "daily_searches": "每日搜索量",
+      "accuracy_rate": "准确率"
+    }
+  },
+  "blog": {
+    "post1": {
+      "title": "人脸识别应用：发现与色情明星的相似之处！",
+      "excerpt": "在当今科技时代，使用人脸识别技术分析和匹配图像已成为可能。现在，我们特别设计的应用程序通过利用人脸识别功能，为您提供有趣且引人入胜的体验。这就是我们的 - xmatch.pro - 应用程序！"
+    },
+    "post2": {
+      "title": "应用程序如何工作？",
+      "excerpt": "在我们的应用程序中，通过简单的界面上传您喜欢的女孩或色情明星的照片。应用程序通过使用神经网络和人工智能分析上传图像中的人脸来识别它。然后，它将其与我们庞大的色情明星档案库中的人脸进行比较，并识别出前 3 个最相似的明星。它会与您分享这些个人资料的链接。"
+    },
+    "post3": {
+      "title": "为什么要使用我们的应用程序？",
+      "excerpt": "娱乐性：发现您与哪些著名色情电影明星相似，不仅提供了有趣的体验，还可以成为与朋友和家人之间很好的谈话开端。引人入胜的结果：得益于我们应用程序强大的面部识别算法，结果可能真正令人印象深刻和着迷。谁知道呢，您可能实际上与您最喜欢的色情电影明星非常相似！学习机会：探索您与明星的相似之处可以拓宽您的兴趣，并帮助您发现不同的色情电影类型或演员。"
+    },
+    "post4": {
+      "title": "什么是 xmatch.pro？",
+      "excerpt": "探索先进人脸识别技术的强大功能！我们的新应用程序会将您上传的照片与庞大的人脸数据库进行匹配，为您提供独特而有趣的体验。我们的应用程序如何工作？上传您的照片：首先上传一张清晰的自拍照。面部分析：我们先进的算法会分析您面部的独特特征。匹配：找出我们数据库中哪些人脸与您相似，并发现您的相似者。功能：快速准确的匹配：使用最新技术获得即时结果。庞大的数据库：包含从名人到匿名用户的广泛人脸数据库。安全和隐私：您的照片是安全的；我们优先考虑您的隐私，绝不会分享您的数据。为什么要使用我们的应用程序？乐趣：享受发现您与哪些名人或有趣的人相似的体验。好奇心：通过发现您的相似者来满足您的好奇心。分享：与朋友分享您的结果，并引发有趣的对话。使用我们的人脸识别应用程序发现您与谁相似，并享受乐趣。立即上传您的照片，找到您的匹配！"
+    },
+    "post5": {
+      "title": "通过 AI 驱动的人脸识别发现色情明星和成人模特",
+      "excerpt": "我们下一代 AI 驱动的人脸识别技术让您比以往任何时候都更容易找到照片或视频中那个性感女孩是谁。无论是您在网上找到的随机图片，还是令人惊叹的美女快照，只需将其上传到我们的系统即可。先进的神经网络和人工智能算法会立即分析面部，扫描眼睛形状、嘴唇、鼻子和面部轮廓等关键特征。在几秒钟内，系统会将其与我们庞大的色情明星、成人模特和 OnlyFans 创作者数据库进行比较。结果是什么？您将获得与您上传的面部最匹配的前 16 位色情明星或成人表演者，以及他们个人资料、视频和独家内容的直接链接。此工具非常适合那些好奇的时刻，当您只想知道那个色情明星是谁，或者当您想发现新的美女来探索时。无论您是休闲粉丝还是成人行业爱好者，我们的人脸识别服务都能让您更接近您渴望的明星。不再需要猜测或无休止的搜索——只需上传、匹配并享受发现色情世界中人物的快感。通过人脸识别查找色情明星和成人模特的需求从未如此之高，而借助我们的系统，您始终领先一步。"
+    },
+    "post6": {
+      "title": "您的照片看起来像谁？找到您的色情明星或 OnlyFans 双胞胎！",
+      "excerpt": "有没有想过您（或您认识的人）看起来像哪个色情明星或 OnlyFans 模特？上传照片，让我们的 AI 来完成剩下的工作。我们先进的人脸识别技术会扫描您上传的面部的每一个曲线、每一个角度和每一个特征。在几秒钟内，它会将其与庞大的热门色情明星和 OnlyFans 美女数据库进行比较。想知道您（或那个性感的女孩）可能会被误认为是哪个人吗？我们将向您展示前 3 个匹配项，并附有他们独家内容、个人资料等的直接链接。无论您是想满足一下好奇心，还是只是想找到您在成人行业的双胞胎，此工具都适合您。停止猜测。开始寻找。立即上传，看看您（或其他人）与哪个著名色情明星或美女长得一模一样！"
+    },
+    "post7": {
+      "title": "什么是人工智能人脸识别？",
+      "excerpt": "人工智能人脸识别（或人脸识别技术）是一种利用计算机和人工智能算法的技术。该技术用于识别和验证个体的面部特征，分析这些特征，并通过使用他们的面部图像来确定人的身份。人脸识别的工作原理是识别人的面部特征，例如他们的面部轮廓、眼睛的位置、鼻子的结构、嘴唇的形状和其他面部特征。人工智能人脸识别的过程包括几个步骤。第一步是捕获人脸的图像，这通常使用摄像头或图像源完成。然后对该图像进行处理，并提取各种面部特征。特别地，计算眼睛之间的距离、鼻子和嘴巴的位置、面部轮廓和相似的特征。然后，人脸识别技术将这些提取的特征与数据库中的记录进行比较。该数据库可能包含已知个体的人脸特征。通过计算匹配的概率，该技术确定捕获的面部的身份。如果找到匹配项，则识别人，并确定其身份。人工智能人脸识别的应用非常广泛。该技术用于安全系统、门禁控制、自动化系统、医疗保健行业、营销分析以及各种其他领域。它还用于智能手机等设备中的个人身份验证。通过这项技术，安全性得到增强，自动化得到加速，个人身份验证过程得到简化。"
+    },
+    "post8": {
+      "title": "探索日常使用的面部识别应用程序",
+      "excerpt": "由于人工智能的进步，面部识别应用程序在日常生活中变得越来越流行。这些移动应用程序旨在通过智能手机摄像头识别和验证个人的面部。通过分析眼睛之间的距离、鼻子宽度和嘴巴弯曲度等面部标志点，这些应用程序可以在几秒钟内提供准确的身份验证。面部识别应用程序的常见用途包括解锁智能手机、保护移动银行应用程序以及增强社交媒体体验。一些应用程序专为娱乐而设计，允许用户查找名人相似者，甚至识别包括演员和公众人物在内的著名人物。此外，企业使用面部识别应用程序来简化客户体验，例如个性化购物或活动中的自动签到。尽管存在对隐私的担忧，但这些应用程序在各个行业都提供了显着的便利性和安全性改进。"
+    },
+    "post9": {
+      "title": "找出哪个色情明星看起来像您梦中的女孩",
+      "excerpt": "她是不是一直活在您幻想中的女孩？或者您只是找到了一张照片，并且一直想知道她在色情明星和 OnlyFans 模特的世界里看起来像谁。现在上传她的照片，让我们的 AI 驱动的人脸识别来完成剩下的工作。我们将扫描她的脸，每一个曲线和特征，并将其与我们庞大的成人明星数据库进行比较。只需几秒钟，您就会发现她最像的前 3 位色情明星或 OnlyFans 美女。是的，我们将分享他们最热门的个人资料和独家内容的直接链接。无论您是追逐幻想，还是只是好奇您梦中的美女到底是谁，我们都能让您轻松找到答案。停止想象。开始发现。您的下一个迷恋对象仅一步之遥。"
+    },
+    "post10": {
+      "title": "人脸识别背后的技术",
+      "excerpt": "人工智能人脸识别（或人脸识别技术）是一种利用计算机和人工智能算法的技术。该技术用于识别和验证个体的面部特征，分析这些特征，并通过使用他们的面部图像来确定人的身份。人脸识别的工作原理是识别人的面部特征，例如他们的面部轮廓、眼睛的位置、鼻子的结构、嘴唇的形状和其他面部特征。人工智能人脸识别的过程包括几个步骤。第一步是捕获人脸的图像，这通常使用摄像头或图像源完成。然后对该图像进行处理，并提取各种面部特征。特别地，计算眼睛之间的距离、鼻子和嘴巴的位置、面部轮廓和相似的特征。然后，人脸识别技术将这些提取的特征与数据库中的记录进行比较。该数据库可能包含已知个体的人脸特征。通过计算匹配的概率，该技术确定捕获的面部的身份。如果找到匹配项，则识别人，并确定其身份。人工智能人脸识别的应用非常广泛。该技术用于安全系统、门禁控制、自动化系统、医疗保健行业、营销分析以及各种其他领域。它还用于智能手机等设备中的个人身份验证。通过这项技术，安全性得到增强，自动化得到加速，个人身份验证过程得到简化。"
+    }
+  },
+  "toplist": {
+    "title": "热门网站列表 | MyProject",
+    "description": "发现用户分类的最佳网站。浏览、搜索和探索！",
+    "visit_site": "访问网站",
+    "all_sites": "所有网站",
+    "unknown_category": "未知分类"
+  },
+  "topfilters": {
+    "filter_by_category": "按分类筛选",
+    "sort_by": "排序方式",
+    "newest": "最新",
+    "oldest": "最旧",
+    "most_popular": "最受欢迎",
+    "hair_color": "发色",
+    "select_hair_color": "选择发色",
+    "eye_color": "瞳孔颜色",
+    "select_eye_color": "选择瞳孔颜色",
+    "cup_size": "罩杯尺寸",
+    "select_cup_size": "选择罩杯尺寸",
+    "any": "任何",
+    "blonde": "金色",
+    "brown": "棕色",
+    "black": "黑色",
+    "red": "红色",
+    "auburn": "红棕色",
+    "grey": "灰色",
+    "other": "其他",
+    "blue": "蓝色",
+    "green": "绿色",
+    "hazel": "淡褐色",
+    "amber": "琥珀色",
+    "cup_a": "A 罩杯",
+    "cup_b": "B 罩杯",
+    "cup_c": "C 罩杯",
+    "cup_d": "D 罩杯",
+    "cup_dd": "DD 罩杯",
+    "cup_ddd": "DDD 罩杯",
+    "cup_e": "E 罩杯",
+    "cup_f": "F 罩杯",
+    "cup_g": "G 罩杯"
+  },
+  "advancedsearch": {
+    "more_filters": "更多筛选条件",
+    "advanced_filters": "高级筛选",
+    "apply_filters": "应用筛选",
+    "reset_filters": "重置筛选",
+    "search": "搜索",
+    "loading_random_models": "正在加载随机模特...",
+    "feeling_lucky": "手气不错",
+    "search_results": "搜索结果",
+    "advertisement": "广告",
+    "promoted_content": "推广内容",
+    "error_title": "错误",
+    "random_search_error": "获取随机模特失败"
+  },
+  "ageverification": {
+    "title": "需要年龄验证",
+    "subtitle": "本内容仅供成人观众观看。",
+    "confirm_message": "点击“我已年满 18 岁”，即表示您确认：\n• 您已达到观看成人内容的法定年龄\n• 此操作符合您当地的法律\n• 您对自己的行为承担全部责任",
+    "confirm_button": "我已年满 18 岁",
+    "exit_button": "退出",
+    "disclaimer": "法律要求进行此验证。我们不会收集或存储任何个人信息。"
+  },
+  "apimodal": {
+    "title": "开发者 API",
+    "coming_soon": "敬请期待！",
+    "coming_description": "我们强大的 AI 人脸识别和模型数据 API 即将向开发者开放。",
+    "restful_api_title": "RESTful API",
+    "restful_api_description": "简单而强大的 REST API，用于人脸检测、识别和全面的模型数据访问。",
+    "extensive_db_title": "庞大数据库",
+    "extensive_db_description": "访问我们不断增长的超过 10 万个模型的数据库，其中包含详细的身体特征和 AI 分析的面部特征。",
+    "available_data_title": "可用数据",
+    "physical_attributes": "身体特征",
+    "face_analysis": "AI 人脸分析",
+    "get_early_access_title": "获取抢先体验",
+    "get_early_access_description": "加入我们的候补名单，抢先体验我们全面的模型数据库 API，该 API 具有 AI 驱动的人脸识别功能。",
+    "contact_button": "联系以获取抢先体验"
+  },
+  "statsmodal": {
+    "platform_statistics": "平台统计",
+    "user_demographics": "用户人口统计",
+    "gender_distribution": "性别分布",
+    "age_distribution": "年龄分布",
+    "country_distribution": "国家分布",
+    "activity_statistics": "活动统计"
+  },
+  "admodal": {
+    "learn_more": "了解更多",
+    "advertise_with_us": "与我们合作推广",
+    "advertising_options": "广告选项"
+  },
+  "sponsoredcontent": {
+    "sponsored_content": "赞助内容",
+    "premium_banner_ads": "高级横幅广告",
+    "premium_banner_description": "在我们平台的醒目位置投放横幅广告。通过优质广告位触达数百万活跃用户。",
+    "get_started": "开始使用",
+    "monthly_users": "月用户数",
+    "daily_searches": "每日搜索量",
+    "accuracy_rate": "准确率"
+  },
+  "adoptions": {
+    "premium_banner_ads": "高级横幅广告",
+    "premium_banner_description": "在我们平台上的高可见度横幅广告位",
+    "sponsored_content": "赞助内容",
+    "sponsored_content_description": "集成到搜索结果中的原生广告",
+    "sponsored_videos": "赞助视频",
+    "sponsored_videos_description": "优质视频展示和推荐",
+    "partnership_opportunities": "合作机会",
+    "partnership_opportunities_description": "长期合作和联合品牌推广选项"
+  },
+  "adfeatures": {
+    "reach_users": "通过 xmatch.pro 上的战略性广告机会触达全球数百万用户",
+    "targeted_audience": "目标受众",
+    "targeted_audience_description": "接触高度活跃的成人娱乐受众",
+    "premium_placement": "优质展示位置",
+    "premium_placement_description": "最大化可见性的战略性广告位置"
+  },
+  "statsdata": {
+    "total_models": "模特总数",
+    "total_models_description": "数据库中的模特总数",
+    "monthly_visitors": "月访客量",
+    "monthly_visitors_description": "过去 30 天的独立访客",
+    "daily_searches": "每日搜索量",
+    "daily_searches_description": "平均每日搜索次数",
+    "male": "男性",
+    "female": "女性",
+    "other": "其他",
+    "others": "其他",
+    "peak_hours": "高峰时段",
+    "most_active_day": "最活跃日",
+    "saturday": "星期六",
+    "avg_session": "平均会话时长"
+  },
+  "contactsection": {
+    "get_in_touch": "联系我们",
+    "contact_message": "有兴趣与我们合作推广吗？联系我们的团队讨论合作机会和定制方案。",
+    "response_time": "我们将在 24 小时内回复。"
+  },
+  "developmentstatus": {
+    "version": "开发版本：",
+    "status": "状态：",
+    "updating_message": "模特和搜索技术正在不断更新和改进。"
+  },
+  "advancedsearchresults": {
+    "searching": "正在搜索模特数据库...",
+    "new_search": "新的搜索"
+  },
+  "imagesearchresults": {
+    "analyzing": "正在分析图像并搜索数据库...",
+    "search_again": "再次使用图片搜索"
+  },
+  "similar_models": "找到相似模特",
+  "similar_models_description": "我们找到了以下与上传的图像非常匹配的模特。",
+  "similarity_score": "相似度评分",
+  "view_profile": "查看资料",
+  "no_results_found": "未找到结果",
+  "try_different_image": "尝试不同的图像或调整过滤器。",
+  "search_results": {
+    "title": "搜索结果",
+    "description": "我们找到了以下与您的搜索条件非常匹配的模特。",
+    "no_results_found": "未找到结果。请尝试调整您的筛选条件。"
+  },
+  "search_by_image": {
+    "title": "以图搜图",
+    "description": "上传图片以查找相似模特。"
+  },
+  "footer": {
+    "copyright": "© 2025 xmatch.pro |",
+    "rta": "RTA",
+    "disclaimer": "免责声明",
+    "2257": "2257",
+    "dmca": "DMCA",
+    "privacy": "隐私",
+    "terms": "条款",
+    "terms_of_service": "服务条款",
+    "privacy_policy": "隐私政策",
+    "contact_us": "联系我们",
+    "about_us": "关于我们",
+    "follow_us": "关注我们",
+    "social_media": {
+      "facebook": "Facebook",
+      "twitter": "Twitter",
+      "instagram": "Instagram"
+    },
+    "noresults": {
+      "title": "未找到结果",
+      "description": "没有模特符合您选择的条件。请尝试调整您的筛选条件或开始新的搜索。",
+      "active_filters": "当前筛选条件：",
+      "reset_filters": "重置筛选条件"
+    }
+  },
+  "loadinganimation": {
+    "analyzing": "正在分析图像并搜索数据库...",
+    "may_take_time": "这可能需要一些时间",
+    "detailed_description": "人脸识别系统经过优化，使用深度学习模型实现高精度和快速匹配。它检测并分析面部的 64 个关键点以确定相似性。"
+  },
+  "searchresults": {
+    "search_results": "搜索结果",
+    "search_again": "再次搜索"
+  },
+  "sharemodal": {
+    "share_results": "分享结果",
+    "share_your_results": "分享您的结果",
+    "ai_powered_results": "AI 驱动的搜索结果",
+    "powered_by_ai": "由 AI 人脸识别驱动",
+    "success_title": "成功！",
+    "success_description": "您的结果已成功下载。",
+    "error_title": "下载失败",
+    "error_description": "请重试。如果问题仍然存在，请尝试其他浏览器。",
+    "processing": "处理中...",
+    "download_results": "下载结果"
+  },
+  "modeldetail": {
+    "model_not_found": "未找到模特",
+    "model_not_found_description": "无法找到请求的模特。",
+    "go_back": "返回",
+    "physical_attributes": "身体特征",
+    "age": "年龄",
+    "height": "身高",
+    "weight": "体重",
+    "ethnicity": "种族",
+    "features": "特征",
+    "cup_size": "罩杯尺寸：",
+    "hair": "头发：",
+    "eyes": "眼睛：",
+    "has_tattoos": "有纹身",
+    "has_piercings": "有穿孔",
+    "biography": "个人简介",
+    "watch_videos": "观看视频"
+  },
+  "videomodal": {
+    "videos": "视频",
+    "adult_content_warning": "成人内容警告",
+    "warning_message": "您即将观看包含 {modelName} 的成人内容。继续操作，即表示您确认：\n• 您已达到观看成人内容的法定年龄\n• 此操作符合您当地的法律\n• 您对自己的行为承担全部责任",
+    "platforms": {
+      "xvideos": "最受欢迎的成人内容平台",
+      "pornhub": "优质视频",
+      "onlyfans": "独家内容"
+    },
+    "cancel": "取消"
+  },
+  "coffeebutton": {
+    "buy_me_a_coffee": "请我喝安全饮品"
+  }
+}

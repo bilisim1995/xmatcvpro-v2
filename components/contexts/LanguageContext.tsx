@@ -6,10 +6,11 @@ import tr from '@/app/locales/tr.json';
 import ru from '@/app/locales/ru.json';
 import hi from '@/app/locales/hi.json';
 import de from '@/app/locales/de.json';
+import zh from '@/app/locales/zh.json';
 
-const translations = { en, ru, hi, de, tr };
+const translations = { en, ru, hi, de, tr, zh };
 
-type Language = 'en' | 'ru' | 'hi' | 'de' | 'tr';
+type Language = 'en' | 'ru' | 'hi' | 'de' | 'tr' | 'zh';
 
 interface LanguageContextType {
   language: Language;
@@ -40,6 +41,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       } else if (browserLang.startsWith('de')) {
         setLanguageState('de');
         localStorage.setItem('lang', 'de');
+      } else if (browserLang.startsWith('zh')) {
+        setLanguageState('zh');
+        localStorage.setItem('lang', 'zh');
       } else {
         setLanguageState('en');
         localStorage.setItem('lang', 'en');

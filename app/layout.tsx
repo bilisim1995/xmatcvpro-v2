@@ -11,6 +11,9 @@ import { ScrollToTop } from '@/components/scroll-to-top';
 import { Toaster } from '@/components/ui/toaster';
 import { Suspense } from 'react';
 import { LanguageProvider } from '@/components/contexts/LanguageContext';
+import { YandexMetrika } from '@/components/analytics/yandex-metrika';
+import { GoogleAnalytics } from '@/components/analytics/google-analytics';
+import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -73,6 +76,9 @@ export default function RootLayout({
             <Navbar />
           </Suspense>
           <main className="flex-1">
+          <YandexMetrika />
+          <GoogleAnalytics />
+          <GoogleTagManager />
             {children}
           </main> 
           <Footer />

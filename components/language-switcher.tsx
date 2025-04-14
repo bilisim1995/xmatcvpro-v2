@@ -13,6 +13,7 @@ export default function LanguageSwitcher() {
     { code: 'en', label: 'EN', flag: '🇬🇧' },
     { code: 'ru', label: 'RU', flag: '🇷🇺' },
     { code: 'hi', label: 'HI', flag: '🇮🇳' },
+    { code: 'zh', label: 'ZH', flag: '🇨🇳' },
     { code: 'de', label: 'DE', flag: '🇩🇪' },
     { code: 'tr', label: 'TR', flag: '🇹🇷' }
   ];
@@ -59,7 +60,7 @@ export default function LanguageSwitcher() {
               <button
                 key={lang.code}
                 onClick={() => {
-                  setLanguage(lang.code as 'en' | 'tr');
+                  setLanguage(lang.code as 'en' | 'tr' | 'ru' | 'hi' | 'de' | 'zh');
                   setOpen(false);
                 }}
                 className={`flex items-center gap-2 w-full px-4 py-2 text-sm text-left text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 ${
