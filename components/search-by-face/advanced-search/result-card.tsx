@@ -98,15 +98,15 @@ export function AdvancedSearchResultCard({ result }: AdvancedSearchResultCardPro
 
         {/* Actions */}
         <div className="grid grid-cols-2 gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={handleProfileClick}
+          <a
+            href={`/models/${result.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full inline-flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
           >
             <span>Profile</span>
             <ExternalLink className="w-3 h-3 ml-1" />
-          </Button>
+          </a>
           <VideoModal 
             modelName={result.name}
             videoUrl={result.link1 || ''}

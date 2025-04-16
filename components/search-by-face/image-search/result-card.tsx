@@ -166,19 +166,15 @@ export function ResultCard({ result, index, showConfidence = true }: ResultCardP
         
         {/* Actions */}
         <div className="grid grid-cols-2 gap-2">
-          <Link
+          <a
             href={`/models/${result.slug || encodeURIComponent(result.name.toLowerCase().replace(/\s+/g, '-'))}`}
-            className="w-full"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full inline-flex items-center justify-center px-4 py-2 border rounded-md text-sm font-medium border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors"
           >
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full"
-            >
-              <span>Profile</span>
-              <ExternalLink className="w-3 h-3 ml-1" />
-            </Button>
-          </Link>
+            <span>Profile</span>
+            <ExternalLink className="w-3 h-3 ml-1" />
+          </a>
           <VideoModal 
             modelName={result.name}
             videoUrl={result.link1 || ''}
@@ -188,7 +184,7 @@ export function ResultCard({ result, index, showConfidence = true }: ResultCardP
                 size="sm"
                 className="w-full bg-red-600 hover:bg-red-700 text-white"
               >
-                <Video className="w-4 h-4 mr-2" />
+                <Video className="w-4 h-4" />
                 Videos
               </Button>
             }
