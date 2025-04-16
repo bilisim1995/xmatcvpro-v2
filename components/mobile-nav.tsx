@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Scan, Star } from 'lucide-react';
+import { Menu, Scan, Star, Construction } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -38,6 +38,18 @@ export function MobileNav() {
           >
             <Star className="w-5 h-5" />
             GOLDEN LIST
+          </Link>
+
+          <Separator />
+
+          <Link
+            href="https://theporndude.com/"
+            target="_blank"
+            rel="nofollow noopener noreferrer"
+            className="flex items-center gap-2 px-2 py-1 text-lg hover:text-red-600 transition-colors"
+          >
+            <Construction className="w-5 h-5" />
+            ThePornDude
           </Link>
         </nav>
       </SheetContent>

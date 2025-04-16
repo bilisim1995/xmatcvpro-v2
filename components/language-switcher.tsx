@@ -48,7 +48,7 @@ export default function LanguageSwitcher() {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1 px-3 py-1.5 rounded-md border bg-white dark:bg-gray-800 dark:text-white cursor-pointer shadow-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition"
       >
-        <span>{current?.flag}</span>
+        <span className="text-2xl sm:text-base">{current?.flag}</span>
         <span className="text-xs font-medium">{current?.label}</span>
         <ChevronDown className="w-4 h-4" />
       </button>
