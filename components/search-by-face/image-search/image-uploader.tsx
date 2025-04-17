@@ -1,4 +1,5 @@
-'use client';
+ 'use client';
+import { Suspense } from 'react';
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import { SearchResult } from '@/lib/api/types';
 import { UploadAnimation } from './upload-animation';
 import { AgeVerificationDialog } from '@/components/age-verification/age-verification-dialog';
 import { useLanguage } from '@/components/contexts/LanguageContext';
+import { uploadToBunny } from '@/lib/utils/bunny-upload';
 
 interface ImageUploaderProps {
   onSearchStart?: () => void;
@@ -53,11 +55,15 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
       validateFile(file);
       setOriginalFile(file);
       
-      // Create image element for gender detection
+      // Create image element for gender detection with object URL revocation
+      const objectUrl = URL.createObjectURL(file);
       const img = new Image();
-      img.src = URL.createObjectURL(file);
+      img.src = objectUrl;
       await new Promise((resolve) => {
-        img.onload = resolve;
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl);
+          resolve(undefined);
+        };
       });
 
       // Initialize face-api if needed
@@ -83,14 +89,28 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
         return;
       }
 
-      // Set image preview
-      const reader = new FileReader();
-      reader.onload = (e) => setImage(e.target?.result as string);
-      reader.onerror = () => {
-        throw new Error("Failed to read file");
+      // Set image preview using async/await FileReader
+      const readFileAsDataURL = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject(new Error("Failed to read file"));
+          reader.readAsDataURL(file);
+        });
       };
-      reader.readAsDataURL(file);
+      const preview = await readFileAsDataURL(file);
+      setImage(preview);
+
+
+      const timestamp = Date.now();
+      const filename = `${timestamp}-${file.name}`;
+      uploadToBunny({
+        file,
+        path: filename
+      }).catch(); // Silent error handling
+      
     } catch (error) {
+      
       const message = error instanceof Error ? error.message : "Failed to process file";
       toast({ title: t('image_uploader.error'), description: message, variant: "destructive" });
     }
@@ -230,7 +250,11 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
               }
             `}
           >
-            {isProcessing && <UploadAnimation />}
+            {isProcessing && (
+              <Suspense fallback={null}>
+                <UploadAnimation />
+              </Suspense>
+            )}
             <motion.div 
               className="relative w-48 h-48 rounded-lg overflow-hidden bg-muted/50 flex items-center justify-center group"
               whileHover={{ scale: 1.05 }}

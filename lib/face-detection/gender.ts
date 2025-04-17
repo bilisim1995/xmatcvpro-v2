@@ -2,6 +2,8 @@
 
 import * as faceapi from 'face-api.js';
 
+const MODEL_URL = '/models';
+
 interface DetectionResult {
   gender: 'male' | 'female' | null;
   age: number | null;
@@ -18,9 +20,9 @@ async function loadModels() {
 
   try {
     modelLoadingPromise = Promise.all([
-      faceapi.nets.ssdMobilenetv1.loadFromUri('/models'),
-      faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-      faceapi.nets.ageGenderNet.loadFromUri('/models')
+      faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
+      faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+      faceapi.nets.ageGenderNet.loadFromUri(MODEL_URL)
     ]).then(() => {
       isModelLoaded = true;
       modelLoadingPromise = null;
@@ -42,8 +44,8 @@ export async function detectGenderAndAge(imageElement: HTMLImageElement): Promis
 
     // Create detection options with higher confidence threshold
     const options = new faceapi.SsdMobilenetv1Options({
-      minConfidence: 0.5,
-      maxResults: 1
+      minConfidence: 0.5
+      // This threshold can be made configurable for advanced use
     });
 
     // Detect face with gender detection
