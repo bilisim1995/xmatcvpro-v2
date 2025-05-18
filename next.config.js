@@ -52,7 +52,10 @@ const nextConfig = {
         hostname: 'cdn.xmatch.pro',
         pathname: '/images/**'
       }
-    ]
+    ],
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    minimumCacheTTL: 60
   },
 
   trailingSlash: false,
@@ -99,7 +102,7 @@ const nextConfig = {
         ]
       },
       {
-        source: '/models/:slug', // <= BU YENİ
+        source: '/models/:slug',
         headers: [
           {
             key: 'Cache-Control',
@@ -127,7 +130,6 @@ const nextConfig = {
       }
     ];
   },
-  
 
   compress: true,
   poweredByHeader: false
