@@ -14,6 +14,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.rewrite(new URL('/api/sitemap_blog', request.url));
   }
 
+  
   // diğer istekler normal devam etsin
   return NextResponse.next();
 }
