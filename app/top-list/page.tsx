@@ -85,9 +85,6 @@ export default function TopListPage() {
             <div className="h-3 w-48 bg-muted rounded" />
           </div>
         </div>
-
-
-        
         <div className="flex gap-2">
           <div className="w-24 h-8 bg-muted rounded" />
           <div className="w-8 h-8 bg-muted rounded" />
