@@ -1,28 +1,28 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Video as VideoIcon, Instagram, Link as LinkIcon, User, Heart } from 'lucide-react'; // Removed Grid icon
+import { Video as VideoIcon, Instagram, Link as LinkIcon, User, Heart, Volume2, VolumeX, AlertCircle } from 'lucide-react'; // Added AlertCircle
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogClose } from '@/components/ui/dialog'; // Added more Dialog parts
 import { usePathname } from 'next/navigation';
-import Confetti from 'react-confetti'; // Import Confetti
-import useWindowSize from 'react-use/lib/useWindowSize'; // Import useWindowSize
+import Confetti from 'react-confetti'; 
+import useWindowSize from 'react-use/lib/useWindowSize'; 
+import { Skeleton } from "@/components/ui/skeleton"; 
 
 interface Video {
   _id: string;
   title?: string;
-  url?: string;
-  cdn_url: string;
+  url?: string; 
+  cdn_url: string; 
   thumbnail_url?: string;
   category?: string;
   description?: string;
-  created_at?: string; // Assuming this is a date string like ISO 8601
+  created_at?: string; 
   updated_at?: string;
   instagram_url?: string;
-  likes?: number; // Added likes field to the interface
+  likes?: number; 
 }
 
-// Key for localStorage
 const LIKED_VIDEOS_STORAGE_KEY = 'likedVideos';
 
 export default function SensualVibesPage() {
@@ -30,12 +30,14 @@ export default function SensualVibesPage() {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const bottomSentinelRef = useRef<HTMLDivElement>(null); // Sentinel for infinite scroll
-  const { width, height } = useWindowSize(); // Get window size for confetti
-  const [confetti, setConfetti] = useState<{ x: number, y: number, w: number, h: number, run: boolean }>({ x: 0, y: 0, w: 0, h: 0, run: false }); // State for confetti effect
-  const [likedVideoIds, setLikedVideoIds] = useState<Set<string>>(new Set()); // State to track liked video IDs
+  const bottomSentinelRef = useRef<HTMLDivElement>(null); 
+  const { width, height } = useWindowSize(); 
+  const [confetti, setConfetti] = useState<{ x: number, y: number, w: number, h: number, run: boolean }>({ x: 0, y: 0, w: 0, h: 0, run: false }); 
+  const [likedVideoIds, setLikedVideoIds] = useState<Set<string>>(new Set()); 
+  const [isGloballyMuted, setIsGloballyMuted] = useState(true); 
+  const [showReportDialog, setShowReportDialog] = useState(false);
+  const [reportingVideoUrl, setReportingVideoUrl] = useState<string | null>(null);
 
-  // Effect to fetch videos
   useEffect(() => {
     const fetchVideos = async () => {
       console.log('Fetching videos...');
@@ -44,7 +46,7 @@ export default function SensualVibesPage() {
         console.log('Fetch response status:', response.status);
         if (!response.ok) {
           console.error('Failed to fetch videos. Status:', response.status, await response.text());
-          setVideos([]); // Clear videos if fetch fails
+          setVideos([]); 
           return;
         }
         const data = await response.json();
@@ -52,28 +54,25 @@ export default function SensualVibesPage() {
 
         if (data && Array.isArray(data.videos)) {
           console.log('Videos received from API:', data.videos.length);
-          // Sort videos by created_at in descending order (newest first)
           const sortedVideos = data.videos.sort((a: Video, b: Video) => {
-            // Ensure created_at exists before trying to parse
             const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
             const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
-            return dateB - dateA; // For descending order
+            return dateB - dateA; 
           });
           setVideos(sortedVideos.map((video: Video) => ({ ...video, likes: video.likes ?? 0 })));
         } else {
           console.error('Error fetching videos: data.videos is not an array or data is undefined', data);
-          setVideos([]); // Clear videos if data is not in expected format
+          setVideos([]); 
         }
       } catch (error) {
         console.error('Error fetching videos (catch block):', error);
-        setVideos([]); // Clear videos on error
+        setVideos([]); 
       }
     };
 
     fetchVideos();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []); 
 
-  // Effect to handle autoplay/pause based on scroll position
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -104,7 +103,6 @@ export default function SensualVibesPage() {
     };
   }, [videos]);
 
-  // Effect for infinite scroll loop
   useEffect(() => {
     if (videos.length <= 1 || !containerRef.current || !bottomSentinelRef.current) {
       return;
@@ -138,7 +136,6 @@ export default function SensualVibesPage() {
     };
   }, [videos]);
 
-    // Effect to load liked video IDs from localStorage on mount
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedLikedVideos = localStorage.getItem(LIKED_VIDEOS_STORAGE_KEY);
@@ -173,7 +170,18 @@ export default function SensualVibesPage() {
     setSelectedVideo(null);
   };
 
-  // Function to handle liking a video
+  const toggleGlobalMute = () => {
+    setIsGloballyMuted(prev => !prev);
+  };
+  
+  const handleReportClick = (video: Video) => { // Pass the whole video object
+    const urlToReport = video.instagram_url || video.url || video.cdn_url;
+    if (urlToReport) {
+      setReportingVideoUrl(urlToReport);
+      setShowReportDialog(true);
+    }
+  };
+
   const handleLike = async (videoId: string, event: React.MouseEvent<HTMLDivElement>) => {
     if (likedVideoIds.has(videoId)) {
         console.log(`Video ${videoId} already liked.`);
@@ -213,6 +221,28 @@ export default function SensualVibesPage() {
     }
   };
 
+  const VideoLoadingSkeleton = () => (
+    <div className="w-full h-full flex flex-col items-center justify-center snap-start bg-black relative">
+      <Skeleton className="w-[80%] h-[60%] bg-gray-700" /> {/* Mimics video player */}
+      {/* Skeleton for top bar */}
+      <div className="absolute top-4 left-0 right-0 px-4 z-50 flex items-center justify-between">
+        <Skeleton className="w-24 h-10 bg-gray-600 rounded-md" /> {/* Mimics category */}
+        <div className="flex items-center space-x-2">
+            <Skeleton className="w-10 h-10 bg-gray-600 rounded-md" /> {/* Mimics report button */}
+            <Skeleton className="w-10 h-10 bg-gray-600 rounded-md" /> {/* Mimics mute button */}
+        </div>
+      </div>
+      <div className="absolute bottom-32 right-4 z-[60] flex flex-col space-y-2">
+        <Skeleton className="w-16 h-10 bg-gray-600" /> {/* Mimics like button */}
+        <Skeleton className="w-10 h-10 bg-gray-600 rounded-full" /> {/* Mimics link button */}
+      </div>
+      <div className="absolute bottom-16 sm:bottom-20 left-4 right-4 sm:left-5 sm:right-auto max-w-[calc(100%-2rem)] sm:max-w-[80%]">
+        <Skeleton className="h-4 w-3/4 mb-2 bg-gray-600" /> {/* Mimics title */}
+        <Skeleton className="h-3 w-1/2 bg-gray-600" /> {/* Mimics description */}
+      </div>
+    </div>
+  );
+
   return (
     <div className="w-full h-screen relative bg-black pt-16">
         <div
@@ -221,9 +251,7 @@ export default function SensualVibesPage() {
           style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {videos.length === 0 && (
-            <div className="w-full h-full flex items-center justify-center text-white">
-              Videolar yükleniyor veya bulunamadı...
-            </div>
+            <VideoLoadingSkeleton /> 
           )}
           {videos.map((video, index) => (
             <div
@@ -232,11 +260,11 @@ export default function SensualVibesPage() {
             >
               <video
                 ref={el => videoRefs.current[index] = el}
-                src={video.cdn_url || video.url}
+                src={video.cdn_url || video.url} 
                 loop
                 controlsList="nodownload noremoteplayback nofullscreen"
                 playsInline
-                muted
+                muted={isGloballyMuted} 
                 className="max-h-full max-w-full object-contain"
                  onClick={(e) => {
                     const videoElement = e.currentTarget;
@@ -249,14 +277,28 @@ export default function SensualVibesPage() {
                 onContextMenu={(e) => e.preventDefault()}
               />
 
-              {video._id && video.category && (
-                <div className="absolute top-4 left-4 z-50 text-base text-white flex items-center space-x-2">
-                   <div className="flex items-center p-2 bg-black/60 rounded-md">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full border border-white mr-1">
-                         <User className="w-5 h-5" />
+              {/* Top bar: Category on left, Report and Mute/Unmute on right */}
+              {video._id && ( 
+                <div className="absolute top-4 left-0 right-0 px-4 z-50 text-base text-white flex items-center justify-between">
+                  {/* Left side: Category */}
+                  {video.category ? (
+                      <div className="flex items-center p-2 bg-black/60 rounded-md"> 
+                         <div className="flex items-center justify-center w-8 h-8 rounded-full border border-white mr-1">
+                            <User className="w-5 h-5" />
+                         </div>
+                         {video.category}
                       </div>
-                      {video.category}
-                   </div>
+                   ) : <div /> /* Empty div to maintain space if no category */}
+
+                  {/* Right side: Report and Mute buttons */}
+                  <div className="flex items-center space-x-2">
+                    <Button variant="ghost" size="icon" onClick={() => handleReportClick(video)} className="text-white hover:bg-white/20 hover:text-white p-2 bg-black/60 rounded-md">
+                      <AlertCircle className="w-5 h-5" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={toggleGlobalMute} className="text-white hover:bg-white/20 hover:text-white p-2 bg-black/60 rounded-md">
+                      {isGloballyMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                    </Button>
+                  </div>
               </div>
              )}
 
@@ -268,8 +310,8 @@ export default function SensualVibesPage() {
                         <Heart className="w-5 h-5 mr-1" />
                         {video.likes ?? 0}
                      </div>
-                     {(video.cdn_url || video.url) && (
-                        <a href={video.cdn_url || video.url} target="_blank" rel="noopener noreferrer">
+                     {video.url && (
+                        <a href={video.url} target="_blank" rel="noopener noreferrer">
                            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 hover:text-white">
                               <LinkIcon className="w-6 h-6" />
                            </Button>
@@ -295,7 +337,6 @@ export default function SensualVibesPage() {
             <div ref={bottomSentinelRef} style={{ height: '1px', width: '100%' }} aria-hidden="true"></div>
           )}
         </div>
-      )
 
       <Dialog open={selectedVideo !== null} onOpenChange={closeVideoModal}>
         <DialogContent className="sm:max-w-[800px] p-0 border-0 bg-transparent">
@@ -303,10 +344,9 @@ export default function SensualVibesPage() {
             <div className="w-full aspect-video bg-black rounded-lg overflow-hidden relative">
               <video
                 id="modal-video"
-                src={selectedVideo.cdn_url || selectedVideo.url}
-                controls
+                src={selectedVideo.cdn_url || selectedVideo.url} 
+                controls 
                 autoPlay
-                controlsList="nodownload noremoteplayback"
                 loop
                 playsInline
                 className="w-full h-full"
@@ -328,8 +368,8 @@ export default function SensualVibesPage() {
                         <Heart className="w-5 h-5 mr-1" />
                         {selectedVideo.likes ?? 0}
                      </div>
-                    {(selectedVideo.cdn_url || selectedVideo.url) && (
-                       <a href={selectedVideo.cdn_url || selectedVideo.url} target="_blank" rel="noopener noreferrer">
+                    {selectedVideo.url && (
+                       <a href={selectedVideo.url} target="_blank" rel="noopener noreferrer">
                           <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 hover:text-white">
                              <LinkIcon className="w-6 h-6" />
                           </Button>
@@ -354,8 +394,39 @@ export default function SensualVibesPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Report Confirmation Dialog */}
+      <Dialog open={showReportDialog} onOpenChange={setShowReportDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Contact About Video</DialogTitle>
+            <DialogDescription>
+              Do you want to contact us about this video?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-end pt-4">
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                No
+              </Button>
+            </DialogClose>
+            <Button
+              type="button"
+              onClick={() => {
+                if (reportingVideoUrl) {
+                  const message = `Video Link: ${reportingVideoUrl}`;
+                  window.open(`https://t.me/xmatchpro?text=${encodeURIComponent(message)}`, '_blank');
+                }
+                setShowReportDialog(false);
+              }}
+            >
+              Yes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Confetti effect */} 
-      {confetti.run && <Confetti width={width} height={height} recycle={false} tweenDuration={1000} numberOfPieces={150} gravity={0.5} initialVelocityX={5} initialVelocityY={15} confettiSource={{ x: confetti.x, y: confetti.y, w: 0, h: 0 }} />} {/* Added w and h to confettiSource */}
+      {confetti.run && <Confetti width={width} height={height} recycle={false} tweenDuration={1000} numberOfPieces={150} gravity={0.5} initialVelocityX={5} initialVelocityY={15} confettiSource={{ x: confetti.x, y: confetti.y, w: 0, h: 0 }} />} 
     </div>
   );
 }
