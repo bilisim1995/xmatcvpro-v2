@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Scan, Star, Construction } from 'lucide-react';
+import { Menu, Scan, Star, Construction, Video as VideoIcon } from 'lucide-react'; // Added VideoIcon import
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -28,6 +28,17 @@ export function MobileNav() {
           >
             <Scan className="w-5 h-5" />
             SEARCH BY FACE
+          </Link>
+
+          <Separator />
+
+          {/* Sensual Vibes Link */}
+          <Link
+            href="/sensual-vibes"
+            className="flex items-center gap-2 px-2 py-1 text-lg hover:text-red-600 transition-colors"
+          >
+            <VideoIcon className="w-5 h-5" /> {/* Using VideoIcon */}
+            SENSUAL VIBES
           </Link>
 
           <Separator />

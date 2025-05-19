@@ -1,5 +1,6 @@
+'use client';
+
 import './globals.css';
-import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/navbar';
@@ -15,6 +16,7 @@ import { YandexMetrika } from '@/components/analytics/yandex-metrika';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
 import { MicrosoftClarity } from '@/components/analytics/microsoft-clarity';
+import { usePathname } from 'next/navigation';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -31,20 +33,14 @@ const inter = Inter({
   preload: true
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://xmatch.pro'),
-  title: {
-    default: 'xmatch.pro - AI-Powered Adult Content Search Engine',
-    template: '%s | xmatch.pro'
-  },
-  description: 'The First Porn Star face-recognizing search engine based on deep neural networks.',
-};
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const hideFooter = pathname === '/sensual-vibes';
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -72,7 +68,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
-        > 
+        >
           <Suspense fallback={null}>
             <Navbar />
           </Suspense>
@@ -82,8 +78,8 @@ export default function RootLayout({
           <GoogleTagManager />
           <MicrosoftClarity />
             {children}
-          </main> 
-          <Footer />
+          </main>
+          {!hideFooter && <Footer />} {/* Conditionally render Footer */}
           <ScrollToTop />
           <ConsentBanner />
           <AgeVerification />

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect, useMemo } from "react";
 import Head from "next/head";
@@ -26,7 +26,7 @@ import {
   Star,
   Video,
   Bot,
-  Camera,
+  Camera, // Camera icon is already imported
   Crown,
   Zap,
   Heart,
@@ -38,17 +38,20 @@ import { useTopListCategories } from "@/hooks/use-toplist-categories";
 import { useTopListSites } from "@/hooks/use-toplist-sites";
 
 const iconMap = { Star, Video, Bot, Camera, Crown, Zap, Heart, Flame, Gift };
-const iconList = Object.keys(iconMap);
+const iconList = Object.keys(iconMap) as (keyof typeof iconMap)[]; // Cast to correct type
 
-type CategoryWithIcon = {
-  randomIcon: keyof typeof iconMap;
+type CategoryFromAPI = {
   _id: string;
   name: string;
   slug2: string;
   description: string;
-  icon_name: string;
+  icon_name: string; // This might be a string that needs to be mapped to an icon key
   created_at: Date;
   updated_at: Date;
+};
+
+type CategoryWithIcon = CategoryFromAPI & {
+  randomIcon: keyof typeof iconMap;
 };
 
 export default function TopListPage() {
@@ -66,7 +69,7 @@ export default function TopListPage() {
   );
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = "/default-favicon.png";
+    e.currentTarget.src = "/default-favicon.png"; // This handles broken image links
   };
 
   const renderLoadingSkeleton = () =>
@@ -89,24 +92,31 @@ export default function TopListPage() {
       </Card>
     ));
 
-  const renderIcon = (iconName: keyof typeof iconMap) => {
+  const renderIcon = (iconName?: keyof typeof iconMap) => { // Made iconName optional
+    if (!iconName) return null; // Return null if iconName is not provided
     const IconComponent = iconMap[iconName];
+    console.log(`Rendering icon: ${iconName}, Component found: ${!!IconComponent}`); // Log for debugging
     return IconComponent ? <IconComponent className="w-5 h-5" /> : null;
   };
 
   useEffect(() => {
-    if (categories.length > 0) {
-      const randomizedCategories = categories.map((category) => ({
-        ...category,
-        randomIcon:
-          category.slug2 === "all"
-            ? "Star"
-            : (category.icon_name as keyof typeof iconMap) ||
-              (iconList[
-                Math.floor(Math.random() * iconList.length)
-              ] as keyof typeof iconMap),
-      }));
+    if (categories && categories.length > 0) {
+      const randomizedCategories = categories.map((category: CategoryFromAPI) => {
+        let assignedIcon: keyof typeof iconMap;
+        if (category.slug2 === "all") {
+          assignedIcon = "Star";
+        } else if (category.icon_name && iconList.includes(category.icon_name as keyof typeof iconMap)) {
+          assignedIcon = category.icon_name as keyof typeof iconMap;
+        } else {
+          assignedIcon = iconList[Math.floor(Math.random() * iconList.length)];
+        }
+        return {
+          ...category,
+          randomIcon: assignedIcon,
+        };
+      });
       setCategoriesWithIcons(randomizedCategories);
+      console.log("Processed Categories with Icons:", randomizedCategories); // Log for debugging
     }
   }, [categories]);
 
@@ -133,29 +143,20 @@ export default function TopListPage() {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  const activeCategDetails: CategoryWithIcon = useMemo(() => {
-    return activeCategory === "all"
-      ? {
-          name: "ALL SITES",
-          randomIcon: "Star",
-          slug2: "all",
-          description: "",
-          _id: "",
-          icon_name: "",
-          created_at: new Date(),
-          updated_at: new Date(),
-        }
-      : categoriesWithIcons.find((c) => c.slug2 === activeCategory) ||
-          categoriesWithIcons.find((c) => c.slug2 === "all") || {
-            name: "Unknown Category",
+  const activeCategDetails: CategoryWithIcon | undefined = useMemo(() => { // Adjusted type
+    if (activeCategory === "all") {
+        return {
+            name: "ALL SITES",
             randomIcon: "Star",
-            slug2: "unknown",
+            slug2: "all",
             description: "",
-            _id: "",
-            icon_name: "",
+            _id: "all-id", // ensure _id is unique and present
+            icon_name: "Star",
             created_at: new Date(),
             updated_at: new Date(),
           };
+    }
+    return categoriesWithIcons.find((c) => c.slug2 === activeCategory);
   }, [activeCategory, categoriesWithIcons]);
 
   const filteredCategories = useMemo(() => {
@@ -194,11 +195,10 @@ export default function TopListPage() {
                     <SelectValue>
                       <div className="flex items-center gap-3">
                         <span className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center text-red-600 text-lg">
-                          {activeCategDetails?.randomIcon &&
-                            renderIcon(activeCategDetails.randomIcon)}
+                          {activeCategDetails && renderIcon(activeCategDetails.randomIcon)}
                         </span>
                         <div className="flex-1 font-medium">
-                          {activeCategDetails?.name}
+                          {activeCategDetails?.name || "Select Category"}
                         </div>
                       </div>
                     </SelectValue>
@@ -227,8 +227,7 @@ export default function TopListPage() {
                             >
                               <div className="flex items-center gap-3">
                                 <span className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center text-red-600 text-lg">
-                                  {category.randomIcon &&
-                                    renderIcon(category.randomIcon)}
+                                  {renderIcon(category.randomIcon)}
                                 </span>
                                 <div className="flex-1 font-medium">
                                   {category.name}
@@ -268,8 +267,7 @@ export default function TopListPage() {
                     >
                       <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
                         <span className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center text-red-600 text-lg">
-                          {category.randomIcon &&
-                            renderIcon(category.randomIcon)}
+                          {renderIcon(category.randomIcon)}
                         </span>
                         {category.name}
                       </h2>
@@ -305,7 +303,7 @@ export default function TopListPage() {
                                         />
                                       ) : (
                                         <div className="w-full h-full bg-muted rounded-full flex items-center justify-center">
-                                          <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                                          <Camera className="w-4 h-4 text-muted-foreground" /> {/* Replaced ExternalLink with Camera */}
                                         </div>
                                       )}
                                     </div>
@@ -397,7 +395,7 @@ export default function TopListPage() {
                   >
                     <h2 className="text-xl font-bold flex items-center gap-2">
                       <span className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center text-red-600 text-lg">
-                        {category.randomIcon && renderIcon(category.randomIcon)}
+                        {renderIcon(category.randomIcon)}
                       </span>
                       {category.name}
                     </h2>
@@ -439,7 +437,7 @@ export default function TopListPage() {
                                           />
                                         ) : (
                                           <div className="w-full h-full bg-muted rounded-full flex items-center justify-center">
-                                            <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                                            <Camera className="w-4 h-4 text-muted-foreground" /> {/* Replaced ExternalLink with Camera */}
                                           </div>
                                         )}
                                       </div>

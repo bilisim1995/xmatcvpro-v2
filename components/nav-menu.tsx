@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Construction, Scan, Star } from 'lucide-react';
+import { Construction, Scan, Star, Video } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 
@@ -22,17 +22,23 @@ export function NavMenu() {
         </Button>
       </Link>
 
-          <Link
-            href="https://theporndude.com/"
-            target="_blank"
-            rel="nofollow noopener noreferrer"
-            className="flex items-center gap-2 px-2 py-1 text-lg hover:text-red-600 transition-colors"
-          >
-            <Construction className="w-5 h-5" />
-            ThePornDude
-          </Link>
+      <Link href="/sensual-vibes">
+        <Button variant="ghost" className="flex items-center gap-2 text-base font-medium">
+          <Video className="w-4 h-4" />
+          SENSUAL VIBES
+        </Button>
+      </Link>
 
-  
+      <Link
+        href="https://theporndude.com/"
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+        className="flex items-center gap-2 px-2 py-1 text-lg hover:text-red-600 transition-colors"
+      >
+        <Construction className="w-5 h-5" />
+        ThePornDude
+      </Link>
+
     </div>
   );
 }
