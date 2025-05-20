@@ -30,7 +30,7 @@ function AdCard({ ad }: { ad: AdSlot }) {
       <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10">
         <Image
           src={ad.imageUrl}
-          alt={`${t('searchresults.advertisement', 'Advertisement')} ${ad.id}`}
+          alt={`${t('searchresults.advertisement')} ${ad.id}`} // Removed fallback text
           layout="fill"
           objectFit="contain"
           className="group-hover:scale-105 transition-transform duration-300"
@@ -58,7 +58,7 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
   const itemsPerPage = 4; 
   
   const displayableItems = results; 
-  console.log("[ModelCarousel] Received results (displayableItems):", displayableItems); // Activated log
+  // console.log("[ModelCarousel] Received results (displayableItems):", displayableItems);
 
   const totalPages = Math.ceil(displayableItems.length / itemsPerPage);
 
@@ -74,9 +74,9 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
     currentIndex * itemsPerPage,
     (currentIndex + 1) * itemsPerPage
   );
-  console.log("[ModelCarousel] Current page items for carousel:", currentPageItems); // Activated log
+  // console.log("[ModelCarousel] Current page items for carousel:", currentPageItems);
   
-  const displayResults = [
+  const displayResultsInPage = [
     ...currentPageItems,
     ...Array(Math.max(0, itemsPerPage - currentPageItems.length)).fill(null)
   ];
@@ -92,7 +92,7 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
           <Button
             variant="ghost"
             size="icon"
-            className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:animate-pulse"
+            className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
             onClick={prevSlide}
             disabled={currentIndex === 0}
           >
@@ -101,7 +101,7 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
           <Button
             variant="ghost"
             size="icon"
-            className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:animate-pulse"
+            className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 rounded-full bg-red-600 text-white hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300"
             onClick={nextSlide}
             disabled={currentIndex >= totalPages - 1}
           >
@@ -120,8 +120,8 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
             transition={{ duration: 0.3 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch"
           >
-            {displayResults.map((item, idx) => {
-              console.log(`[ModelCarousel] Mapping item ${idx}:`, item); // Activated log
+            {displayResultsInPage.map((item, idx) => {
+              // console.log(`[ModelCarousel] Mapping item ${idx}:`, item);
               return (
                 <motion.div
                   key={item ? (isAdSlot(item) ? `ad-${item.id}-${currentIndex}-${idx}` : `model-${(item as SearchResult).id}-${currentIndex}-${idx}`) : `empty-${currentIndex}-${idx}`}
