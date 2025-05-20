@@ -4,40 +4,37 @@ import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ResultCard } from '../image-search/result-card'; // Assuming ResultCard is for SearchResult only
-import { SearchResult } from '@/lib/api/types'; 
+import { ResultCard } from '../image-search/result-card';
+import { SearchResult } from '@/lib/api/types';
 import { Card } from '@/components/ui/card';
 import Image from 'next/image'; 
 import { useLanguage } from '@/components/contexts/LanguageContext'; 
 
-// Consistent AdSlot interface
 interface AdSlot {
   type: 'ad';
   id: string | number;
-  imageUrl: string; // Expecting full image URL for ads
+  imageUrl: string;
 }
 
-// Consistent ResultItem type
 type ResultItem = SearchResult | AdSlot;
 
 interface ModelCarouselProps {
-  results: ResultItem[]; // Expects a mixed array of SearchResult and AdSlot
+  results: ResultItem[]; 
   showConfidence?: boolean;
 }
 
-// AdCard component using imageUrl and Next/Image
 function AdCard({ ad }: { ad: AdSlot }) { 
   const { t } = useLanguage();
   return (
     <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
       <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10">
         <Image
-          src={ad.imageUrl} // Use imageUrl from AdSlot
-          alt={`${t('searchresults.advertisement', 'Advertisement')} ${ad.id}`}
+          src={ad.imageUrl} 
+          alt={`${t('searchresults.advertisement')} ${ad.id}`} // Removed fallback text
           layout="fill"
           objectFit="contain"
           className="group-hover:scale-105 transition-transform duration-300"
-          unoptimized={true} // For SVG troubleshooting
+          unoptimized={true} 
           onError={(e) => {
             console.error(`Error loading AdCard image (SVG) in Shared ModelCarousel: ${ad.imageUrl}`, e);
             e.currentTarget.src = 'https://via.placeholder.com/300x400.png?text=Ad+SVG+Error';
@@ -52,16 +49,14 @@ function AdCard({ ad }: { ad: AdSlot }) {
   );
 }
 
-// Helper to check if item is AdSlot
 function isAdSlot(item: ResultItem | null): item is AdSlot {
   return item !== null && typeof item === 'object' && 'type' in item && item.type === 'ad';
 }
 
 export function ModelCarousel({ results, showConfidence = true }: ModelCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsPerPage = 4;
+  const itemsPerPage = 4; 
   
-  // The 'results' prop now comes pre-processed with ads from the parent component
   const displayableItems = results; 
   // console.log("[SharedModelCarousel] Received results (displayableItems):", displayableItems);
 
@@ -141,7 +136,7 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
                     ) : (
                       <ResultCard
                         result={item as SearchResult} 
-                        index={idx} // Simplified index
+                        index={idx} 
                         showConfidence={showConfidence}
                       />
                     )
