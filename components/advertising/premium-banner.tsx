@@ -6,9 +6,9 @@ import { useLanguage } from '@/components/contexts/LanguageContext';
 import Image from 'next/image'; // Import Next.js Image component
 
 export function PremiumBanner() {
-  const { t } = useLanguage(); // t fonksiyonu hala alt text için kullanılabilir
+  const { t } = useLanguage(); 
   const BUNNY_NET_PULL_ZONE_HOSTNAME = 'cdn.xmatch.pro';
-  const bannerImageUrl = `https://${BUNNY_NET_PULL_ZONE_HOSTNAME}/ads/p1.svg`; // Changed to p1.svg
+  const bannerImageUrl = `https://${BUNNY_NET_PULL_ZONE_HOSTNAME}/ads/p1.svg`; 
 
   return (
     <div 
@@ -18,9 +18,9 @@ export function PremiumBanner() {
       {/* Background Image */}
       <Image
         src={bannerImageUrl}
-        alt={t('premium_banner.banner_title', "Advertisement Banner")} // Fallback alt text
+        alt={t('premium_banner.banner_title')} // Removed fallback text, assumes key exists
         layout="fill"
-        objectFit="cover" // Keep as cover to fill the fixed dimensions
+        objectFit="cover"
         className="group-hover:scale-105 transition-transform duration-500 ease-in-out"
         priority 
         onError={(e) => {
@@ -48,7 +48,7 @@ export function PremiumBanner() {
               // window.open('YOUR_AD_LINK', '_blank'); // Örnek yönlendirme
             }}
           >
-            Detail
+            {t('premium_banner.detail_button')} {/* Removed fallback text, assumes key exists */}
           </Button>
         </motion.div>
       </div>
