@@ -39,7 +39,7 @@ function AdCard({ ad }: { ad: AdSlot }) {
       <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10">
         <Image
           src={ad.imageUrl}
-          alt={`${t('searchresults.advertisement', 'Advertisement')} ${ad.id}`}
+          alt={`${t('searchresults.advertisement')} ${ad.id}`} // Removed fallback text
           layout="fill"
           objectFit="contain"
           className="group-hover:scale-105 transition-transform duration-300"
