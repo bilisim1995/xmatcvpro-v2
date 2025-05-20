@@ -7,7 +7,7 @@ import { BlogPost } from '@/lib/mongodb/blog';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/lib/utils';
-import { SponsoredContent } from '@/components/blog/sponsored-content';
+// import { SponsoredContent } from '@/components/blog/sponsored-content'; // Kaldırıldı veya yorum satırına alındı
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
@@ -91,7 +91,7 @@ export default function BlogPostPage({
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
-          <SponsoredContent />
+          {/* <SponsoredContent /> */}
 
           <footer className="mt-8 pt-8 border-t">
             <div className="flex flex-wrap gap-2">

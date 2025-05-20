@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Video as VideoIcon, Instagram, Link as LinkIcon, User, Heart, Volume2, VolumeX, AlertCircle } from 'lucide-react'; // Added AlertCircle
+import { Video as VideoIcon, Instagram, Link as LinkIcon, User, Heart, Volume2, VolumeX, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogClose } from '@/components/ui/dialog'; // Added more Dialog parts
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import { usePathname } from 'next/navigation';
 import Confetti from 'react-confetti'; 
 import useWindowSize from 'react-use/lib/useWindowSize'; 
@@ -265,7 +265,7 @@ export default function SensualVibesPage() {
                 controlsList="nodownload noremoteplayback nofullscreen"
                 playsInline
                 muted={isGloballyMuted} 
-                className="max-h-full max-w-full object-contain"
+                className="max-h-full max-w-full w-full h-full object-cover" // Changed object-contain to object-cover and added w-full h-full
                  onClick={(e) => {
                     const videoElement = e.currentTarget;
                     if (videoElement.paused) {
@@ -349,7 +349,7 @@ export default function SensualVibesPage() {
                 autoPlay
                 loop
                 playsInline
-                className="w-full h-full"
+                className="w-full h-full object-cover" // Also changed to object-cover for modal consistency
                 onContextMenu={(e) => e.preventDefault()}
               />
               {selectedVideo.category && (
@@ -391,37 +391,6 @@ export default function SensualVibesPage() {
               )}
             </div>
           )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Report Confirmation Dialog */}
-      <Dialog open={showReportDialog} onOpenChange={setShowReportDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Contact About Video</DialogTitle>
-            <DialogDescription>
-              Do you want to contact us about this video?
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="sm:justify-end pt-4">
-            <DialogClose asChild>
-              <Button type="button" variant="secondary">
-                No
-              </Button>
-            </DialogClose>
-            <Button
-              type="button"
-              onClick={() => {
-                if (reportingVideoUrl) {
-                  const message = `Video Link: ${reportingVideoUrl}`;
-                  window.open(`https://t.me/xmatchpro?text=${encodeURIComponent(message)}`, '_blank');
-                }
-                setShowReportDialog(false);
-              }}
-            >
-              Yes
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 

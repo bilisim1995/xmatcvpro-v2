@@ -14,40 +14,51 @@ import { useAdvancedSearch } from '@/hooks/use-advanced-search';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { NoResults } from '../advanced-search/no-results';
-import { ModelCarousel } from '../shared/model-carousel';
+import { ModelCarousel } from '../shared/model-carousel'; 
 import { motion } from 'framer-motion';
 import { ResultCard } from '../image-search/result-card';
 import { AgeVerificationDialog } from '@/components/age-verification/age-verification-dialog';
 import { useLanguage } from '@/components/contexts/LanguageContext';
+import Image from 'next/image'; 
 
 interface AdSlot {
   type: 'ad';
   id: string | number;
+  imageUrl: string; 
 }
 
-function AdCard({ index }: { index: string | number }) {
-  function t(arg0: string): import("react").ReactNode {
-    throw new Error('Function not implemented.');
-  }
+// Added isAdSlot type guard function here
+function isAdSlot(item: ResultItem | null): item is AdSlot {
+  return item !== null && typeof item === 'object' && 'type' in item && item.type === 'ad';
+}
 
+function AdCard({ ad }: { ad: AdSlot }) { 
+  const { t } = useLanguage();
   return (
-    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border p-4">
-      <div className="flex flex-col items-center justify-center flex-grow px-4 pt-6 text-center">
-        <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
-          <Megaphone className="w-6 h-6 text-red-600" />
+    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
+      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10">
+        <Image
+          src={ad.imageUrl}
+          alt={`${t('searchresults.advertisement', 'Advertisement')} ${ad.id}`}
+          layout="fill"
+          objectFit="contain"
+          className="group-hover:scale-105 transition-transform duration-300"
+          unoptimized={true} 
+          onError={(e) => {
+            console.error("Error loading ad image:", ad.imageUrl, e);
+            e.currentTarget.src = 'https://via.placeholder.com/300x400.png?text=Ad+Not+Found';
+            e.currentTarget.srcset = '';
+          }}
+        />
+        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+          {`R${ad.id}`}
         </div>
-        <h3 className="text-lg font-semibold mb-2">{t('advancedsearch.advertisement')}</h3>
-        <p className="text-sm text-muted-foreground">{t('advancedsearch.promoted_content')}</p>
-      </div>
-
-      <div className="flex justify-center pb-4">
-        <div className="w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white font-bold">
-          {`R${index}`}
-        </div>
-      </div>
+      </a>
     </Card>
   );
 }
+
+type ResultItem = SearchResult | AdSlot;
 
 export default function AdvancedSearchTab() {
   const { t } = useLanguage();
@@ -60,6 +71,8 @@ export default function AdvancedSearchTab() {
   const [topFilters, setTopFilters] = useState<ModelFilters>({});
   const [showAgeVerification, setShowAgeVerification] = useState(false);
   const [isLoadingRandom, setIsLoadingRandom] = useState(false);
+
+  const BUNNY_NET_PULL_ZONE_HOSTNAME = 'cdn.xmatch.pro'; 
 
   const handleSearch = async () => {
     setShowAgeVerification(true);
@@ -82,7 +95,6 @@ export default function AdvancedSearchTab() {
   const handleRandomSearch = async () => {
     setHasSearched(true);
     
-    // Seçenekleri tanımla
     const options = {
       cupSizes: ['a', 'b', 'c', 'd', 'dd', 'e', 'f', 'g'],
       ethnicities: ['caucasian', 'asian', 'ebony', 'latina', 'indian', 'mixed'],
@@ -91,14 +103,12 @@ export default function AdvancedSearchTab() {
       nationalities: ['american', 'british', 'canadian', 'australian', 'german', 'french', 'italian', 'spanish', 'russian', 'japanese', 'korean', 'brazilian']
     };
 
-    // Rastgele seçimler yap
     const randomCupSize = options.cupSizes[Math.floor(Math.random() * options.cupSizes.length)];
     const randomEthnicity = options.ethnicities[Math.floor(Math.random() * options.ethnicities.length)];
     const randomHairColor = options.hairColors[Math.floor(Math.random() * options.hairColors.length)];
     const randomEyeColor = options.eyeColors[Math.floor(Math.random() * options.eyeColors.length)];
     const randomNationality = options.nationalities[Math.floor(Math.random() * options.nationalities.length)];
     
-    // Rastgele filtreler oluştur
     const randomFilters: ModelFilters = {
       age: Math.floor(Math.random() * (50 - 18) + 18),
       height: Math.floor(Math.random() * (190 - 150) + 150),
@@ -113,10 +123,7 @@ export default function AdvancedSearchTab() {
       random: true
     };
 
-    // Tüm filtreleri güncelle
     setFilters(randomFilters);
-    
-    // Top filtreleri güncelle
     setTopFilters({
       hair_color: randomHairColor,
       eye_color: randomEyeColor,
@@ -132,7 +139,6 @@ export default function AdvancedSearchTab() {
     setIsLoadingRandom(true);
     
     try {
-      // Rastgele filtreleri URL'ye ekle
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
         if (value) params.append(key, value.toString());
@@ -156,7 +162,6 @@ export default function AdvancedSearchTab() {
         throw new Error('No random models found');
       }
       
-      // Directly update results without filters
       const shuffledData = data
         .map(value => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
@@ -177,18 +182,21 @@ export default function AdvancedSearchTab() {
 
   const hasActiveFilters = Object.keys(filters).length > 0;
 
-  // Limit to 15 results and insert ad slots
-  const processedResults = results.slice(0, 15).reduce<(SearchResult | AdSlot)[]>((acc, result, index) => {
-    acc.push(result);
-    if ((index + 1) % 3 === 0 && index < 14) { // Add ad after every 3rd item, up to R5
-      acc.push({ type: 'ad', id: Math.floor(index / 3) + 1 });
+  const finalResultsWithAds: ResultItem[] = [];
+  let adCounter = 1;
+  const limitedResults = results.slice(0, 15);
+
+  for (let i = 0; i < limitedResults.length; i++) {
+    finalResultsWithAds.push(limitedResults[i]);
+    if ((i + 1) % 3 === 0 && adCounter <= 5) {
+      finalResultsWithAds.push({
+        type: 'ad',
+        id: `${adCounter}`,
+        imageUrl: `https://${BUNNY_NET_PULL_ZONE_HOSTNAME}/ads/r${adCounter}.svg`
+      });
+      adCounter++;
     }
-    // Add R5 at the end if we have all 15 results
-    if (index === 14) {
-      acc.push({ type: 'ad', id: 5 });
-    }
-    return acc;
-  }, []);
+  }
 
   return (
     <Card className="p-6 space-y-6">
@@ -349,23 +357,26 @@ export default function AdvancedSearchTab() {
 
                 {viewMode === 'carousel' ? (
                   <ModelCarousel 
-                    results={results.slice(0, 15)}
+                    results={finalResultsWithAds} // Use the refined list for carousel
                     showConfidence={false}
                   />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {processedResults.map((item, idx) => (
-                      'type' in item ? (
-                        <AdCard key={`ad-${item.id}`} index={item.id} />
-                      ) : (
+                    {finalResultsWithAds.map((item, idx) => { // Use the refined list for grid
+                      if (isAdSlot(item)) { // Use the defined type guard
+                        return <AdCard key={`ad-${item.id}`} ad={item} />;
+                      }
+                      // Type guard for SearchResult (assuming item is SearchResult if not AdSlot)
+                      const searchResultItem = item as SearchResult;
+                      return (
                         <ResultCard
-                          key={item.id}
-                          result={item}
-                          index={idx - Math.floor(idx / 4)}
+                          key={searchResultItem.id}
+                          result={searchResultItem}
+                          index={idx - Math.floor(idx / 4)} // Adjust index based on number of ads before this item
                           showConfidence={false}
                         />
-                      )
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>

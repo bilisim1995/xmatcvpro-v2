@@ -12,28 +12,38 @@ import { Search, LayoutGrid, Images, Megaphone } from 'lucide-react';
 import { useState } from 'react';
 import { ResultCard } from './result-card';
 import { useLanguage } from '@/components/contexts/LanguageContext';
+import Image from 'next/image'; // Import Next.js Image component
 
 interface AdSlot {
   type: 'ad';
-  id: string | number;
+  id: string | number; // R1, R2 etc.
+  imageUrl: string; // Full URL from Bunny.net
 }
 
-function AdCard({ index }: { index: string | number }) {
+function AdCard({ ad }: { ad: AdSlot }) { // Pass the whole ad object
+  const { t } = useLanguage();
   return (
-    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border p-4">
-      <div className="flex flex-col items-center justify-center flex-grow px-4 pt-6 text-center">
-        <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center mb-4">
-          <Megaphone className="w-6 h-6 text-red-600" />
+    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
+      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10"> {/* Added a light background for contain */}
+        <Image
+          src={ad.imageUrl}
+          alt={`${t('searchresults.advertisement')} ${ad.id}`}
+          layout="fill"
+          objectFit="contain" 
+          className="group-hover:scale-105 transition-transform duration-300"
+          unoptimized={true} // Added for SVG troubleshooting
+          onError={(e) => {
+            // Fallback if image fails to load (optional)
+            console.error("Error loading ad image:", ad.imageUrl, e);
+            e.currentTarget.src = 'https://via.placeholder.com/300x400.png?text=Ad+Not+Found';
+            e.currentTarget.srcset = '';
+          }}
+        />
+        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+          {`R${ad.id}`}
         </div>
-        <h3 className="text-lg font-semibold mb-2">Advertisement</h3>
-        <p className="text-sm text-muted-foreground">Promoted content</p>
-      </div>
-
-      <div className="flex justify-center pb-4">
-        <div className="w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white font-bold">
-          {`R${index}`}
-        </div>
-      </div>
+        {/* Removed ADS Card label from top-left */}
+      </a>
     </Card>
   );
 }
@@ -48,7 +58,7 @@ interface SearchResultsProps {
 }
 
 function isAdSlot(item: ResultItem): item is AdSlot {
-  return 'type' in item && item.type === 'ad';
+  return item && 'type' in item && item.type === 'ad';
 }
 
 export function SearchResults({ 
@@ -60,19 +70,26 @@ export function SearchResults({
   const { t } = useLanguage();
   const [viewMode, setViewMode] = useState<'carousel' | 'grid'>('carousel');
   
+  const BUNNY_NET_PULL_ZONE_HOSTNAME = 'cdn.xmatch.pro'; 
+
   // Sort results and limit to 15
   const sortedResults = [...results]
     .sort((a, b) => (b.confidence || 0) - (a.confidence || 0))
     .slice(0, 15);
 
-  // Insert ad slots after every 3 models
+  // Insert ad slots after every 3 models, up to 5 ads
   const resultsWithAds: ResultItem[] = [];
   let adCounter = 1;
 
   sortedResults.forEach((result, index) => {
     resultsWithAds.push(result);
-    if ((index + 1) % 3 === 0) {
-      resultsWithAds.push({ type: 'ad', id: `${adCounter++}` });
+    if ((index + 1) % 3 === 0 && adCounter <= 5) { 
+      resultsWithAds.push({
+        type: 'ad',
+        id: `${adCounter}`,
+        imageUrl: `https://${BUNNY_NET_PULL_ZONE_HOSTNAME}/ads/r${adCounter}.svg` 
+      });
+      adCounter++;
     }
   });
 
@@ -133,17 +150,17 @@ export function SearchResults({
         </motion.div>
         
         {viewMode === 'carousel' ? (
-          <ModelCarousel results={sortedResults} showConfidence />
+          <ModelCarousel results={resultsWithAds} showConfidence /> 
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {resultsWithAds.map((item, idx) => (
               isAdSlot(item) ? (
-                <AdCard key={`${item.id}`} index={item.id} />
+                <AdCard key={`ad-${item.id}`} ad={item} /> 
               ) : (
                 <ResultCard
                   key={item.id}
                   result={item}
-                  index={idx - Math.floor(idx / 4)}
+                  index={idx - Math.floor(idx / 4)} 
                   showConfidence
                 />
               )
