@@ -27,7 +27,6 @@ interface AdSlot {
   imageUrl: string; 
 }
 
-// Added isAdSlot type guard function here
 function isAdSlot(item: ResultItem | null): item is AdSlot {
   return item !== null && typeof item === 'object' && 'type' in item && item.type === 'ad';
 }
@@ -35,13 +34,13 @@ function isAdSlot(item: ResultItem | null): item is AdSlot {
 function AdCard({ ad }: { ad: AdSlot }) { 
   const { t } = useLanguage();
   return (
-    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
-      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10">
+    <Card className="h-full w-full flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
+      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full aspect-[3/4] bg-muted/10">
         <Image
           src={ad.imageUrl}
-          alt={`${t('searchresults.advertisement')} ${ad.id}`} // Removed fallback text
+          alt={`${t('searchresults.advertisement')} ${ad.id}`}
           layout="fill"
-          objectFit="contain"
+          objectFit="cover" // Changed from contain to cover
           className="group-hover:scale-105 transition-transform duration-300"
           unoptimized={true} 
           onError={(e) => {
@@ -357,22 +356,21 @@ export default function AdvancedSearchTab() {
 
                 {viewMode === 'carousel' ? (
                   <ModelCarousel 
-                    results={finalResultsWithAds} // Use the refined list for carousel
+                    results={finalResultsWithAds} 
                     showConfidence={false}
                   />
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {finalResultsWithAds.map((item, idx) => { // Use the refined list for grid
-                      if (isAdSlot(item)) { // Use the defined type guard
+                    {finalResultsWithAds.map((item, idx) => { 
+                      if (isAdSlot(item)) { 
                         return <AdCard key={`ad-${item.id}`} ad={item} />;
                       }
-                      // Type guard for SearchResult (assuming item is SearchResult if not AdSlot)
                       const searchResultItem = item as SearchResult;
                       return (
                         <ResultCard
                           key={searchResultItem.id}
                           result={searchResultItem}
-                          index={idx - Math.floor(idx / 4)} // Adjust index based on number of ads before this item
+                          index={idx - Math.floor(idx / 4)} 
                           showConfidence={false}
                         />
                       );

@@ -1,37 +1,34 @@
-import { NextResponse } from 'next/server';
-import clientPromise from '../../../lib/mongodb/client'; // Adjusted the path
+import { NextRequest, NextResponse } from 'next/server';
+import clientPromise from '@/lib/mongodb/client'; // Adjust path if necessary
 
-// This is the API route to fetch videos from MongoDB.
-
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
-    // Use the database name from environment variable as found in lib/mongodb/db.ts
-    // Ensure MONGODB_DB environment variable is set.
-    if (!process.env.MONGODB_DB) {
-      throw new Error('MONGODB_DB environment variable is not set.');
+    const db = client.db('xmatchpro'); // Your database name
+    const videosCollection = db.collection('videos'); // Your videos collection name
+
+    const { searchParams } = new URL(req.url);
+    const channelName = searchParams.get('channel');
+
+    let query = {};
+    if (channelName) {
+      // Assuming your video documents have a 'channel' field
+      // Use a case-insensitive regex for broader matching if needed, or direct match.
+      query = { channel: channelName }; 
+      // Example for case-insensitive: query = { channel: new RegExp(`^${channelName}$`, 'i') };
     }
-    const db = client.db(process.env.MONGODB_DB);
 
-    const videos = await db.collection('videos').find({}).toArray();
-
-    // Ensure the fetched videos match the expected structure:
-    // interface Video {
-    //   _id: string; // MongoDB ObjectId will be converted to string by .toArray()
-    //   title?: string;
-    //   url?: string;
-    //   cdn_url: string;
-    //   thumbnail_url?: string;
-    //   category?: string;
-    //   description?: string;
-    //   created_at?: Date; // MongoDB Date type
-    //   updated_at?: Date; // MongoDB Date type
-    // }
-
-    return NextResponse.json({ videos: videos });
+    // Add any default sorting if needed, e.g., by createdAt descending
+    const videos = await videosCollection.find(query).sort({ createdAt: -1 }).toArray();
+    
+    // The client-side mapApiVideoToVideo expects objects with $oid, $numberInt etc.
+    // Ensure your API returns data in that raw format if mapApiVideoToVideo is used as is.
+    // Or, adjust mapApiVideoToVideo to handle already-parsed data if your API does parsing.
+    // For now, assuming API returns documents as they are in MongoDB.
+    return NextResponse.json({ videos });
 
   } catch (error) {
-    console.error('Error fetching videos from database:', error);
+    console.error('Failed to fetch videos:', error);
     return NextResponse.json({ error: 'Failed to fetch videos' }, { status: 500 });
   }
 }

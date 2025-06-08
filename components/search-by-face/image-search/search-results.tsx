@@ -23,17 +23,16 @@ interface AdSlot {
 function AdCard({ ad }: { ad: AdSlot }) { // Pass the whole ad object
   const { t } = useLanguage();
   return (
-    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
-      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10"> {/* Added a light background for contain */}
+    <Card className="h-full w-full flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border"> 
+      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full aspect-[3/4] bg-muted/10"> 
         <Image
           src={ad.imageUrl}
           alt={`${t('searchresults.advertisement')} ${ad.id}`}
           layout="fill"
-          objectFit="contain" 
+          objectFit="cover" // Changed from contain to cover
           className="group-hover:scale-105 transition-transform duration-300"
-          unoptimized={true} // Added for SVG troubleshooting
+          unoptimized={true} 
           onError={(e) => {
-            // Fallback if image fails to load (optional)
             console.error("Error loading ad image:", ad.imageUrl, e);
             e.currentTarget.src = 'https://via.placeholder.com/300x400.png?text=Ad+Not+Found';
             e.currentTarget.srcset = '';
@@ -42,7 +41,6 @@ function AdCard({ ad }: { ad: AdSlot }) { // Pass the whole ad object
         <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
           {`R${ad.id}`}
         </div>
-        {/* Removed ADS Card label from top-left */}
       </a>
     </Card>
   );
@@ -72,12 +70,10 @@ export function SearchResults({
   
   const BUNNY_NET_PULL_ZONE_HOSTNAME = 'cdn.xmatch.pro'; 
 
-  // Sort results and limit to 15
   const sortedResults = [...results]
     .sort((a, b) => (b.confidence || 0) - (a.confidence || 0))
     .slice(0, 15);
 
-  // Insert ad slots after every 3 models, up to 5 ads
   const resultsWithAds: ResultItem[] = [];
   let adCounter = 1;
 

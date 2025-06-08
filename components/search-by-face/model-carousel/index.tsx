@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react'; // Added useEffect
+import { useState, useEffect } from 'react'; 
 import { ChevronLeft, ChevronRight, Megaphone } from 'lucide-react'; 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -26,15 +26,15 @@ interface ModelCarouselProps {
 function AdCard({ ad }: { ad: AdSlot }) { 
   const { t } = useLanguage();
   return (
-    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
-      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10">
+    <Card className="h-full w-full flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
+      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full aspect-[3/4] bg-muted/10">
         <Image
           src={ad.imageUrl}
-          alt={`${t('searchresults.advertisement')} ${ad.id}`} // Removed fallback text
+          alt={`${t('searchresults.advertisement')} ${ad.id}`}
           layout="fill"
-          objectFit="contain"
+          objectFit="cover" // Changed from contain to cover
           className="group-hover:scale-105 transition-transform duration-300"
-          unoptimized={true} // Keep for SVG troubleshooting
+          unoptimized={true} 
           onError={(e) => {
             console.error(`Error loading AdCard image (SVG) in ModelCarousel: ${ad.imageUrl}`, e);
             e.currentTarget.src = 'https://via.placeholder.com/300x400.png?text=Ad+SVG+Error';
@@ -49,7 +49,7 @@ function AdCard({ ad }: { ad: AdSlot }) {
   );
 }
 
-function isAdSlot(item: ResultItem | null): item is AdSlot { // Allow null for item
+function isAdSlot(item: ResultItem | null): item is AdSlot { 
   return item !== null && typeof item === 'object' && 'type' in item && item.type === 'ad';
 }
 
@@ -136,7 +136,7 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
                     ) : (
                       <ResultCard
                         result={item as SearchResult} 
-                        index={idx} // Simplified index to current page index
+                        index={idx} 
                         showConfidence={showConfidence}
                       />
                     )

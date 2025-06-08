@@ -2,23 +2,23 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/components/contexts/LanguageContext';
+// import { useLanguage } from '@/components/contexts/LanguageContext'; // Removed useLanguage as t is not used for Detail button
 import Image from 'next/image'; // Import Next.js Image component
 
 export function PremiumBanner() {
-  const { t } = useLanguage(); 
+  // const { t } = useLanguage(); // Removed useLanguage as t is not used for Detail button
   const BUNNY_NET_PULL_ZONE_HOSTNAME = 'cdn.xmatch.pro';
   const bannerImageUrl = `https://${BUNNY_NET_PULL_ZONE_HOSTNAME}/ads/p1.svg`; 
 
   return (
     <div 
-      className="relative rounded-lg overflow-hidden group shadow-lg hover:shadow-xl dark:shadow-red-700/30 dark:hover:shadow-red-600/40 transition-all duration-300 mx-auto"
-      style={{ width: '895px', height: '290px' }} // Fixed size and centered with mx-auto
+      className="relative rounded-lg overflow-hidden group shadow-lg hover:shadow-xl dark:shadow-red-700/30 dark:hover:shadow-red-600/40 transition-all duration-300 mx-auto w-full"
+      style={{ maxWidth: '895px', height: '290px' }} // Changed width to maxWidth, added w-full
     >
       {/* Background Image */}
       <Image
         src={bannerImageUrl}
-        alt={t('premium_banner.banner_title')} // Removed fallback text, assumes key exists
+        alt={"Advertisement Banner"} // Using a generic alt text
         layout="fill"
         objectFit="cover"
         className="group-hover:scale-105 transition-transform duration-500 ease-in-out"
@@ -43,12 +43,11 @@ export function PremiumBanner() {
           <Button 
             className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white px-4 py-2 text-sm rounded-md shadow-md hover:shadow-lg transition-all duration-300"
             onClick={() => {
-              // Gerekirse butona bir aksiyon eklenebilir, örneğin reklam sayfasına yönlendirme
               console.log("Detail button clicked on banner");
-              // window.open('YOUR_AD_LINK', '_blank'); // Örnek yönlendirme
+              // window.open('YOUR_AD_LINK', '_blank'); // Example redirect
             }}
           >
-            {t('premium_banner.detail_button')} {/* Removed fallback text, assumes key exists */}
+            Detail {/* Changed text directly to Detail */}
           </Button>
         </motion.div>
       </div>

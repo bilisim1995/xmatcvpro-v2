@@ -1,20 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Megaphone } from 'lucide-react'; 
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { ResultCard } from '../image-search/result-card';
-import { SearchResult } from '@/lib/api/types';
+import { SearchResult } from '@/lib/api/types'; 
 import { Card } from '@/components/ui/card';
 import Image from 'next/image'; 
 import { useLanguage } from '@/components/contexts/LanguageContext'; 
+
 
 interface AdSlot {
   type: 'ad';
   id: string | number;
   imageUrl: string;
 }
+
 
 type ResultItem = SearchResult | AdSlot;
 
@@ -23,16 +25,17 @@ interface ModelCarouselProps {
   showConfidence?: boolean;
 }
 
+
 function AdCard({ ad }: { ad: AdSlot }) { 
   const { t } = useLanguage();
   return (
-    <Card className="h-full w-full aspect-[3/4] flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
-      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full bg-muted/10">
+    <Card className="h-full w-full flex flex-col overflow-hidden group hover:shadow-lg transition-shadow duration-300 rounded-lg border">
+      <a href={`#ad-${ad.id}`} target="_blank" rel="noopener noreferrer" className="block relative w-full h-full aspect-[3/4] bg-muted/10">
         <Image
           src={ad.imageUrl} 
-          alt={`${t('searchresults.advertisement')} ${ad.id}`} // Removed fallback text
+          alt={`${t('searchresults.advertisement')} ${ad.id}`}
           layout="fill"
-          objectFit="contain"
+          objectFit="cover" // Changed from contain to cover
           className="group-hover:scale-105 transition-transform duration-300"
           unoptimized={true} 
           onError={(e) => {
@@ -49,7 +52,8 @@ function AdCard({ ad }: { ad: AdSlot }) {
   );
 }
 
-function isAdSlot(item: ResultItem | null): item is AdSlot {
+
+function isAdSlot(item: ResultItem | null): item is AdSlot { 
   return item !== null && typeof item === 'object' && 'type' in item && item.type === 'ad';
 }
 
@@ -58,8 +62,7 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
   const itemsPerPage = 4; 
   
   const displayableItems = results; 
-  // console.log("[SharedModelCarousel] Received results (displayableItems):", displayableItems);
-
+  
   const totalPages = Math.ceil(displayableItems.length / itemsPerPage);
 
   const nextSlide = () => {
@@ -74,7 +77,6 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
     currentIndex * itemsPerPage,
     (currentIndex + 1) * itemsPerPage
   );
-  // console.log("[SharedModelCarousel] Current page items:", currentPageItems);
   
   const displayResultsInPage = [
     ...currentPageItems,
@@ -121,7 +123,6 @@ export function ModelCarousel({ results, showConfidence = true }: ModelCarouselP
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch"
           >
             {displayResultsInPage.map((item, idx) => {
-              // console.log(`[SharedModelCarousel] Mapping item ${idx}:`, item);
               return (
                 <motion.div
                   key={item ? (isAdSlot(item) ? `shared-ad-${item.id}-${currentIndex}-${idx}` : `shared-model-${(item as SearchResult).id}-${currentIndex}-${idx}`) : `shared-empty-${currentIndex}-${idx}`}

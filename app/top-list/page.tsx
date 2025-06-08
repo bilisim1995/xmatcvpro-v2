@@ -96,7 +96,7 @@ export default function TopListPage() {
   const renderIcon = (iconName?: keyof typeof iconMap) => { // Made iconName optional
     if (!iconName) return null; // Return null if iconName is not provided
     const IconComponent = iconMap[iconName];
-    console.log(`Rendering icon: ${iconName}, Component found: ${!!IconComponent}`); // Log for debugging
+    // console.log(`Rendering icon: ${iconName}, Component found: ${!!IconComponent}`); // Log for debugging
     return IconComponent ? <IconComponent className="w-5 h-5" /> : null;
   };
 
@@ -117,7 +117,7 @@ export default function TopListPage() {
         };
       });
       setCategoriesWithIcons(randomizedCategories);
-      console.log("Processed Categories with Icons:", randomizedCategories); // Log for debugging
+      // console.log("Processed Categories with Icons:", randomizedCategories); // Log for debugging
     }
   }, [categories]);
 
@@ -304,7 +304,7 @@ export default function TopListPage() {
                                         />
                                       ) : (
                                         <div className="w-full h-full bg-muted rounded-full flex items-center justify-center">
-                                          <Camera className="w-4 h-4 text-muted-foreground" /> {/* Replaced ExternalLink with Camera */}
+                                          <Camera className="w-4 h-4 text-blue-500" /> {/* Changed color for testing */}
                                         </div>
                                       )}
                                     </div>
@@ -438,7 +438,7 @@ export default function TopListPage() {
                                           />
                                         ) : (
                                           <div className="w-full h-full bg-muted rounded-full flex items-center justify-center">
-                                            <Camera className="w-4 h-4 text-muted-foreground" /> {/* Replaced ExternalLink with Camera */}
+                                            <Camera className="w-4 h-4 text-blue-500" /> {/* Changed color for testing */}
                                           </div>
                                         )}
                                       </div>
