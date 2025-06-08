@@ -111,7 +111,8 @@ export default function ChannelProfilePage() {
           const data = await response.json();
           if (data && Array.isArray(data.videos) && data.videos.length > 0) {
             const mappedVideos = data.videos.map(mapApiVideoToVideo);
-            const sortedVideos = mappedVideos.sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime());
+            // Added type annotation for sort callback parameters
+            const sortedVideos = mappedVideos.sort((a: Video, b: Video) => b.createdAt.getTime() - a.createdAt.getTime());
             setVideos(sortedVideos);
             setProfileUsername(sortedVideos[0].username); 
           } else {
