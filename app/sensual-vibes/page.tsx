@@ -109,10 +109,7 @@ const VideoLoadingSkeleton = () => (
 
 export default function SensualVibesPage() {
   const [videos, setVideos] = useState<Video[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const bottomSentinelRef = useRef<HTMLDivElement>(null);
   const { width, height } = useWindowSize();
   const [confetti, setConfetti] = useState<{ x: number, y: number, w: number, h: number, run: boolean }>({ x: 0, y: 0, w: 0, h: 0, run: false });
   const [likedVideoIds, setLikedVideoIds] = useState<Set<string>>(new Set());
@@ -120,7 +117,6 @@ export default function SensualVibesPage() {
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [reportingVideoUrl, setReportingVideoUrl] = useState<string | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
-  const [isPaused, setIsPaused] = useState(true);
 
   useEffect(() => {
     setHasMounted(true);
@@ -136,8 +132,7 @@ export default function SensualVibesPage() {
         const data = await response.json();
         if (data && Array.isArray(data.videos)) {
           const mappedVideos = data.videos.map(mapApiVideoToVideo);
-          const shuffledVideos = mappedVideos.sort(() => Math.random() - 0.5);
-          setVideos(shuffledVideos);
+          setVideos(mappedVideos);
         } else {
           setVideos([]);
         }
@@ -183,13 +178,11 @@ export default function SensualVibesPage() {
 
           if (entry.isIntersecting) {
             videoElement.play().catch(error => console.log('Autoplay prevented:', error));
-            setIsPaused(false)
             if (videoId) {
               handleView(videoId);
             }
           } else {
             videoElement.pause();
-            setIsPaused(true)
             videoElement.currentTime = 0;
           }
         });
@@ -267,7 +260,6 @@ export default function SensualVibesPage() {
   return (
     <div className="w-full h-screen relative bg-black pt-16">
         <div
-          ref={containerRef}
           className="w-full h-full overflow-y-scroll snap-y snap-mandatory"
           style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
@@ -292,22 +284,12 @@ export default function SensualVibesPage() {
                       const videoElement = e.currentTarget;
                       if (videoElement.paused) {
                         videoElement.play();
-                        setIsPaused(false);
                       } else {
                         videoElement.pause();
-                        setIsPaused(true);
                       }
                   }}
                   onContextMenu={(e) => e.preventDefault()}
                 />
-
-                {isPaused && (
-                  <div
-                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 pointer-events-none"
-                  >
-                    <Play className="w-20 h-20 text-white opacity-50" />
-                  </div>
-                )}
 
                 <div className="absolute top-6 left-0 right-0 px-4 z-50 text-base text-white flex items-center justify-between">
                   {(video.username || video.channel) && video.channel ? (
