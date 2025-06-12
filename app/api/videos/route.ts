@@ -1,30 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import clientPromise from '@/lib/mongodb/client'; // Adjust path if necessary
+import clientPromise from '@/lib/mongodb/client';
 
 export async function GET(req: NextRequest) {
   try {
     const client = await clientPromise;
-    const db = client.db('xmatchpro'); // Your database name
-    const videosCollection = db.collection('videos'); // Your videos collection name
+    const db = client.db('xmatchpro');
+    const videosCollection = db.collection('videos');
 
     const { searchParams } = new URL(req.url);
     const channelName = searchParams.get('channel');
 
-    let query = {};
-    if (channelName) {
-      // Assuming your video documents have a 'channel' field
-      // Use a case-insensitive regex for broader matching if needed, or direct match.
-      query = { channel: channelName }; 
-      // Example for case-insensitive: query = { channel: new RegExp(`^${channelName}$`, 'i') };
-    }
+    let videos;
 
-    // Add any default sorting if needed, e.g., by createdAt descending
-    const videos = await videosCollection.find(query).sort({ createdAt: -1 }).toArray();
+    if (channelName) {
+      // If a channel is specified, fetch videos for that channel, sorted by newest first.
+      // Using a regular expression for a case-insensitive match on the channel name.
+      videos = await videosCollection.find({ channel: new RegExp(`^${channelName}$`, 'i') }).sort({ createdAt: -1 }).toArray();
+    } else {
+      // For the general feed, fetch a random sample of videos.
+      const pipeline = [{ $sample: { size: 100 } }]; // Fetches 100 random videos
+      videos = await videosCollection.aggregate(pipeline).toArray();
+    }
     
-    // The client-side mapApiVideoToVideo expects objects with $oid, $numberInt etc.
-    // Ensure your API returns data in that raw format if mapApiVideoToVideo is used as is.
-    // Or, adjust mapApiVideoToVideo to handle already-parsed data if your API does parsing.
-    // For now, assuming API returns documents as they are in MongoDB.
     return NextResponse.json({ videos });
 
   } catch (error) {

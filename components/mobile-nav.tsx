@@ -9,7 +9,8 @@ import {
 } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
-import { motion } from 'framer-motion'; // Import motion
+import { motion } from 'framer-motion';
+import { Logo } from './logo'; // Import the Logo component
 
 export function MobileNav() {
   return (
@@ -21,6 +22,10 @@ export function MobileNav() {
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+        <div className="flex justify-center py-4">
+          <Logo size={60} />
+        </div>
+        <Separator />
         <nav className="flex flex-col gap-4 pt-6">
           {/* Search by Face */}
           <Link

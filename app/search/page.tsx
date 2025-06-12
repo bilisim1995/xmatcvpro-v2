@@ -8,7 +8,7 @@ import { BlogSection } from '@/components/search-by-face/blog';
 import { DevelopmentStatus } from '@/components/search-by-face/development-status';
 import { Card } from '@/components/ui/card';
 import { CoffeeButton } from '@/components/coffee-button';
-
+import { SensualVibesPrompt } from '@/components/sensual-vibes-prompt';
 
 export default function SearchPage() {
   return (
@@ -42,6 +42,7 @@ export default function SearchPage() {
           </div>
         </div>
       </div>
+      <SensualVibesPrompt />
     </div>
   );
 }

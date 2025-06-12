@@ -87,6 +87,7 @@ export default function ChannelProfilePage() {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [likedVideoIds, setLikedVideoIds] = useState<Set<string>>(new Set());
   const [profileUsername, setProfileUsername] = useState<string | undefined>(undefined);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -111,7 +112,6 @@ export default function ChannelProfilePage() {
           const data = await response.json();
           if (data && Array.isArray(data.videos) && data.videos.length > 0) {
             const mappedVideos = data.videos.map(mapApiVideoToVideo);
-            // Added type annotation for sort callback parameters
             const sortedVideos = mappedVideos.sort((a: Video, b: Video) => b.createdAt.getTime() - a.createdAt.getTime());
             setVideos(sortedVideos);
             setProfileUsername(sortedVideos[0].username); 
@@ -154,6 +154,22 @@ export default function ChannelProfilePage() {
     }
   };
 
+  const handleMouseEnter = (index: number) => {
+    const videoElement = videoRefs.current[index];
+    if (videoElement) {
+      videoElement.play().catch(error => console.log('Autoplay for preview failed', error));
+    }
+  };
+
+  const handleMouseLeave = (index: number) => {
+    const videoElement = videoRefs.current[index];
+    if (videoElement) {
+      videoElement.pause();
+      videoElement.currentTime = 0;
+    }
+  };
+
+
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-16 pt-24">
@@ -177,13 +193,11 @@ export default function ChannelProfilePage() {
 
   return (
     <div className="container mx-auto px-4 py-16 pt-24">
-      {/* Header Section with Back Button and Profile Info (clickable to Instagram) */}
       <div className="flex items-center justify-between mb-8">
         <Button onClick={() => router.back()} variant="outline" className="whitespace-nowrap flex-shrink-0">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back
         </Button>
         
-        {/* Profile Info linked to Instagram - Pushed to the right */}
         <a 
           href={instagramProfileUrl} 
           target="_blank" 
@@ -203,27 +217,24 @@ export default function ChannelProfilePage() {
         <p>No videos found for channel: {decodedChannelName}</p>
       )}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
-        {videos.map(video => (
-          <Card key={video._id} className="overflow-hidden cursor-pointer group aspect-[9/16]" onClick={() => setSelectedVideo(video)}>
+        {videos.map((video, index) => (
+          <Card 
+            key={video._id} 
+            className="overflow-hidden cursor-pointer group aspect-[9/16]" 
+            onClick={() => setSelectedVideo(video)}
+            onMouseEnter={() => handleMouseEnter(index)}
+            onMouseLeave={() => handleMouseLeave(index)}
+          >
             <div className="relative w-full h-full">
-              {video.thumbnail_url ? (
-                <Image 
-                  src={video.thumbnail_url} 
-                  alt={video.description || 'Video thumbnail'} 
-                  layout="fill" 
-                  objectFit="cover" 
-                  className="group-hover:scale-105 transition-transform duration-300"
-                  unoptimized={true} 
-                  onError={(e) => { 
-                    console.error("Error loading thumbnail:", video.thumbnail_url, e); 
-                    e.currentTarget.style.display = 'none'; 
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full bg-muted flex items-center justify-center">
-                  <VideoIcon className="w-12 h-12 text-muted-foreground" />
-                </div>
-              )}
+              <video
+                ref={el => videoRefs.current[index] = el}
+                src={video.cdnUrl}
+                poster={video.thumbnail_url}
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                  <VideoIcon className="w-10 h-10 text-white" />
                </div>
@@ -232,7 +243,6 @@ export default function ChannelProfilePage() {
         ))}
       </div>
 
-      {/* Modal for displaying selected video - Adjusted for screen fit with margins */}
       <Dialog open={selectedVideo !== null} onOpenChange={(isOpen) => !isOpen && setSelectedVideo(null)}>
         <DialogContent className="w-[calc(100vw-2rem)] max-w-screen-lg h-auto max-h-[calc(100vh-2rem)] p-0 border-0 bg-transparent flex items-center justify-center rounded-lg sm:bg-black/80 sm:backdrop-blur-sm">
           {selectedVideo && (
@@ -247,7 +257,6 @@ export default function ChannelProfilePage() {
                 className="max-h-full max-w-full object-contain"
                 onContextMenu={(e) => e.preventDefault()}
               />
-              {/* Modal overlays - Top left profile info REMOVED */}
               
                {selectedVideo._id && (
                   <div className="absolute bottom-12 right-2 sm:right-4 z-[70] flex flex-col space-y-1.5 bg-black/30 p-1.5 sm:p-2 rounded-md">
@@ -280,7 +289,6 @@ export default function ChannelProfilePage() {
           )}
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }
