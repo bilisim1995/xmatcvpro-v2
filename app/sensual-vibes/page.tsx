@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Video as VideoIcon, Instagram, Link as LinkIconComponent, User, Heart, Volume2, VolumeX, AlertCircle, Eye } from 'lucide-react';
+import { Video as VideoIcon, Instagram, Link as LinkIconComponent, User, Heart, Volume2, VolumeX, AlertCircle, Eye, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogClose } from '@/components/ui/dialog';
 import Link from 'next/link';
@@ -120,6 +120,7 @@ export default function SensualVibesPage() {
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [reportingVideoUrl, setReportingVideoUrl] = useState<string | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
+  const [isPaused, setIsPaused] = useState(true);
 
   useEffect(() => {
     setHasMounted(true);
@@ -135,8 +136,8 @@ export default function SensualVibesPage() {
         const data = await response.json();
         if (data && Array.isArray(data.videos)) {
           const mappedVideos = data.videos.map(mapApiVideoToVideo);
-          const sortedVideos = mappedVideos.sort((a: Video, b: Video) => b.createdAt.getTime() - a.createdAt.getTime());
-          setVideos(sortedVideos);
+          const shuffledVideos = mappedVideos.sort(() => Math.random() - 0.5);
+          setVideos(shuffledVideos);
         } else {
           setVideos([]);
         }
@@ -182,11 +183,13 @@ export default function SensualVibesPage() {
 
           if (entry.isIntersecting) {
             videoElement.play().catch(error => console.log('Autoplay prevented:', error));
+            setIsPaused(false)
             if (videoId) {
               handleView(videoId);
             }
           } else {
             videoElement.pause();
+            setIsPaused(true)
             videoElement.currentTime = 0;
           }
         });
@@ -287,10 +290,24 @@ export default function SensualVibesPage() {
                   className="max-h-full max-w-full w-full h-full object-cover"
                    onClick={(e) => {
                       const videoElement = e.currentTarget;
-                      videoElement.paused ? videoElement.play() : videoElement.pause();
+                      if (videoElement.paused) {
+                        videoElement.play();
+                        setIsPaused(false);
+                      } else {
+                        videoElement.pause();
+                        setIsPaused(true);
+                      }
                   }}
                   onContextMenu={(e) => e.preventDefault()}
                 />
+
+                {isPaused && (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 pointer-events-none"
+                  >
+                    <Play className="w-20 h-20 text-white opacity-50" />
+                  </div>
+                )}
 
                 <div className="absolute top-6 left-0 right-0 px-4 z-50 text-base text-white flex items-center justify-between">
                   {(video.username || video.channel) && video.channel ? (

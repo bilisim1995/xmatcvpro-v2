@@ -36,7 +36,7 @@ export function SensualVibesPrompt() {
           animate={{ y: '0%' }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-muted/95 backdrop-blur-sm border-t border-border"
+          className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-muted/95 backdrop-blur-sm border-t border-border md:hidden"
           style={{ height: '20vh' }}
         >
           <div className="container mx-auto h-full flex flex-col items-center justify-center text-center relative">

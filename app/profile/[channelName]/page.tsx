@@ -5,8 +5,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import Image from 'next/image';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { User, Heart, Eye, Link as LinkIconComponent, Instagram, Video as VideoIcon, ArrowLeft } from 'lucide-react'; 
+import { Dialog, DialogContent, DialogClose } from '@/components/ui/dialog';
+import { User, Heart, Eye, Link as LinkIconComponent, Instagram, Video as VideoIcon, ArrowLeft, Play, X } from 'lucide-react'; 
 import { Button } from '@/components/ui/button';
 import NextLink from 'next/link'; 
 
@@ -88,6 +88,7 @@ export default function ChannelProfilePage() {
   const [likedVideoIds, setLikedVideoIds] = useState<Set<string>>(new Set());
   const [profileUsername, setProfileUsername] = useState<string | undefined>(undefined);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const [isPaused, setIsPaused] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -235,8 +236,8 @@ export default function ChannelProfilePage() {
                 playsInline
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
-               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                 <VideoIcon className="w-10 h-10 text-white" />
+               <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                 <Play className="w-12 h-12 text-white opacity-70 group-hover:opacity-100 transition-opacity duration-300" />
                </div>
             </div>
           </Card>
@@ -247,6 +248,16 @@ export default function ChannelProfilePage() {
         <DialogContent className="w-[calc(100vw-2rem)] max-w-screen-lg h-auto max-h-[calc(100vh-2rem)] p-0 border-0 bg-transparent flex items-center justify-center rounded-lg sm:bg-black/80 sm:backdrop-blur-sm">
           {selectedVideo && (
             <div className="w-full h-full aspect-[9/16] bg-black rounded-lg overflow-hidden relative flex items-center justify-center max-w-full max-h-full">
+                <DialogClose asChild>
+                    <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2 z-50 bg-black/50 hover:bg-black/75 text-white rounded-full"
+                    >
+                    <X className="h-6 w-6" />
+                    <span className="sr-only">Close</span>
+                    </Button>
+                </DialogClose>
               <video
                 id="modal-video"
                 src={selectedVideo.cdnUrl}
@@ -256,8 +267,26 @@ export default function ChannelProfilePage() {
                 playsInline
                 className="max-h-full max-w-full object-contain"
                 onContextMenu={(e) => e.preventDefault()}
+                onClick={(e) => {
+                  const videoElement = e.currentTarget;
+                  if (videoElement.paused) {
+                    videoElement.play();
+                    setIsPaused(false);
+                  } else {
+                    videoElement.pause();
+                    setIsPaused(true);
+                  }
+              }}
               />
               
+              {isPaused && (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 pointer-events-none"
+                  >
+                    <Play className="w-20 h-20 text-white opacity-50" />
+                  </div>
+                )}
+
                {selectedVideo._id && (
                   <div className="absolute bottom-12 right-2 sm:right-4 z-[70] flex flex-col space-y-1.5 bg-black/30 p-1.5 sm:p-2 rounded-md">
                      <Button variant="ghost" size="icon" className={`h-8 w-8 sm:h-9 sm:w-9 p-1.5 flex flex-col items-center ${likedVideoIds.has(selectedVideo._id) ? 'text-red-500' : 'text-white'}`} 

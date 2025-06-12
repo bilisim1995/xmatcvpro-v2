@@ -11,14 +11,17 @@ export async function GET(req: NextRequest) {
     const channelName = searchParams.get('channel');
 
     let videos;
+    const size = 100; // Number of videos to fetch for the random feed
 
     if (channelName) {
-      // If a channel is specified, fetch videos for that channel, sorted by newest first.
-      // Using a regular expression for a case-insensitive match on the channel name.
-      videos = await videosCollection.find({ channel: new RegExp(`^${channelName}$`, 'i') }).sort({ createdAt: -1 }).toArray();
+      // If a channel is specified, fetch all videos for that channel, sorted by newest first.
+      videos = await videosCollection
+        .find({ channel: new RegExp(`^${channelName}$`, 'i') })
+        .sort({ createdAt: -1 })
+        .toArray();
     } else {
       // For the general feed, fetch a random sample of videos.
-      const pipeline = [{ $sample: { size: 100 } }]; // Fetches 100 random videos
+      const pipeline = [{ $sample: { size } }];
       videos = await videosCollection.aggregate(pipeline).toArray();
     }
     
