@@ -37,6 +37,7 @@ export async function POST(req: NextRequest, { params }: { params: { videoId: st
       createdAt: new Date(),
     };
 
+    
     const result = await videosCollection.updateOne(
       { _id: new ObjectId(videoId) },
       { $push: { comments: newComment as any } } // Cast newComment to any here
