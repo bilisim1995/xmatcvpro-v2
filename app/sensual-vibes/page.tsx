@@ -55,7 +55,6 @@ interface Video {
 }
 
 const LIKED_VIDEOS_STORAGE_KEY = 'sensualVibesLikedVideos';
-const VIEWED_VIDEOS_STORAGE_KEY = 'sensualVibesViewedVideos';
 
 function mapApiVideoToVideo(apiVideo: ApiVideoObject): Video {
   const likes = typeof apiVideo.likes === 'object' && apiVideo.likes !== null && '$numberInt' in apiVideo.likes
@@ -174,11 +173,7 @@ export default function SensualVibesPage() {
   }, [hasMounted]);
 
   const handleView = async (videoId: string) => {
-    const viewedVideos = JSON.parse(localStorage.getItem(VIEWED_VIDEOS_STORAGE_KEY) || '[]');
-    if (viewedVideos.includes(videoId)) {
-      return;
-    }
-
+    // localStorage kontrolü kaldırıldı
     try {
       const response = await fetch(`/api/videos/${videoId}/view`, { method: 'POST' });
       if (response.ok) {
@@ -188,8 +183,7 @@ export default function SensualVibesPage() {
             video._id === videoId ? { ...video, views: data.views } : video
           )
         );
-        const newViewedVideos = [...viewedVideos, videoId];
-        localStorage.setItem(VIEWED_VIDEOS_STORAGE_KEY, JSON.stringify(newViewedVideos));
+        // localStorage güncellemesi kaldırıldı
       }
     } catch (error) {
       console.error('Error incrementing view count:', error);
@@ -257,11 +251,12 @@ export default function SensualVibesPage() {
   const handleLike = async (videoId: string, event: React.MouseEvent<HTMLDivElement>) => {
     if (likedVideoIds.has(videoId)) return;
 
-    setVideos(prevVideos =>
-      prevVideos.map(video =>
-        video._id === videoId ? { ...video, likes: (video.likes ?? 0) + 1 } : video
-      )
-    );
+    // Beğeni sayısını anında artırmak yerine, API yanıtını bekleyeceğiz.
+    // setVideos(prevVideos =>
+    //   prevVideos.map(video =>
+    //     video._id === videoId ? { ...video, likes: (video.likes ?? 0) + 1 } : video
+    //   )
+    // );
 
     const rect = event.currentTarget.getBoundingClientRect();
     setConfetti({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, w: 0, h: 0, run: true });
@@ -272,9 +267,33 @@ export default function SensualVibesPage() {
     localStorage.setItem(LIKED_VIDEOS_STORAGE_KEY, JSON.stringify(Array.from(newLikedVideoIds)));
 
     try {
-      await fetch(`/api/videos/${videoId}/like`, { method: 'POST' });
+      const response = await fetch(`/api/videos/${videoId}/like`, { method: 'POST' });
+      if (response.ok) {
+        const data = await response.json();
+        setVideos(prevVideos =>
+          prevVideos.map(video =>
+            video._id === videoId ? { ...video, likes: data.likes } : video
+          )
+        );
+      } else {
+        console.error('Failed to like video');
+        // Hata durumunda, beğeniyi geri al
+        setLikedVideoIds(prev => {
+          const updated = new Set(prev);
+          updated.delete(videoId);
+          localStorage.setItem(LIKED_VIDEOS_STORAGE_KEY, JSON.stringify(Array.from(updated)));
+          return updated;
+        });
+      }
     } catch (error) {
       console.error('Error liking video:', error);
+      // Hata durumunda, beğeniyi geri al
+      setLikedVideoIds(prev => {
+        const updated = new Set(prev);
+        updated.delete(videoId);
+        localStorage.setItem(LIKED_VIDEOS_STORAGE_KEY, JSON.stringify(Array.from(updated)));
+        return updated;
+      });
     }
   };
 
