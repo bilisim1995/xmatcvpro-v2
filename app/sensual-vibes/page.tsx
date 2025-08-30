@@ -1,14 +1,24 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Video as VideoIcon, Instagram, Link as LinkIconComponent, User, Heart, Volume2, VolumeX, AlertCircle, Eye, Play } from 'lucide-react';
+import { Video as VideoIcon, Instagram, Link as LinkIconComponent, User, Heart, Volume2, VolumeX, AlertCircle, Eye, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription, DialogClose } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input'; // Input bileşenini ekledik
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Confetti from 'react-confetti';
 import useWindowSize from 'react-use/lib/useWindowSize';
 import { Skeleton } from "@/components/ui/skeleton";
+
+interface Comment {
+  _id: string;
+  userId: string; // Kodu basitleştirmek için şimdilik string olarak tutulacak, gerçek uygulamada User ID referansı olabilir.
+  username: string;
+  content: string;
+  createdAt: Date;
+}
 
 interface ApiVideoObject {
   _id: { $oid: string } | string;
@@ -24,6 +34,7 @@ interface ApiVideoObject {
   createdAt?: { $date: { $numberLong: string } } | string | Date;
   updatedAt?: { $date: { $numberLong: string } } | string | Date;
   thumbnail_url?: string;
+  comments?: any[]; // MongoDB'den gelen ham yorum verisi
 }
 
 interface Video {
@@ -40,6 +51,7 @@ interface Video {
   createdAt: Date;
   updatedAt: Date;
   thumbnail_url?: string;
+  comments: Comment[];
 }
 
 const LIKED_VIDEOS_STORAGE_KEY = 'sensualVibesLikedVideos';
@@ -61,6 +73,14 @@ function mapApiVideoToVideo(apiVideo: ApiVideoObject): Video {
   const id = typeof apiVideo._id === 'object' && apiVideo._id !== null && '$oid' in apiVideo._id
              ? apiVideo._id.$oid
              : typeof apiVideo._id === 'string' ? apiVideo._id : 'unknown-'+Date.now();
+  
+  const comments: Comment[] = (apiVideo.comments || []).map((comment: any) => ({
+    _id: comment._id.$oid || comment._id,
+    userId: comment.userId.$oid || comment.userId,
+    username: comment.username,
+    content: comment.content,
+    createdAt: new Date(comment.createdAt.$date?.$numberLong ? parseInt(comment.createdAt.$date.$numberLong) : comment.createdAt),
+  }));
 
   return {
     _id: id,
@@ -76,6 +96,7 @@ function mapApiVideoToVideo(apiVideo: ApiVideoObject): Video {
     createdAt: createdAt,
     updatedAt: updatedAt,
     thumbnail_url: apiVideo.thumbnail_url,
+    comments: comments,
   };
 }
 
@@ -117,6 +138,14 @@ export default function SensualVibesPage() {
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [reportingVideoUrl, setReportingVideoUrl] = useState<string | null>(null);
   const [hasMounted, setHasMounted] = useState(false);
+
+  // Yorum modalı için state'ler
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [currentVideoForComments, setCurrentVideoForComments] = useState<Video | null>(null);
+  const [newCommentContent, setNewCommentContent] = useState<string>('');
+  const [commenterName, setCommenterName] = useState<string>(''); // Yorumcu adı için yeni state
+  const commentsListRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     setHasMounted(true);
@@ -249,6 +278,77 @@ export default function SensualVibesPage() {
     }
   };
 
+  const handleCommentClick = async (video: Video) => {
+    setCurrentVideoForComments(video);
+    setNewCommentContent(''); // Yeni yorum alanını temizle
+    setCommenterName(''); // Yorumcu adı alanını temizle
+
+    try {
+      const response = await fetch(`/api/videos/${video._id}/comments`, { cache: 'no-store' });
+      if (!response.ok) throw new Error('Failed to fetch comments');
+      const fetchedComments: Comment[] = await response.json();
+
+      // fetchedComments içindeki tarih stringlerini Date objelerine dönüştür
+      const parsedComments = fetchedComments.map(comment => ({
+        ...comment,
+        createdAt: new Date(comment.createdAt),
+      }));
+
+      // currentVideoForComments state'ini güncellerken yorumları da dahil et
+      setCurrentVideoForComments(prev => prev ? { ...prev, comments: parsedComments } : null);
+      setShowCommentModal(true); // Yorumlar çekildikten sonra modalı aç
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      // Yorumlar çekilemezse bile modalı açabiliriz, boş bir liste gösterir
+      setCurrentVideoForComments(prev => prev ? { ...prev, comments: [] } : null);
+      setShowCommentModal(true);
+    }
+  };
+
+  const handlePostComment = async () => {
+    if (!currentVideoForComments || newCommentContent.trim() === '') return;
+
+    const videoId = currentVideoForComments._id;
+    // Kullanıcı adı boşsa 'AnonymousUser' olarak ayarla
+    const finalUsername = commenterName.trim() === '' ? 'AnonymousUser' : commenterName.trim();
+
+    try {
+      const response = await fetch(`/api/videos/${videoId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: 'anon', username: finalUsername, content: newCommentContent.trim() }),
+      });
+
+      if (response.ok) {
+        const newComment = await response.json();
+        // Videonun yorumlarını güncelle
+        setVideos(prevVideos =>
+          prevVideos.map(video =>
+            video._id === videoId
+              ? { ...video, comments: [...video.comments, newComment] }
+              : video
+          )
+        );
+        setCurrentVideoForComments(prev => prev ? { ...prev, comments: [...prev.comments, { ...newComment, createdAt: new Date(newComment.createdAt) }] } : null);
+        setNewCommentContent(''); // Yorum gönderildikten sonra inputu temizle
+        setCommenterName(''); // Yorumcu adı gönderildikten sonra inputu temizle
+        // Yorumlar listesini en alta kaydır
+        if (commentsListRef.current) {
+          commentsListRef.current.scrollTop = commentsListRef.current.scrollHeight;
+        }
+      } else {
+        console.error('Failed to post comment');
+        // Hata durumunda kullanıcıya bilgi verebiliriz
+        alert('Failed to post comment. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      alert('An error occurred while posting your comment. Please try again.');
+    }
+  };
+
   if (!hasMounted) {
     return (
       <div className="w-full h-screen relative bg-black pt-16">
@@ -260,7 +360,7 @@ export default function SensualVibesPage() {
   return (
     <div className="w-full h-screen relative bg-black pt-16">
         <div
-          className="w-full h-full overflow-y-scroll snap-y snap-mandatory"
+          className="w-full h-[calc(100%-60px)] overflow-y-scroll snap-y snap-mandatory" // Yükseklik güncellendi
           style={{ WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {videos.length === 0 ? (
@@ -323,6 +423,12 @@ export default function SensualVibesPage() {
 
                 <div className="absolute bottom-32 right-4 z-[60] flex flex-col space-y-2 bg-black/30 p-2 rounded-md">
                    <div
+                      className="flex items-center p-2 bg-black/60 rounded-md text-white cursor-pointer"
+                      onClick={() => handleCommentClick(video)}>
+                      <MessageCircle className="w-5 h-5 mr-1" />
+                      {video.comments?.length ?? 0}
+                   </div>
+                   <div
                       className={`flex items-center p-2 bg-black/60 rounded-md cursor-pointer ${likedVideoIds.has(video._id) ? 'text-red-500 cursor-not-allowed' : 'text-white'}`}
                       onClick={(e) => !likedVideoIds.has(video._id) && handleLike(video._id, e)}>
                       <Heart className="w-5 h-5 mr-1" />
@@ -372,6 +478,50 @@ export default function SensualVibesPage() {
               }}
             >
               Yes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Yorum Modalı */}
+      <Dialog open={showCommentModal} onOpenChange={setShowCommentModal}>
+        <DialogContent className="w-[90%] sm:max-w-[80%] md:max-w-[60%] lg:max-w-[50%] xl:max-w-[40%] h-[80vh] flex flex-col p-4">
+          <DialogHeader className="pb-4">
+            <DialogTitle>Comments</DialogTitle>
+            <DialogDescription className="line-clamp-2">{currentVideoForComments?.description}</DialogDescription>
+          </DialogHeader>
+          <div ref={commentsListRef} className="flex-1 overflow-y-auto p-4 space-y-4 border-b border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-850 shadow-inner">
+            {currentVideoForComments?.comments
+              .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) // En yeni yorum en üstte
+              .map((comment) => (
+                <div key={comment._id} className="bg-gray-200 dark:bg-[#2D3748] p-3 rounded-lg shadow-sm"> {/* Burası güncellendi */}
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-1">
+                    <span className="font-semibold text-gray-700 dark:text-gray-300">{comment.username}</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500">{comment.createdAt.toLocaleString()}</span>
+                  </div>
+                  <p className="text-gray-800 dark:text-gray-200 text-sm break-words">{comment.content}</p>
+                </div>
+              ))}
+          </div>
+          <DialogFooter className="flex flex-col p-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <Input
+              placeholder="Your Name (Optional)"
+              value={commenterName}
+              onChange={(e) => setCommenterName(e.target.value)}
+              className="mb-3 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
+            />
+            <Textarea
+              placeholder="Write your comment here..."
+              value={newCommentContent}
+              onChange={(e) => setNewCommentContent(e.target.value)}
+              className="mb-3 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 min-h-[80px]"
+            />
+            <Button 
+              onClick={handlePostComment} 
+              disabled={newCommentContent.trim() === ''} // Yorum içeriği boşsa butonu devre dışı bırak
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200"
+            >
+              Send
             </Button>
           </DialogFooter>
         </DialogContent>

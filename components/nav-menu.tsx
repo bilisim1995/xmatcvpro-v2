@@ -22,15 +22,6 @@ export function NavMenu() {
         </Button>
       </Link>
 
-      <Link
-        href="https://theporndude.com/"
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-        className="flex items-center gap-2 px-2 py-1 text-lg hover:text-red-600 transition-colors"
-      >
-        <Construction className="w-5 h-5" />
-        ThePornDude
-      </Link>
 
     </div>
   );

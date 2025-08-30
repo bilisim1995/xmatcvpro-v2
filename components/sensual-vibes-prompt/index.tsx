@@ -37,9 +37,9 @@ export function SensualVibesPrompt() {
           exit={{ y: '100%' }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-muted/95 backdrop-blur-sm border-t border-border md:hidden"
-          style={{ height: '20vh' }}
+          style={{ height: '15vh' }} // Yükseklik 18vh'den 15vh'ye düşürüldü
         >
-          <div className="container mx-auto h-full flex flex-col items-center justify-center text-center relative">
+          <div className="container mx-auto h-full flex items-center justify-between text-center relative">
             <Button
               variant="ghost"
               size="icon"
@@ -57,7 +57,7 @@ export function SensualVibesPrompt() {
               </p>
             </div>
             
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-2 items-end"> {/* Burası güncellendi */}
               <motion.div
                 animate={{
                   scale: [1, 1.05, 1],
