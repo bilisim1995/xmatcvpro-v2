@@ -38,8 +38,7 @@ export function HomepageSEO() {
     "browserRequirements": "Requires JavaScript. Requires HTML5.",
     "memoryRequirements": "256MB RAM",
     "storageRequirements": "10MB",
-    "permissions": "Camera access for image uploads",
-    "screenshot": "https://xmatch.pro/m1.png"
+    "permissions": "Camera access for image uploads"
   };
 
   return (

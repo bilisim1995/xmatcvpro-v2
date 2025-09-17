@@ -13,7 +13,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { YandexMetrika } from '@/components/analytics/yandex-metrika';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
-import { MicrosoftClarity } from '@/components/analytics/microsoft-clarity';
+
 
 export default function ClientLayoutContent({
   children,
@@ -32,7 +32,6 @@ export default function ClientLayoutContent({
         <YandexMetrika />
         <GoogleAnalytics />
         <GoogleTagManager />
-        <MicrosoftClarity />
         {children}
       </main>
       {!hideFooter && <Footer />} {/* Conditionally render Footer */}

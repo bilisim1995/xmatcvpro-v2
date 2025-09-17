@@ -16,7 +16,6 @@ import { LanguageProvider } from '@/components/contexts/LanguageContext';
 import { YandexMetrika } from '@/components/analytics/yandex-metrika';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
-import { MicrosoftClarity } from '@/components/analytics/microsoft-clarity';
 
 export default function ClientLayoutWrapper({
   children,
@@ -52,7 +51,6 @@ export default function ClientLayoutWrapper({
         <YandexMetrika />
         <GoogleAnalytics />
         <GoogleTagManager />
-        <MicrosoftClarity />
       </ThemeProvider>
     </LanguageProvider>
   );

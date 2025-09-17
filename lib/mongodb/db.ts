@@ -4,12 +4,8 @@ import { connect, disconnect } from './connection';
 
 // Constants for similarity calculation
 const MAX_DISTANCE = 0.6; // Daha sıkı mesafe eşiği
-const COSINE_WEIGHT = 0.75; // Cosine similarity'e daha fazla ağırlık
-const EUCLIDEAN_WEIGHT = 0.25; // Euclidean distance'a daha az ağırlık
 const MIN_CONFIDENCE = 35; // Minimum benzerlik eşiği
-const SIMILARITY_BOOST = 1.35; // Yüksek benzerlik için daha güçlü boost
 const HIGH_SIMILARITY_THRESHOLD = 0.85; // Yüksek benzerlik eşiği
-const PRECISION = 8; // Ondalık hassasiyet
 
 const COLLECTION_NAME = 'adultmodels';
 
