@@ -5,6 +5,7 @@ import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ImageIcon, Upload, Search, Loader2, Info, AlertTriangle } from 'lucide-react';
+import NextImage from 'next/image';
 import { initializeFaceApi } from '@/lib/face-detection/initialize';
 import { findMatches } from '@/lib/face-detection/face-matcher';
 import { detectGenderAndAge } from '@/lib/face-detection/gender';
@@ -261,10 +262,12 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               {image ? (
-                <img 
+                <NextImage 
                   src={image} 
                   alt="Preview" 
-                  className="w-full h-full object-cover" 
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  className="w-full h-full" 
                 />
               ) : (
                 <div className="flex flex-col items-center gap-2">

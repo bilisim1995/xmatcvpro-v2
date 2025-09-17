@@ -17,6 +17,7 @@ export function SearchHeader() {
           height={128}
           className="w-full h-full object-contain"
           priority
+          sizes="(max-width: 640px) 7rem, 8rem"
         />
       </div>
       <div className="text-left">

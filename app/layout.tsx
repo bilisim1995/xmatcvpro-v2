@@ -5,7 +5,7 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer/index';
-import { Analytics } from '@/components/analytics';
+import { AnalyticsLoader } from '@/components/analytics/analytics-loader';
 import { ConsentBanner } from '@/components/gdpr/consent-banner';
 import { AgeVerification } from '@/components/age-verification/age-verification';
 import { ScrollToTop } from '@/components/scroll-to-top';
@@ -73,10 +73,7 @@ export default function RootLayout({
             <Navbar />
           </Suspense>
           <main className="flex-1">
-          <YandexMetrika />
-          <GoogleAnalytics />
-          <GoogleTagManager />
-          <MicrosoftClarity />
+            <AnalyticsLoader />
             {children}
           </main>
           {!hideFooter && <Footer />} {/* Conditionally render Footer */}
@@ -85,7 +82,6 @@ export default function RootLayout({
           <AgeVerification />
           <Toaster />
         </ThemeProvider>
-        <Analytics />
         </LanguageProvider>
       </body>
     </html>

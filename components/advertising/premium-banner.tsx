@@ -18,11 +18,12 @@ export function PremiumBanner() {
       {/* Background Image */}
       <Image
         src={bannerImageUrl}
-        alt={"Advertisement Banner"} // Using a generic alt text
-        layout="fill"
-        objectFit="cover"
+        alt="Advertisement Banner"
+        fill
+        style={{ objectFit: 'cover' }}
         className="group-hover:scale-105 transition-transform duration-500 ease-in-out"
         priority 
+        sizes="(max-width: 768px) 100vw, 895px"
         onError={(e) => {
             // Fallback if image fails to load
             e.currentTarget.src = 'https://via.placeholder.com/895x290.png?text=Advertisement+Banner+Not+Found';
