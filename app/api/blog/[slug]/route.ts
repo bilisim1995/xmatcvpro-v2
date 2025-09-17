@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(
   request: Request,
   { params }: { params: { slug: string } }
+  
 ) {
   try {
     await connect();
