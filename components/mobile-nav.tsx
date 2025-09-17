@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Scan, Star, Construction, Video as VideoIcon } from 'lucide-react';
+import { Menu, Scan, Video as VideoIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -62,13 +62,6 @@ export function MobileNav() {
 
           <Separator />
 
-          <Link
-            href="/top-list"
-            className="flex items-center gap-3 px-3 py-2 text-lg hover:bg-muted/50 rounded-md transition-colors"
-          >
-            <Star className="w-5 h-5 text-muted-foreground" />
-            <span>GOLDEN LIST</span>
-          </Link>
 
         </nav>
       </SheetContent>

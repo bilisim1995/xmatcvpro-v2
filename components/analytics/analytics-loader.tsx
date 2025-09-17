@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { GoogleAnalytics } from './google-analytics';
 import { GoogleTagManager } from './google-tag-manager';
-import { MicrosoftClarity } from './microsoft-clarity';
 import { YandexMetrika } from './yandex-metrika';
 import { Analytics } from './index';
 
@@ -43,7 +42,6 @@ export function AnalyticsLoader() {
       <YandexMetrika />
       <GoogleAnalytics />
       <GoogleTagManager />
-      <MicrosoftClarity />
       <Analytics />
     </>
   );

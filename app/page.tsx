@@ -2,6 +2,7 @@
 
 import { SearchHeader } from '@/components/search-by-face/search-header';
 import { SearchTabs } from '@/components/search-by-face/tabs/index';
+import { HomepageSEO } from '@/components/seo/homepage-seo';
 import dynamic from 'next/dynamic';
 const HowItWorks = dynamic(() => import('@/components/search-by-face/how-it-works').then(m => m.HowItWorks), { ssr: false, loading: () => <div className="h-40 animate-pulse bg-muted rounded-lg" /> });
 const PremiumBanner = dynamic(() => import('@/components/advertising/premium-banner').then(m => m.PremiumBanner), { ssr: false, loading: () => <div className="h-32 animate-pulse bg-muted rounded-lg" /> });
@@ -13,7 +14,9 @@ import { SensualVibesPrompt } from '@/components/sensual-vibes-prompt';
 
 export default function SearchPage() {
   return (
-    <div className="min-h-screen w-full overflow-x-hidden">
+    <>
+      <HomepageSEO />
+      <div className="min-h-screen w-full overflow-x-hidden">
       <div className="w-full max-w-full px-2 sm:container sm:mx-auto sm:px-6 pt-16 sm:pt-24 pb-8 sm:pb-16">
         <SearchHeader />
 
@@ -44,6 +47,7 @@ export default function SearchPage() {
         </div>
       </div>
       <SensualVibesPrompt />
-    </div>
+      </div>
+    </>
   );
 }

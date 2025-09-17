@@ -129,13 +129,6 @@
 "excerpt": "Gesichtserkennung mit künstlicher Intelligenz (oder Gesichtserkennungstechnologie) ist eine Technologieart, die Computer und Algorithmen der künstlichen Intelligenz nutzt. Diese Technologie wird verwendet, um die Gesichtszüge einer Person zu identifizieren und zu verifizieren, diese Merkmale zu analysieren und die Identität der Person anhand ihres Gesichtsbildes zu bestimmen. Die Gesichtserkennung funktioniert, indem sie die Gesichtszüge einer Person erkennt, wie z. B. die Konturen ihres Gesichts, die Position ihrer Augen, die Struktur ihrer Nase, die Form ihrer Lippen und andere Gesichtsmerkmale. Der Prozess der Gesichtserkennung mit künstlicher Intelligenz besteht aus mehreren Schritten. Der erste Schritt ist die Erfassung des Bildes des Gesichts einer Person, was in der Regel mit einer Kamera oder einer Bildquelle geschieht. Dieses Bild wird dann verarbeitet und verschiedene Gesichtsmerkmale werden extrahiert. Insbesondere werden der Abstand zwischen den Augen, die Positionen von Nase und Mund, Gesichtskonturen und ähnliche Merkmale berechnet. Die Gesichtserkennungstechnologie vergleicht dann diese extrahierten Merkmale mit Einträgen in einer Datenbank. Diese Datenbank kann die Gesichtszüge bekannter Personen enthalten. Durch die Berechnung der Wahrscheinlichkeit einer Übereinstimmung bestimmt die Technologie die Identität des erfassten Gesichts. Wenn eine Übereinstimmung gefunden wird, wird die Person erkannt und ihre Identität festgestellt. Die Anwendungen der Gesichtserkennung mit künstlicher Intelligenz sind recht vielfältig. Diese Technologie wird in Sicherheitssystemen, Zugangskontrolle, Automatisierungssystemen, im Gesundheitswesen, in der Marketinganalyse und in verschiedenen anderen Bereichen eingesetzt. Sie wird auch zur persönlichen Identitätsprüfung in Geräten wie Smartphones verwendet. Durch diese Technologie wird die Sicherheit erhöht, die Automatisierung beschleunigt und die Prozesse der persönlichen Identitätsprüfung vereinfacht."
 }
 },
-"toplist": {
-"title": "Top-Seiten-Liste | MyProject",
-"description": "Entdecken Sie die besten Seiten, kategorisiert von Nutzern. Durchsuchen, suchen und erkunden Sie!",
-"visit_site": "Seite besuchen",
-"all_sites": "Alle Seiten",
-"unknown_category": "Unbekannte Kategorie"
-},
 "topfilters": {
 "filter_by_category": "Nach Kategorie filtern",
 "sort_by": "Sortieren nach",

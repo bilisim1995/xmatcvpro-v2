@@ -128,13 +128,6 @@
       "excerpt": "Facial recognition with artificial intelligence (or facial recognition technology) is a type of technology that utilizes computers and artificial intelligence algorithms. This technology is used to identify and verify the facial features of an individual, analyze these features, and determine the person's identity by using their facial image. Facial recognition works by recognizing the facial features of a person, such as the contours of their face, the position of their eyes, the structure of their nose, the shape of their lips, and other facial characteristics. The process of facial recognition with artificial intelligence consists of several steps. The first step is to capture the image of a person's face, which is typically done using a camera or an image source. This image is then processed, and various facial features are extracted. In particular, the distance between the eyes, the positions of the nose and mouth, facial contours, and similar features are calculated. Facial recognition technology then compares these extracted features with records in a database. This database may contain the facial features of known individuals. By calculating the probability of a match, the technology determines the identity of the captured face. If a match is found, the person is recognized, and their identity is established. The applications of facial recognition with artificial intelligence are quite diverse. This technology is used in security systems, access control, automation systems, the healthcare sector, marketing analytics, and various other fields. It is also used for personal identity verification in devices like smartphones. Through this technology, security is enhanced, automation is expedited, and personal identity verification processes are simplified."
     }
   },
-  "toplist": {
-    "title": "Top Sites List | MyProject",
-    "description": "Discover the best sites categorized by users. Browse, search and explore!",
-    "visit_site": "Visit Site",
-    "all_sites": "All Sites",
-    "unknown_category": "Unknown Category"
-  },
   "topfilters": {
     "filter_by_category": "Filter by Category",
     "sort_by": "Sort By",

@@ -29,6 +29,54 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: currentDate,
         changeFrequency: 'daily',
         priority: 0.9
+      },
+      {
+        url: `${baseUrl}/sensual-vibes`,
+        lastModified: currentDate,
+        changeFrequency: 'weekly',
+        priority: 0.8
+      },
+      {
+        url: `${baseUrl}/blog`,
+        lastModified: currentDate,
+        changeFrequency: 'daily',
+        priority: 0.7
+      },
+      {
+        url: `${baseUrl}/legal/privacy`,
+        lastModified: currentDate,
+        changeFrequency: 'monthly',
+        priority: 0.3
+      },
+      {
+        url: `${baseUrl}/legal/terms`,
+        lastModified: currentDate,
+        changeFrequency: 'monthly',
+        priority: 0.3
+      },
+      {
+        url: `${baseUrl}/legal/disclaimer`,
+        lastModified: currentDate,
+        changeFrequency: 'monthly',
+        priority: 0.3
+      },
+      {
+        url: `${baseUrl}/legal/dmca`,
+        lastModified: currentDate,
+        changeFrequency: 'monthly',
+        priority: 0.3
+      },
+      {
+        url: `${baseUrl}/legal/2257`,
+        lastModified: currentDate,
+        changeFrequency: 'monthly',
+        priority: 0.3
+      },
+      {
+        url: `${baseUrl}/legal/rta`,
+        lastModified: currentDate,
+        changeFrequency: 'monthly',
+        priority: 0.3
       }
     ];
 

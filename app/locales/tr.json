@@ -128,13 +128,6 @@
       "excerpt": "Yapay zeka ile yüz tanıma (veya yüz tanıma teknolojisi), bilgisayarları ve yapay zeka algoritmalarını kullanan bir tür teknolojidir. Bu teknoloji, bir bireyin yüz özelliklerini tanımlamak ve doğrulamak, bu özellikleri analiz etmek ve kişinin yüz görüntüsünü kullanarak kimliğini belirlemek için kullanılır. Yüz tanıma, bir kişinin yüz hatlarını, örneğin yüzünün konturlarını, gözlerinin konumunu, burnunun yapısını, dudaklarının şeklini ve diğer yüz özelliklerini tanıyarak çalışır. Yapay zeka ile yüz tanıma süreci birkaç adımdan oluşur. İlk adım, tipik olarak bir kamera veya görüntü kaynağı kullanılarak bir kişinin yüzünün görüntüsünü yakalamaktır. Bu görüntü daha sonra işlenir ve çeşitli yüz özellikleri çıkarılır. Özellikle, gözler arasındaki mesafe, burun ve ağzın konumları, yüz konturları ve benzeri özellikler hesaplanır. Yüz tanıma teknolojisi daha sonra bu çıkarılan özellikleri bir veritabanındaki kayıtlarla karşılaştırır. Bu veritabanı, bilinen kişilerin yüz özelliklerini içerebilir. Bir eşleşme olasılığını hesaplayarak, teknoloji yakalanan yüzün kimliğini belirler. Bir eşleşme bulunursa, kişi tanınır ve kimliği doğrulanır. Yapay zeka ile yüz tanıma uygulamaları oldukça çeşitlidir. Bu teknoloji güvenlik sistemlerinde, erişim kontrolünde, otomasyon sistemlerinde, sağlık sektöründe, pazarlama analizlerinde ve çeşitli diğer alanlarda kullanılır. Ayrıca akıllı telefonlar gibi cihazlarda kişisel kimlik doğrulama için de kullanılır. Bu teknoloji sayesinde güvenlik artırılır, otomasyon hızlandırılır ve kişisel kimlik doğrulama süreçleri basitleştirilir."
     }
   },
-  "toplist": {
-    "title": "En İyi Siteler Listesi | MyProject",
-    "description": "Kullanıcılar tarafından kategorilere ayrılmış en iyi siteleri keşfedin. Göz atın, arayın ve keşfedin!",
-    "visit_site": "Siteyi Ziyaret Et",
-    "all_sites": "Tüm Siteler",
-    "unknown_category": "Bilinmeyen Kategori"
-  },
   "topfilters": {
     "filter_by_category": "Kategoriye Göre Filtrele",
     "sort_by": "Sırala",
