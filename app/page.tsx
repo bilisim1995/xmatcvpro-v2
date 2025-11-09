@@ -10,7 +10,6 @@ const DevelopmentStatus = dynamic(() => import('@/components/search-by-face/deve
 const ComplianceBadges = dynamic(() => import('@/components/search-by-face/compliance-badges').then(m => m.ComplianceBadges), { ssr: false, loading: () => <div className="h-32 animate-pulse bg-muted rounded-lg" /> });
 import { Card } from '@/components/ui/card';
 import { CoffeeButton } from '@/components/coffee-button';
-import { SensualVibesPrompt } from '@/components/sensual-vibes-prompt';
 
 export default function SearchPage() {
   // Structured Data for SEO
@@ -289,7 +288,6 @@ export default function SearchPage() {
           </section>
         </div>
       </div>
-      <SensualVibesPrompt />
       </main>
     </>
   );
