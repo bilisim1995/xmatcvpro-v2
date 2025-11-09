@@ -85,9 +85,6 @@ export interface SearchResult {
     rating: number;
   };
 }
-
-
-
 export interface SearchError {
   message: string;
   code?: string;
