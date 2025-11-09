@@ -3,9 +3,10 @@ import { Collection, MongoClient } from 'mongodb';
 import { connect, disconnect } from './connection';
 
 // Constants for similarity calculation
-const MAX_DISTANCE = 0.6; // Daha sıkı mesafe eşiği
 const MIN_CONFIDENCE = 35; // Minimum benzerlik eşiği
 const HIGH_SIMILARITY_THRESHOLD = 0.85; // Yüksek benzerlik eşiği
+const EARLY_EXIT_COSINE_THRESHOLD = 0.3; // Early exit için minimum cosine similarity
+const BOOST_FACTOR = 2; // Boost katsayısı (daha yumuşak)
 
 const COLLECTION_NAME = 'adultmodels';
 
@@ -117,8 +118,9 @@ export async function testConnection() {
   }
 }
 
-// 🔥 SIMILARITY CALCULATION 🔥
+// 🔥 SIMILARITY CALCULATION - İYİLEŞTİRİLMİŞ VERSİYON 🔥
 export function calculateSimilarity(descriptor1: number[], descriptor2: number[]): number {
+  // Validation
   if (!descriptor1?.length || !descriptor2?.length || descriptor1.length !== descriptor2.length) {
     console.warn("❌ Descriptor boyutları eşleşmiyor!");
     return 0;
@@ -129,15 +131,17 @@ export function calculateSimilarity(descriptor1: number[], descriptor2: number[]
     return 0;
   }
 
-  const factor = Math.pow(10, descriptor1.length > 128 ? 6 : 8);
+  const descriptorLength = descriptor1.length;
+  
+  // Calculate cosine similarity (no rounding for precision)
   let dotProduct = 0;
   let norm1 = 0;
   let norm2 = 0;
   let euclideanDistance = 0;
 
-  for (let i = 0; i < descriptor1.length; i++) {
-    const d1 = Math.round(descriptor1[i] * factor) / factor;
-    const d2 = Math.round(descriptor2[i] * factor) / factor;
+  for (let i = 0; i < descriptorLength; i++) {
+    const d1 = descriptor1[i];
+    const d2 = descriptor2[i];
     dotProduct += d1 * d2;
     norm1 += d1 * d1;
     norm2 += d2 * d2;
@@ -147,38 +151,53 @@ export function calculateSimilarity(descriptor1: number[], descriptor2: number[]
 
   norm1 = Math.sqrt(norm1);
   norm2 = Math.sqrt(norm2);
+  
   if (norm1 === 0 || norm2 === 0) {
     console.warn("⚠️ Boş vektör tespit edildi!");
     return 0;
   }
 
   const cosineSimilarity = dotProduct / (norm1 * norm2);
+  
+  // Early exit for very low similarity (performance optimization)
+  if (cosineSimilarity < EARLY_EXIT_COSINE_THRESHOLD) {
+    return 0;
+  }
+
+  // Normalize cosine to 0-1 range
   const cosineScore = (cosineSimilarity + 1) / 2;
 
+  // Dynamic MAX_DISTANCE based on descriptor length
+  // For 128-dimensional descriptors: sqrt(128) * 0.05 ≈ 0.57
+  const MAX_DISTANCE = Math.sqrt(descriptorLength) * 0.05;
+  
+  // Calculate normalized euclidean score
   euclideanDistance = Math.sqrt(euclideanDistance);
-  const normalizedEuclideanScore = Math.max(0, (1 - (euclideanDistance / MAX_DISTANCE)));
+  const normalizedEuclideanScore = Math.max(0, Math.min(1, 1 - (euclideanDistance / MAX_DISTANCE)));
 
-  const cosineWeight = cosineScore > 0.8 ? 0.85 : 0.75;
+  // Adaptive weight calculation (smoother transition)
+  // Cosine weight ranges from 0.7 to 0.9 based on cosine score
+  const cosineWeight = 0.7 + (cosineScore * 0.2);
   const euclideanWeight = 1 - cosineWeight;
 
+  // Combined score
   const combinedScore = (cosineScore * cosineWeight) + (normalizedEuclideanScore * euclideanWeight);
 
+  // Softer boost for high similarity
   let boostedScore = combinedScore;
   if (combinedScore > HIGH_SIMILARITY_THRESHOLD) {
-    const boostStrength = 1 + (combinedScore - HIGH_SIMILARITY_THRESHOLD) * 10;
-    boostedScore = Math.min(1, combinedScore * boostStrength);
+    const boostFactor = 1 + ((combinedScore - HIGH_SIMILARITY_THRESHOLD) * BOOST_FACTOR);
+    boostedScore = Math.min(1, combinedScore * boostFactor);
   }
 
+  // Convert to percentage (no additional emphasis needed - boost is sufficient)
   let finalPercent = Number((boostedScore * 100).toFixed(1));
 
-  if (finalPercent > 90) {
-    const emphasis = Math.pow((finalPercent - 90) / 10, 1.5) * 10;
-    finalPercent = Math.min(100, Number((90 + emphasis).toFixed(1)));
-  }
-
+  // Apply minimum threshold
   const dynamicMinConfidence = HIGH_SIMILARITY_THRESHOLD * 100 * 0.4;
   const minThreshold = Math.max(MIN_CONFIDENCE, dynamicMinConfidence);
-
+  
+  // Clamp to valid range
   finalPercent = Math.min(100, Math.max(0, finalPercent));
 
   return finalPercent >= minThreshold ? finalPercent : 0;

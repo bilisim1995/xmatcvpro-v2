@@ -39,21 +39,13 @@ export function StepCard({ icon: Icon, step, title, description }: StepCardProps
           </motion.span>
         </div>
 
-        <motion.h3 
-          className="text-lg font-semibold mt-6 mb-3 group-hover:text-red-600 transition-colors"
-          initial={{ y: 0 }}
-          whileHover={{ y: -2 }}
-        >
+        <h3 className="text-lg font-semibold mt-6 mb-3 group-hover:text-red-600 transition-colors">
           {title}
-        </motion.h3>
+        </h3>
 
-        <motion.p
-          className="text-sm text-muted-foreground mt-2"
-          initial={{ opacity: 0.8 }}
-          whileHover={{ opacity: 1 }}
-        >
+        <p className="text-sm text-muted-foreground mt-2">
           {description}
-        </motion.p>
+        </p>
       </motion.div>
     </Card>
   );

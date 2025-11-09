@@ -10,8 +10,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const models = await AdultModel
       .find({ 
-        profile_image: { $exists: true, $ne: null, $ne: '' },
-        slug: { $exists: true, $ne: null, $ne: '' }
+        profile_image: { $exists: true, $nin: [null, ''] },
+        slug: { $exists: true, $nin: [null, ''] }
       })
       .select('name slug profile_image updated_at')
       .lean()

@@ -63,6 +63,7 @@ export interface SearchResult {
   height?: number;
   weight?: number;
   cup_size?: string;
+  measurements?: string;
   nationality?: string;
   ethnicity?: string;
   hair?: string;

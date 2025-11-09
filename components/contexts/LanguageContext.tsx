@@ -64,6 +64,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       if (value && typeof value === 'object') {
         value = value[k];
       } else {
+        // Debug: log missing keys in development
+        if (process.env.NODE_ENV === 'development' && key.includes('post0')) {
+          console.warn(`Translation key not found: ${key} in language: ${language}`, {
+            availableKeys: value ? Object.keys(value) : 'null',
+            currentPath: keys.slice(0, keys.indexOf(k)).join('.')
+          });
+        }
         return key;
       }
     }

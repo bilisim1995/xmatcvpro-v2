@@ -12,7 +12,7 @@ export function SearchHeader() {
       <div className="w-28 h-28 sm:w-32 sm:h-32 flex-shrink-0">
         <Image
           src="/m1.png"
-          alt="xmatch.pro AI Face Recognition mascot logo"
+          alt="xmatch.pro AI-powered face recognition search engine logo - Find pornstars and adult models by uploading face photos"
           width={128}
           height={128}
           className="w-full h-full object-contain"

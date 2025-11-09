@@ -35,24 +35,14 @@ export function HowItWorks() {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <motion.h2 
+        <h2 
           className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-400"
-          initial={{ scale: 0.95 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
         >
           {t('how_it_works.title')}
-        </motion.h2>
-        <motion.p 
-          className="text-muted-foreground"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-        >
+        </h2>
+        <p className="text-muted-foreground">
           {t('how_it_works.subtitle')}
-        </motion.p>
+        </p>
       </motion.div>
       
       <motion.div 

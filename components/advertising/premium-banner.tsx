@@ -2,23 +2,32 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-// import { useLanguage } from '@/components/contexts/LanguageContext'; // Removed useLanguage as t is not used for Detail button
+import { useLanguage } from '@/components/contexts/LanguageContext';
 import Image from 'next/image'; // Import Next.js Image component
 
 export function PremiumBanner() {
-  // const { t } = useLanguage(); // Removed useLanguage as t is not used for Detail button
+  const { t } = useLanguage();
   const BUNNY_NET_PULL_ZONE_HOSTNAME = 'cdn.xmatch.pro';
   const bannerImageUrl = `https://${BUNNY_NET_PULL_ZONE_HOSTNAME}/ads/p1.svg`; 
 
   return (
-    <div 
-      className="relative rounded-lg overflow-hidden group shadow-lg hover:shadow-xl dark:shadow-red-700/30 dark:hover:shadow-red-600/40 transition-all duration-300 mx-auto w-full"
-      style={{ maxWidth: '895px', height: '290px' }} // Changed width to maxWidth, added w-full
-    >
+    <div className="space-y-6">
+      <header className="text-center space-y-2">
+        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-400">
+          {t('premium_banner.section_title')}
+        </h2>
+        <p className="text-muted-foreground">
+          {t('premium_banner.section_description')}
+        </p>
+      </header>
+      <div 
+        className="relative rounded-lg overflow-hidden group shadow-lg hover:shadow-xl dark:shadow-red-700/30 dark:hover:shadow-red-600/40 transition-all duration-300 mx-auto w-full"
+        style={{ maxWidth: '895px', height: '290px' }} // Changed width to maxWidth, added w-full
+      >
       {/* Background Image */}
       <Image
         src={bannerImageUrl}
-        alt="Advertisement Banner"
+        alt="Premium advertising banner - Reach millions of engaged users with high-visibility banner placements on xmatch.pro"
         fill
         style={{ objectFit: 'cover' }}
         className="group-hover:scale-105 transition-transform duration-500 ease-in-out"
@@ -52,6 +61,7 @@ export function PremiumBanner() {
           </Button>
         </motion.div>
       </div>
+    </div>
     </div>
   );
 }

@@ -18,7 +18,7 @@ export default function SearchPage() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "xmatch.pro",
-    "description": "AI-powered adult content search engine with advanced face recognition technology. Upload any image and find similar models instantly with 99% accuracy.",
+    "description": "Find pornstars and adult models using AI-powered face recognition technology. Upload any face photo and discover matching performers instantly with 99% accuracy.",
     "url": "https://xmatch.pro",
     "applicationCategory": "EntertainmentApplication",
     "operatingSystem": "Web Browser",
@@ -58,7 +58,7 @@ export default function SearchPage() {
     "name": "xmatch.pro",
     "url": "https://xmatch.pro",
     "logo": "https://xmatch.pro/m1.png",
-    "description": "AI-powered adult content search engine with advanced face recognition technology",
+    "description": "Find pornstars and adult models using AI-powered face recognition technology. Upload any face photo and discover matching performers instantly with 99% accuracy.",
     "sameAs": [
       "https://twitter.com/xmatchpro"
     ]

@@ -3,7 +3,15 @@
 import { useLanguage } from '@/components/contexts/LanguageContext';
 import { BlogPost } from './blog-post';
 
-const posts = [
+type PostConfig = {
+  titleKey: string;
+  excerptKey: string;
+  contentKey?: string;
+  tags: string[];
+};
+
+const posts: PostConfig[] = [
+  { titleKey: 'blog.post0.title', excerptKey: 'blog.post0.excerpt', contentKey: 'blog.post0.content', tags: ["Face Recognition", "AI Technology", "Similarity Application", "Face Recognition", "Porn Star Search", "Biometric", "Face Matching", "OnlyFans Model", "Deep Learning", "Digital Identity"] },
   { titleKey: 'blog.post1.title', excerptKey: 'blog.post1.excerpt', tags: ["Facial Recognition Technologies", "Biometric Identification", "pornstar", "search pornstar by face"] },
   { titleKey: 'blog.post2.title', excerptKey: 'blog.post2.excerpt', tags: ["Facial Recognition Trends", "porn models", "sexy models"] },
   { titleKey: 'blog.post3.title', excerptKey: 'blog.post3.excerpt', tags: ["Facial Recognition Research", "search porn models", "Facial Recognition Updates"] },
@@ -21,15 +29,27 @@ export function BlogSection() {
 
   return (
     <section className="mt-16 space-y-8">
+      <header className="text-center space-y-2 mb-8">
+        <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-400">
+          {t('blog.section_title')}
+        </h2>
+        <p className="text-muted-foreground">
+          {t('blog.section_description')}
+        </p>
+      </header>
       <div className="grid gap-6 divide-y">
-        {posts.map((post, index) => (
-          <BlogPost
-            key={index}
-            title={t(post.titleKey)}
-            excerpt={t(post.excerptKey)}
-            tags={post.tags}
-          />
-        ))}
+        {posts.map((post, index) => {
+          const content = post.contentKey ? t(post.contentKey) : undefined;
+          return (
+            <BlogPost
+              key={`post-${index}-${post.titleKey}`}
+              title={t(post.titleKey)}
+              excerpt={t(post.excerptKey)}
+              content={content}
+              tags={post.tags}
+            />
+          );
+        })}
       </div>
     </section>
   );

@@ -17,13 +17,58 @@ export async function GET(req: Request) {
   
         switch (key) {
           case 'age':
-            query.age = Number(value);
+            // Support range format: "18-25" or single value: "22"
+            if (typeof value === 'string' && value.includes('-')) {
+              const [min, max] = value.split('-').map(Number);
+              if (!isNaN(min) && !isNaN(max)) {
+                query.age = { $gte: min, $lte: max };
+              } else {
+                query.age = Number(value);
+              }
+            } else {
+              const ageNum = Number(value);
+              if (!isNaN(ageNum)) {
+                query.age = ageNum;
+              }
+            }
             break;
           case 'height':
-            query['height.value'] = Number(value);
+            // Support range format: "160-170" or single value: "165"
+            if (typeof value === 'string' && value.includes('-')) {
+              const [min, max] = value.split('-').map(Number);
+              if (!isNaN(min) && !isNaN(max)) {
+                query['height.value'] = { $gte: min, $lte: max };
+              } else {
+                const heightNum = Number(value);
+                if (!isNaN(heightNum)) {
+                  query['height.value'] = heightNum;
+                }
+              }
+            } else {
+              const heightNum = Number(value);
+              if (!isNaN(heightNum)) {
+                query['height.value'] = heightNum;
+              }
+            }
             break;
           case 'weight':
-            query['weight.value'] = Number(value);
+            // Support range format: "50-60" or single value: "55"
+            if (typeof value === 'string' && value.includes('-')) {
+              const [min, max] = value.split('-').map(Number);
+              if (!isNaN(min) && !isNaN(max)) {
+                query['weight.value'] = { $gte: min, $lte: max };
+              } else {
+                const weightNum = Number(value);
+                if (!isNaN(weightNum)) {
+                  query['weight.value'] = weightNum;
+                }
+              }
+            } else {
+              const weightNum = Number(value);
+              if (!isNaN(weightNum)) {
+                query['weight.value'] = weightNum;
+              }
+            }
             break;
           case 'cup_size':
             query.cup_size = { $regex: new RegExp(`^${value}$`, 'i') };
@@ -60,7 +105,8 @@ export async function GET(req: Request) {
         const pipeline = [
           {
             $match: {
-              profile_image: { $exists: true },
+              profile_image: { $exists: true, $nin: [null, ''] },
+              slug: { $exists: true, $nin: [null, ''] },
               ...query
             }
           },
@@ -100,23 +146,40 @@ export async function GET(req: Request) {
         throw error;
       }
     } else {
-      // Ensure profile_image exists and is not empty
-      query.profile_image = { $exists: true, $ne: null, $ne: '' };
-      models = await collection.find(query).limit(20).toArray();
+      // Ensure profile_image exists and is not empty, and slug exists
+      query.profile_image = { $exists: true, $nin: [null, ''] };
+      query.slug = { $exists: true, $nin: [null, ''] };
+      models = await collection.find(query).limit(30).toArray();
     }
 
     if (!models.length) {
       // If no results, try a more relaxed search
       const relaxedQuery = Object.entries(query).reduce((acc, [key, value]) => {
-        if (key === 'profile_image') {
-          // Keep profile_image filter
+        if (key === 'profile_image' || key === 'slug') {
+          // Keep profile_image and slug filters
           acc[key] = value;
         } else if (typeof value === 'object' && value.$regex) {
-          // Make text searches more flexible
+          // Make text searches more flexible (remove exact match anchors)
           acc[key as string] = { $regex: new RegExp(value.$regex.source.replace(/^\^|\$$/g, ''), 'i') };
+        } else if (typeof value === 'object' && ('$gte' in value || '$lte' in value)) {
+          // Expand existing ranges by ±5%
+          if ('$gte' in value && '$lte' in value) {
+            const min = value.$gte as number;
+            const max = value.$lte as number;
+            const range = (max - min) * 0.05;
+            acc[key as string] = { $gte: Math.max(0, min - range), $lte: max + range };
+          } else if ('$gte' in value) {
+            const min = value.$gte as number;
+            const range = min * 0.05;
+            acc[key as string] = { $gte: Math.max(0, min - range) };
+          } else if ('$lte' in value) {
+            const max = value.$lte as number;
+            const range = max * 0.05;
+            acc[key as string] = { $lte: max + range };
+          }
         } else if (typeof value === 'number') {
-          // Add ±10% range for numeric values
-          const range = value * 0.1;
+          // Add ±5% range for single numeric values (more conservative than ±10%)
+          const range = Math.max(1, Math.floor(value * 0.05));
           acc[key as string] = { $gte: value - range, $lte: value + range };
         } else {
           acc[key as string] = value;
@@ -124,15 +187,28 @@ export async function GET(req: Request) {
         return acc;
       }, {} as Record<string, any>);
 
-      // Ensure profile_image exists in relaxed query too
+      // Ensure profile_image and slug exist in relaxed query too
       if (!relaxedQuery.profile_image) {
-        relaxedQuery.profile_image = { $exists: true, $ne: null, $ne: '' };
+        relaxedQuery.profile_image = { $exists: true, $nin: [null, ''] };
       }
-      models = await collection.find(relaxedQuery).limit(20).toArray();
+      if (!relaxedQuery.slug) {
+        relaxedQuery.slug = { $exists: true, $nin: [null, ''] };
+      }
+      models = await collection.find(relaxedQuery).limit(30).toArray();
     }
 
     const results = models
-      .filter(model => model.profile_image && model.profile_image.trim() !== '')
+      .filter(model => {
+        // Ensure profile_image exists and is valid
+        if (!model.profile_image || model.profile_image.trim() === '') {
+          return false;
+        }
+        // Ensure slug exists or can be generated
+        if (!model.slug && !model.name) {
+          return false;
+        }
+        return true;
+      })
       .map(model => ({
         id: model._id.toString(),
         name: model.name,
@@ -144,7 +220,7 @@ export async function GET(req: Request) {
         height: model.height?.value,
         weight: model.weight?.value,
         cup_size: model.cup_size,
-        nationality: model.nationality,
+        nationality: Array.isArray(model.nationality) ? model.nationality[0] : model.nationality,
         ethnicity: model.ethnicity,
         hair: model.hair_color,
         eyes: model.eye_color,
@@ -156,8 +232,12 @@ export async function GET(req: Request) {
 
   } catch (error) {
     console.error('Models API error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch models';
     return NextResponse.json(
-      { message: 'Failed to fetch models' },
+      { 
+        message: errorMessage,
+        error: process.env.NODE_ENV === 'development' ? String(error) : undefined
+      },
       { status: 500 }
     );
   }

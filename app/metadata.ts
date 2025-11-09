@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     default: 'xmatch.pro - AI-Powered Adult Content Search Engine | Face Recognition Technology',
     template: '%s | xmatch.pro'
   },
-  description: 'Discover adult content with advanced AI face recognition technology. Upload any image and find similar models instantly with 99% accuracy. The most advanced porn star search engine powered by deep neural networks.',
+  description: 'Find pornstars and adult models using AI-powered face recognition technology. Upload any face photo and discover matching performers instantly with 99% accuracy. Advanced neural network search engine for adult content discovery.',
   keywords: [
     'face recognition',
     'AI search',
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     url: 'https://xmatch.pro',
     siteName: 'xmatch.pro',
     title: 'xmatch.pro - AI-Powered Adult Content Search Engine',
-    description: 'Discover adult content with advanced AI face recognition technology. Upload any image and find similar models instantly with 99% accuracy.',
+    description: 'Find pornstars and adult models using AI-powered face recognition technology. Upload any face photo and discover matching performers instantly with 99% accuracy.',
     images: [
       {
         url: '/m1.png',
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'xmatch.pro - AI-Powered Adult Content Search Engine',
-    description: 'Discover adult content with advanced AI face recognition technology. Upload any image and find similar models instantly.',
+    description: 'Find pornstars and adult models using AI-powered face recognition technology. Upload any face photo and discover matching performers instantly.',
     images: ['/m1.png'],
     creator: '@xmatchpro',
   },
