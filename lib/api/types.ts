@@ -86,6 +86,7 @@ export interface SearchResult {
   };
 }
 
+
 export interface SearchError {
   message: string;
   code?: string;
