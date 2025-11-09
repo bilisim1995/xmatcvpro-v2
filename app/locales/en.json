@@ -264,6 +264,18 @@
     "status": "Status:",
     "updating_message": "Models and search technology are continuously being updated and improved."
   },
+  "compliancebadges": {
+    "title": "Compliance Support",
+    "wcag_title": "WCAG 2.1 AA",
+    "wcag_description": "Accessibility",
+    "pwa_title": "PWA",
+    "pwa_description": "Progressive Web App",
+    "w3c_title": "W3C",
+    "w3c_description": "Web Standards",
+    "https_title": "HTTPS",
+    "https_description": "Secure Connection",
+    "footer_message": "This site complies with modern web standards and accessibility requirements."
+  },
   "advancedsearchresults": {
     "searching": "Searching models database...",
     "new_search": "New Search"

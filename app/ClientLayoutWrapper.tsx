@@ -7,15 +7,12 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Navbar } from '@/components/navbar';
 import { Footer } from '@/components/footer/index';
 import { Analytics } from '@/components/analytics';
+import { AnalyticsLoader } from '@/components/analytics/analytics-loader';
 import { ConsentBanner } from '@/components/gdpr/consent-banner';
 import { AgeVerification } from '@/components/age-verification/age-verification';
 import { ScrollToTop } from '@/components/scroll-to-top';
 import { Toaster } from '@/components/ui/toaster';
 import { LanguageProvider } from '@/components/contexts/LanguageContext';
-// Import individual analytics components as they are likely client components
-import { YandexMetrika } from '@/components/analytics/yandex-metrika';
-import { GoogleAnalytics } from '@/components/analytics/google-analytics';
-import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
 
 export default function ClientLayoutWrapper({
   children,
@@ -45,12 +42,10 @@ export default function ClientLayoutWrapper({
         <ConsentBanner />
         <AgeVerification />
         <Toaster />
-        {/* Render individual analytics components directly within the client wrapper */}
-        {/* Make sure these are client components or correctly handle server components within them if needed */}
+        {/* Analytics with GDPR consent control */}
+        <AnalyticsLoader />
+        {/* Page view tracking - only tracks, doesn't render analytics scripts */}
         <Analytics />
-        <YandexMetrika />
-        <GoogleAnalytics />
-        <GoogleTagManager />
       </ThemeProvider>
     </LanguageProvider>
   );

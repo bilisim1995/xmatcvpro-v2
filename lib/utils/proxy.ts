@@ -57,7 +57,23 @@ export async function getImageAsBase64(url: string): Promise<string> {
       reader.readAsDataURL(blob);
     });
   } catch (error) {
-    console.warn('Failed to load image, using fallback:', url);
-    return FALLBACK_IMAGE;
+    console.warn('Failed to load image via proxy, trying direct URL:', url);
+    // Try direct fetch as fallback
+    try {
+      const response = await fetch(url, { mode: 'cors' });
+      if (response.ok) {
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      }
+    } catch (directError) {
+      console.warn('Failed to load image directly:', url);
+    }
+    // If both fail, throw error so caller can handle it
+    throw new Error(`Failed to load image: ${url}`);
   }
 }

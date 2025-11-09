@@ -1,7 +1,7 @@
 'use client';
 
 import html2canvas from 'html2canvas';
-import { convertImageToBase64 } from '@/lib/utils/image';
+import { getImageAsBase64 } from '@/lib/utils/proxy';
 
 interface UsePreviewDownloadOptions {
   elementId: string;
@@ -15,7 +15,7 @@ export function usePreviewDownload({
   elementId, 
   filename,
   quality = 1.0,
-  scale = 2,
+  scale = 3,
   backgroundColor = '#ffffff'
 }: UsePreviewDownloadOptions) {
   const downloadPreview = async () => {
@@ -25,34 +25,70 @@ export function usePreviewDownload({
         throw new Error('Preview element not found');
       }
 
-      // Convert all images to base64
+      // Wait a bit for images to load
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Convert all images to base64 to avoid CORS issues
       const images = element.getElementsByTagName('img');
       const imagePromises = Array.from(images).map(async (img) => {
         try {
-          const base64 = await convertImageToBase64(img.src);
+          // If image is already base64, skip
+          if (img.src.startsWith('data:')) {
+            return;
+          }
+          
+          // Try to convert via proxy
+          const base64 = await getImageAsBase64(img.src);
           img.src = base64;
+          
+          // Wait for image to load
+          await new Promise((resolve) => {
+            const tempImg = new Image();
+            tempImg.onload = () => resolve(undefined);
+            tempImg.onerror = () => resolve(undefined);
+            tempImg.src = base64;
+          });
         } catch (error) {
-          console.warn('Failed to convert image:', img.src);
+          console.warn('Failed to convert image:', img.src, error);
         }
       });
       
       await Promise.all(imagePromises);
 
+      // Wait a bit more for rendering
+      await new Promise(resolve => setTimeout(resolve, 300));
+
       // Create canvas with high quality settings
       const canvas = await html2canvas(element, {
         scale,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         backgroundColor,
         logging: false,
-        removeContainer: true,
-        onclone: (clonedDoc) => {
+        removeContainer: false,
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+        x: 0,
+        y: 0,
+        scrollX: 0,
+        scrollY: 0,
+        onclone: (clonedDoc, element) => {
           const clonedElement = clonedDoc.getElementById(elementId);
           if (clonedElement) {
-            clonedElement.style.width = `${element.offsetWidth}px`;
-            clonedElement.style.height = `${element.offsetHeight}px`;
-            clonedElement.style.margin = '0';
-            clonedElement.style.padding = '20px';
+            // Ensure all styles are preserved
+            clonedElement.style.display = 'block';
+            clonedElement.style.visibility = 'visible';
+            clonedElement.style.opacity = '1';
+            clonedElement.style.position = 'relative';
+            clonedElement.style.overflow = 'visible';
+            
+            // Make sure all images are visible
+            const clonedImages = clonedElement.getElementsByTagName('img');
+            Array.from(clonedImages).forEach((img) => {
+              img.style.display = 'block';
+              img.style.visibility = 'visible';
+              img.style.opacity = '1';
+            });
           }
         }
       });

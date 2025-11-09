@@ -12,6 +12,7 @@ import { AlertTriangle } from 'lucide-react';
 import { User, Ruler, Scale, Globe2, Video, Link as LinkIcon, Globe, Instagram, Twitter } from 'lucide-react';
 import { SuggestedModels } from './suggested-models';
 import { useLanguage } from '@/components/contexts/LanguageContext';
+import { WatermarkedImage } from '../shared/watermarked-image';
 
 const socialMediaIcons = {
   www: Globe,
@@ -55,14 +56,40 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
           ...(model.eyes && { eye_color: model.eyes })
         });
 
-        const response = await fetch(`/api/models?${params.toString()}`);
+        // If no params, fetch random models
+        const url = params.toString() 
+          ? `/api/models?${params.toString()}`
+          : '/api/models?random=true';
+        
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch suggested models');
 
         const data = await response.json();
+        console.log('Suggested models data:', data);
         // Filter out the current model and limit to 5 suggestions
         const filtered = data
-          .filter((m: SearchResult) => m.id !== model.id && m.image)
+          .filter((m: SearchResult) => {
+            const hasImage = m.image && m.image.trim() !== '';
+            if (!hasImage) {
+              console.warn('Model without image:', m.name, m);
+            }
+            return m.id !== model.id && hasImage;
+          })
           .slice(0, 5);
+        console.log('Filtered suggested models:', filtered);
+
+        // If still no results, try random
+        if (filtered.length === 0 && params.toString()) {
+          const randomResponse = await fetch('/api/models?random=true');
+          if (randomResponse.ok) {
+            const randomData = await randomResponse.json();
+            const randomFiltered = randomData
+              .filter((m: SearchResult) => m.id !== model.id && m.image && m.image.trim() !== '')
+              .slice(0, 5);
+            setSuggestedModels(randomFiltered);
+            return;
+          }
+        }
 
         setSuggestedModels(filtered);
       } catch (error) {
@@ -102,9 +129,9 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
   }
 
   return (
-    <div className="min-h-screen pt-24">
+    <main id="main-content" className="min-h-screen pt-24">
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-12">
+      <article className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-12 gap-8">
           {/* Left Column - Image */}
           <motion.div
@@ -115,23 +142,12 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
           >
             <div className="space-y-4 sticky top-24">
               <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 relative">
-                {/* Watermark Background */}
-                <div className="absolute inset-0 pointer-events-none select-none z-10">
-                  <div className="w-full h-full flex items-center justify-center opacity-25">
-                    <div className="text-3xl font-bold text-white transform rotate-[-30deg] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
-                      xmatch.pro
-                    </div>
-                  </div>
-                </div>
-                <img 
+                <WatermarkedImage 
                   src={model.image} 
                   alt={model.name}
                   className="w-full aspect-[3/4] object-cover"
+                  watermarkSize="large"
                 />
-                {/* Bottom Watermark */}
-                <div className="absolute bottom-0 right-0 bg-black/50 px-1.5 py-0.5 text-[8px] text-white/70">
-                  xmatch.pro
-                </div>
               </Card>
               
               {/* Social Media Links */}
@@ -188,8 +204,9 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
             <Separator />
 
             {/* Physical Attributes Grid */}
-            <Card className="p-6 space-y-6">
-              <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.physical_attributes')}</h2>
+            <section>
+              <Card className="p-6 space-y-6">
+                <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.physical_attributes')}</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {model.age && (
                   <div className="space-y-2">
@@ -228,11 +245,13 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
                   </div>
                 )}
               </div>
-            </Card>
+              </Card>
+            </section>
 
             {/* Additional Features */}
-            <Card className="p-6 space-y-6">
-              <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.features')}</h2>
+            <section>
+              <Card className="p-6 space-y-6">
+                <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.features')}</h2>
               <div className="flex flex-wrap gap-2 text-foreground">
                 {model.cup_size && (
                   <Badge className="px-3 py-1.5 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/20 text-foreground">
@@ -260,20 +279,23 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
                   </Badge>
                 )}
               </div>
-            </Card>
+              </Card>
+            </section>
             
             {/* Biography */}
             {model.description && (
-              <Card className="p-6 space-y-4">
-                <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.biography')}</h2>
+              <section>
+                <Card className="p-6 space-y-4">
+                  <div className="space-y-4">
+                    <h2 className="text-xl font-semibold text-foreground">{t('modeldetail.biography')}</h2>
                   <div className="max-h-[300px] overflow-y-auto pr-4 scrollbar-thin scrollbar-thumb-red-200 dark:scrollbar-thumb-red-800 scrollbar-track-transparent">
                     <p className="text-foreground/90 leading-relaxed whitespace-pre-wrap">
                       {model.description}
                     </p>
                   </div>
                 </div>
-              </Card>
+                </Card>
+              </section>
             )}
 
             {/* Actions */}
@@ -294,9 +316,11 @@ export function ModelDetailPage({ model }: ModelDetailPageProps) {
 
         {/* Suggested Models */}
         {!isLoadingSuggestions && suggestedModels.length > 0 && (
-          <SuggestedModels models={suggestedModels} />
+          <section aria-label="You May Also Like">
+            <SuggestedModels models={suggestedModels} />
+          </section>
         )}
-      </div>
-    </div>
+      </article>
+    </main>
   );
 }

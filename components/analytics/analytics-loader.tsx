@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { GoogleAnalytics } from './google-analytics';
 import { GoogleTagManager } from './google-tag-manager';
 import { YandexMetrika } from './yandex-metrika';
-import { Analytics } from './index';
 
 export function AnalyticsLoader() {
   const [consented, setConsented] = useState(false);
@@ -35,6 +34,37 @@ export function AnalyticsLoader() {
     };
   }, [consented]);
 
+  // Listen for consent changes (same-tab updates)
+  useEffect(() => {
+    if (consented) return; // No need to check if already consented
+
+    const checkConsent = () => {
+      try {
+        const consent = localStorage.getItem('gdpr-consent');
+        if (consent === 'accepted') {
+          setConsented(true);
+        }
+      } catch {}
+    };
+
+    // Check periodically until consent is given
+    const interval = setInterval(checkConsent, 500);
+
+    // Also listen for storage events (cross-tab updates)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'gdpr-consent' && e.newValue === 'accepted') {
+        setConsented(true);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [consented]);
+
   if (!consented || !idle) return null;
 
   return (
@@ -42,7 +72,6 @@ export function AnalyticsLoader() {
       <YandexMetrika />
       <GoogleAnalytics />
       <GoogleTagManager />
-      <Analytics />
     </>
   );
 }

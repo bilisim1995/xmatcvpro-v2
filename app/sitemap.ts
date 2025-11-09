@@ -9,7 +9,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = 'https://xmatch.pro';
 
     const models = await AdultModel
-      .find({})
+      .find({ 
+        profile_image: { $exists: true, $ne: null, $ne: '' },
+        slug: { $exists: true, $ne: null, $ne: '' }
+      })
       .select('name slug profile_image updated_at')
       .lean()
       .exec();

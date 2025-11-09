@@ -100,13 +100,18 @@ export async function GET(req: Request) {
         throw error;
       }
     } else {
+      // Ensure profile_image exists and is not empty
+      query.profile_image = { $exists: true, $ne: null, $ne: '' };
       models = await collection.find(query).limit(20).toArray();
     }
 
     if (!models.length) {
       // If no results, try a more relaxed search
       const relaxedQuery = Object.entries(query).reduce((acc, [key, value]) => {
-        if (typeof value === 'object' && value.$regex) {
+        if (key === 'profile_image') {
+          // Keep profile_image filter
+          acc[key] = value;
+        } else if (typeof value === 'object' && value.$regex) {
           // Make text searches more flexible
           acc[key as string] = { $regex: new RegExp(value.$regex.source.replace(/^\^|\$$/g, ''), 'i') };
         } else if (typeof value === 'number') {
@@ -119,27 +124,33 @@ export async function GET(req: Request) {
         return acc;
       }, {} as Record<string, any>);
 
+      // Ensure profile_image exists in relaxed query too
+      if (!relaxedQuery.profile_image) {
+        relaxedQuery.profile_image = { $exists: true, $ne: null, $ne: '' };
+      }
       models = await collection.find(relaxedQuery).limit(20).toArray();
     }
 
-    const results = models.map(model => ({
-      id: model._id.toString(),
-      name: model.name,
-      slug: model.slug || model.name.toLowerCase().replace(/\s+/g, '-'),
-      image: model.profile_image,
-      profile_image: model.profile_image,
-      link1: model.link1,
-      age: model.age,
-      height: model.height?.value,
-      weight: model.weight?.value,
-      cup_size: model.cup_size,
-      nationality: model.nationality,
-      ethnicity: model.ethnicity,
-      hair: model.hair_color,
-      eyes: model.eye_color,
-      tats: model.tattoos?.has_tattoos ? 'yes' : 'no',
-      piercings: model.piercings?.has_piercings ? 'yes' : 'no'
-    }));
+    const results = models
+      .filter(model => model.profile_image && model.profile_image.trim() !== '')
+      .map(model => ({
+        id: model._id.toString(),
+        name: model.name,
+        slug: model.slug || model.name.toLowerCase().replace(/\s+/g, '-'),
+        image: model.profile_image,
+        profile_image: model.profile_image,
+        link1: model.link1,
+        age: model.age,
+        height: model.height?.value,
+        weight: model.weight?.value,
+        cup_size: model.cup_size,
+        nationality: model.nationality,
+        ethnicity: model.ethnicity,
+        hair: model.hair_color,
+        eyes: model.eye_color,
+        tats: model.tattoos?.has_tattoos ? 'yes' : 'no',
+        piercings: model.piercings?.has_piercings ? 'yes' : 'no'
+      }));
 
     return NextResponse.json(results);
 

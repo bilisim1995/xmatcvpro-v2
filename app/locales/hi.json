@@ -265,6 +265,18 @@
 "status": "स्थिति:",
 "updating_message": "मॉडल और खोज तकनीक को लगातार अपडेट और बेहतर किया जा रहा है।"
 },
+"compliancebadges": {
+"title": "अनुपालन समर्थन",
+"wcag_title": "WCAG 2.1 AA",
+"wcag_description": "पहुंच",
+"pwa_title": "PWA",
+"pwa_description": "प्रगतिशील वेब ऐप",
+"w3c_title": "W3C",
+"w3c_description": "वेब मानक",
+"https_title": "HTTPS",
+"https_description": "सुरक्षित कनेक्शन",
+"footer_message": "यह साइट आधुनिक वेब मानकों और पहुंच आवश्यकताओं का अनुपालन करती है।"
+},
 "advancedsearchresults": {
 "searching": "मॉडल डेटाबेस खोज रहे हैं...",
 "new_search": "नई खोज"

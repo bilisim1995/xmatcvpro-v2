@@ -1,18 +1,15 @@
- 'use client';
-import { Suspense } from 'react';
+'use client';
 
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ImageIcon, Upload, Search, Loader2, Info, AlertTriangle } from 'lucide-react';
+import { Upload, Search, Loader2, Info, AlertTriangle } from 'lucide-react';
 import NextImage from 'next/image';
 import { initializeFaceApi } from '@/lib/face-detection/initialize';
 import { findMatches } from '@/lib/face-detection/face-matcher';
-import { detectGenderAndAge } from '@/lib/face-detection/gender';
 import { motion } from 'framer-motion';
 import { toast } from '@/components/ui/use-toast';
 import { SearchResult } from '@/lib/api/types';
-import { UploadAnimation } from './upload-animation';
 import { AgeVerificationDialog } from '@/components/age-verification/age-verification-dialog';
 import { useLanguage } from '@/components/contexts/LanguageContext';
 import { uploadToBunny } from '@/lib/utils/bunny-upload';
@@ -32,9 +29,6 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
   const [dragActive, setDragActive] = useState(false);
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isMale, setIsMale] = useState(false);
-  const [detectedAge, setDetectedAge] = useState<number | null>(null);
   const [showAgeVerification, setShowAgeVerification] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -52,43 +46,8 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
     if (!file) return;
     
     try {
-      setIsProcessing(true);
       validateFile(file);
       setOriginalFile(file);
-      
-      // Create image element for gender detection with object URL revocation
-      const objectUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.src = objectUrl;
-      await new Promise((resolve) => {
-        img.onload = () => {
-          URL.revokeObjectURL(objectUrl);
-          resolve(undefined);
-        };
-      });
-
-      // Initialize face-api if needed
-      if (!isInitialized) {
-        await initializeFaceApi();
-        setIsInitialized(true);
-      }
-
-      // Detect gender
-      const { gender, age } = await detectGenderAndAge(img);
-      setIsMale(gender === 'male');
-      setDetectedAge(age);
-
-      // Show warning if detected age is under 18
-      if (age !== null && age < 18) {
-        toast({
-          title: t('image_uploader.age_verification_required'),
-          description: t('image_uploader.age_verification_description'),
-          variant: "destructive",
-        });
-        setImage(null);
-        setOriginalFile(null);
-        return;
-      }
 
       // Set image preview using async/await FileReader
       const readFileAsDataURL = (file: File): Promise<string> => {
@@ -102,7 +61,6 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
       const preview = await readFileAsDataURL(file);
       setImage(preview);
 
-
       const timestamp = Date.now();
       const filename = `${timestamp}-${file.name}`;
       uploadToBunny({
@@ -111,12 +69,8 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
       }).catch(); // Silent error handling
       
     } catch (error) {
-      
       const message = error instanceof Error ? error.message : "Failed to process file";
       toast({ title: t('image_uploader.error'), description: message, variant: "destructive" });
-    }
-    finally {
-      setIsProcessing(false);
     }
   };
 
@@ -144,10 +98,10 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
   const handleVerified = async () => {
     setShowAgeVerification(false);
 
-    if (!image || !originalFile || (detectedAge !== null && detectedAge < 18)) {
+    if (!image || !originalFile) {
       toast({
-        title: t('image_uploader.age_verification_failed'),
-        description: t('image_uploader.adult_images_only'),
+        title: t('image_uploader.error'),
+        description: t('image_uploader.failed_to_process_image'),
         variant: "destructive"
       });
       return;
@@ -234,7 +188,19 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
             className="gap-3 px-8 py-6 text-lg font-medium bg-red-600 hover:bg-red-700 text-white transition-all duration-300"
             onClick={() => fileInputRef.current?.click()}
           >
-            <Upload className="w-6 h-6" />
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [1, 0.7, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <Upload className="w-6 h-6" />
+            </motion.div>
             {t('image_uploader.select_image')}
           </Button>
         </div>
@@ -251,51 +217,55 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
               }
             `}
           >
-            {isProcessing && (
-              <Suspense fallback={null}>
-                <UploadAnimation />
-              </Suspense>
-            )}
-            <motion.div 
-              className="relative w-48 h-48 rounded-lg overflow-hidden bg-muted/50 flex items-center justify-center group"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              {image ? (
-                <NextImage 
-                  src={image} 
-                  alt="Preview" 
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  className="w-full h-full" 
-                />
-              ) : (
-                <div className="flex flex-col items-center gap-2">
-                  <ImageIcon className="w-16 h-16 text-muted-foreground/40" />
-                  <p className="text-sm text-muted-foreground">{t('image_uploader.drag_drop')}</p>
-                </div>
-              )}
-              {image && (
-                <motion.div 
-                  className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-white hover:text-white hover:bg-red-600/50"
-                    onClick={() => {
-                      setImage(null);
-                      setOriginalFile(null);
-                    }}
+            <div className="flex flex-col items-center gap-4">
+              <motion.div 
+                className="relative w-64 h-64 rounded-lg overflow-hidden bg-muted/50 flex items-center justify-center group"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                {image ? (
+                  <NextImage 
+                    src={image} 
+                    alt="Preview" 
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    className="w-full h-full" 
+                  />
+                ) : (
+                  <NextImage 
+                    src="/woman2.gif" 
+                    alt="Upload illustration" 
+                    width={250}
+                    height={250}
+                    className="object-contain"
+                    unoptimized
+                  />
+                )}
+                {image && (
+                  <motion.div 
+                    className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
                   >
-                    {t('image_uploader.change_photo')}
-                  </Button>
-                </motion.div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-white hover:text-white hover:bg-red-600/50"
+                      onClick={() => {
+                        setImage(null);
+                        setOriginalFile(null);
+                      }}
+                    >
+                      {t('image_uploader.change_photo')}
+                    </Button>
+                  </motion.div>
+                )}
+              </motion.div>
+              {!image && (
+                <p className="text-sm text-muted-foreground text-center">{t('image_uploader.drag_drop')}</p>
               )}
-            </motion.div>
+            </div>
           </div>
 
           <input
@@ -322,17 +292,17 @@ export function ImageUploader({ onSearchStart, onSearchComplete }: ImageUploader
             <Button 
               onClick={handleSearch}
               disabled={isUploading}
-              className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white px-8 py-6 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white px-8 py-8 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
               {isUploading ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  {t('image_uploader.searching')}
+                  <span className="animate-pulse">{t('image_uploader.searching')}</span>
                 </>
               ) : (
                 <>
                   <Search className="w-5 h-5 mr-2" />
-                  {t('image_uploader.search')} {isMale && '😅'}
+                  <span className="animate-pulse">{t('image_uploader.search')}</span>
                 </>
               )}
             </Button>

@@ -6,6 +6,7 @@ import { SearchResult } from '@/lib/api/types';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { User } from 'lucide-react';
+import { WatermarkedImage } from '../shared/watermarked-image';
 
 interface SuggestedModelsProps {
   models: SearchResult[];
@@ -35,24 +36,18 @@ export function SuggestedModels({ models }: SuggestedModelsProps) {
             <Link href={`/models/${model.slug || encodeURIComponent(model.name.toLowerCase().replace(/\s+/g, '-'))}`}>
               <Card className="overflow-hidden group hover:shadow-lg transition-all duration-300 h-full">
                 <div className="relative aspect-[3/4] overflow-hidden bg-muted/10">
-                  <img
-                    src={model.image}
-                    alt={model.name}
-                    className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy" 
-                  />
-                   {/* Watermark Background */}
-                  <div className="absolute inset-0 pointer-events-none select-none z-10">
-                    <div className="w-full h-full flex items-center justify-center opacity-25">
-                      <div className="text-3xl font-bold text-white transform rotate-[-30deg] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
-                        xmatch.pro
-                      </div>
+                  {model.image ? (
+                    <WatermarkedImage
+                      src={model.image}
+                      alt={model.name}
+                      className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                      watermarkSize="large"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 w-full h-full bg-muted flex items-center justify-center">
+                      <span className="text-muted-foreground text-xs">No image</span>
                     </div>
-                  </div>
-                  {/* Bottom Watermark */}
-                  <div className="absolute bottom-0 right-0 bg-black/50 px-1.5 py-0.5 text-[8px] text-white/70">
-                    xmatch.pro
-                  </div>
+                  )}
                   {/* Quick Info Badge */}
                   {model.age && (
                     <div className="absolute bottom-2 left-2">

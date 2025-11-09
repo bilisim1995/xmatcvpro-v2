@@ -10,12 +10,14 @@ Error: listen EADDRINUSE: address already in use :::3000
     at /Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/server/lib/start-server.js:254:16
     at new Promise (<anonymous>)
     at startServer (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/server/lib/start-server.js:191:11)
-    at nextStart (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/cli/next-start.js:50:40)
-    at /Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/bin/next:157:54
-    at async main (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/bin/next:157:5) {
-  code: 'EADDRINUSE',
-  errno: -48,
-  syscall: 'listen',
-  address: '::',
-  port: 3000
-}
+    at nextStart (/Users/macbookpro/DocTypeError: Cannot read properties of undefined (reading 'call')
+    at __webpack_require__ (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/.next/server/webpack-runtime.js:1:161)
+    at A (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:35:5655)
+    at R (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:35:4334)
+    at rh (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:27:25718)
+    at ny (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:27:50004)
+    at nv (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:27:55162)
+    at ng (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:27:54569)
+    at ny (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:27:52770)
+    at nv (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:27:55162)
+    at ng (/Users/macbookpro/Documents/Projects/Cursor/xmatcvpro-v2/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:27:54569)

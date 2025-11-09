@@ -38,7 +38,12 @@ export function ResultCard({ result, index, showConfidence = true }: ResultCardP
     <Card className="overflow-hidden group hover:shadow-lg transition-shadow duration-300">
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden">
-        {/* Watermark Background */}
+        <img 
+          src={result.image} 
+          alt={result.name}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+        {/* CSS Watermark Overlay */}
         <div className="absolute inset-0 pointer-events-none select-none z-10">
           <div className="w-full h-full flex items-center justify-center opacity-25">
             <div className="text-3xl font-bold text-white transform rotate-[-30deg] drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
@@ -46,15 +51,7 @@ export function ResultCard({ result, index, showConfidence = true }: ResultCardP
             </div>
           </div>
         </div>
-
-
-        <img 
-          src={result.image} 
-          alt={result.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
-        {/* Bottom Watermark */}
-        <div className="absolute bottom-0 right-0 bg-black/50 px-1.5 py-0.5 text-[8px] text-white/70">
+        <div className="absolute bottom-0 right-0 bg-black/50 px-1.5 py-0.5 text-[8px] text-white/70 z-10">
           xmatch.pro
         </div>
         {/* Ranking Number */}
@@ -100,10 +97,10 @@ export function ResultCard({ result, index, showConfidence = true }: ResultCardP
           <CollapsibleTrigger asChild>
             <Button 
               variant="outline"
-              className="w-full justify-between hover:bg-red-50 dark:hover:bg-red-900/20 border-dashed"
+              className="w-full justify-center relative hover:bg-red-50 dark:hover:bg-red-900/20 border-dashed"
             >
               <span className="text-sm">Physical Attributes</span>
-              <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-4 h-4 absolute right-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-4 pt-4 animate-accordion-down">

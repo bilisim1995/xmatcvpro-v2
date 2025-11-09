@@ -265,6 +265,18 @@
 "status": "Статус:",
 "updating_message": "Модели и технология поиска постоянно обновляются и улучшаются."
 },
+"compliancebadges": {
+"title": "Поддержка соответствия",
+"wcag_title": "WCAG 2.1 AA",
+"wcag_description": "Доступность",
+"pwa_title": "PWA",
+"pwa_description": "Прогрессивное веб-приложение",
+"w3c_title": "W3C",
+"w3c_description": "Веб-стандарты",
+"https_title": "HTTPS",
+"https_description": "Безопасное соединение",
+"footer_message": "Этот сайт соответствует современным веб-стандартам и требованиям доступности."
+},
 "advancedsearchresults": {
 "searching": "Поиск в базе данных моделей...",
 "new_search": "Новый поиск"

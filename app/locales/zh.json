@@ -264,6 +264,18 @@
     "status": "状态：",
     "updating_message": "模特和搜索技术正在不断更新和改进。"
   },
+  "compliancebadges": {
+    "title": "合规支持",
+    "wcag_title": "WCAG 2.1 AA",
+    "wcag_description": "可访问性",
+    "pwa_title": "PWA",
+    "pwa_description": "渐进式网络应用",
+    "w3c_title": "W3C",
+    "w3c_description": "网络标准",
+    "https_title": "HTTPS",
+    "https_description": "安全连接",
+    "footer_message": "本网站符合现代网络标准和可访问性要求。"
+  },
   "advancedsearchresults": {
     "searching": "正在搜索模特数据库...",
     "new_search": "新的搜索"

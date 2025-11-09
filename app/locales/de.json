@@ -265,6 +265,18 @@
 "status": "Status:",
 "updating_message": "Modelle und Suchtechnologie werden kontinuierlich aktualisiert und verbessert."
 },
+"compliancebadges": {
+"title": "Compliance-Unterstützung",
+"wcag_title": "WCAG 2.1 AA",
+"wcag_description": "Barrierefreiheit",
+"pwa_title": "PWA",
+"pwa_description": "Progressive Web App",
+"w3c_title": "W3C",
+"w3c_description": "Web-Standards",
+"https_title": "HTTPS",
+"https_description": "Sichere Verbindung",
+"footer_message": "Diese Website entspricht modernen Web-Standards und Barrierefreiheitsanforderungen."
+},
 "advancedsearchresults": {
 "searching": "Suche in der Modelldatenbank...",
 "new_search": "Neue Suche"

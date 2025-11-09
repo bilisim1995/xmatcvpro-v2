@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { SearchSkeleton } from '../search-skeleton';
-import { ShareModal } from '../share-modal';
 import { SearchResult } from '@/lib/api/types';
 import { ModelCarousel } from '../model-carousel';
 import { LoadingAnimation } from '../loading-animation';
@@ -169,12 +168,12 @@ export function SearchResults({
       <div className="flex justify-center gap-4 pt-4">
         <Button
           onClick={onSearchAgain}
-          className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white"
+          size="lg"
+          className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white px-8 py-6 text-lg font-medium"
         >
-          <Search className="w-4 h-4 mr-2" />
+          <Search className="w-5 h-5 mr-2" />
           {t('searchresults.search_again')}
         </Button>
-        {searchImage && <ShareModal searchImage={searchImage} results={results} />}
       </div>
     </div>
   );

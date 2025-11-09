@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu, Scan, Video as VideoIcon } from 'lucide-react';
+import { Menu, Scan, Video as VideoIcon, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -35,6 +35,20 @@ export function MobileNav() {
             <Scan className="w-5 h-5 text-muted-foreground" />
             <span>SEARCH BY FACE</span>
           </Link>
+
+          <Separator />
+
+          {/* The Porn Dude */}
+          <a
+            href="https://theporndude.com/21462/xmatch"
+            target="_blank"
+            rel="dofollow noopener noreferrer"
+            title="Xmatch Review on The Porn Dude - Best AI Face Recognition Search Engine"
+            className="flex items-center gap-3 px-3 py-2 text-lg hover:bg-muted/50 rounded-md transition-colors"
+          >
+            <ExternalLink className="w-5 h-5 text-muted-foreground" />
+            <span>THE PORN DUDE</span>
+          </a>
 
           <Separator />
 

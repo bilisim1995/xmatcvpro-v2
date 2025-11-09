@@ -1,21 +1,7 @@
-'use client';
-
 import './globals.css';
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/components/theme-provider';
-import { Navbar } from '@/components/navbar';
-import { Footer } from '@/components/footer/index';
-import { AnalyticsLoader } from '@/components/analytics/analytics-loader';
-import { ConsentBanner } from '@/components/gdpr/consent-banner';
-import { AgeVerification } from '@/components/age-verification/age-verification';
-import { ScrollToTop } from '@/components/scroll-to-top';
-import { Toaster } from '@/components/ui/toaster';
-import { Suspense } from 'react';
-import { LanguageProvider } from '@/components/contexts/LanguageContext';
-import { YandexMetrika } from '@/components/analytics/yandex-metrika';
-import { GoogleAnalytics } from '@/components/analytics/google-analytics';
-import { GoogleTagManager } from '@/components/analytics/google-tag-manager';
-import { usePathname } from 'next/navigation';
+import { metadata } from './metadata';
+import ClientLayoutWrapper from './ClientLayoutWrapper';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -32,56 +18,27 @@ const inter = Inter({
   preload: true
 });
 
+export { metadata };
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const hideFooter = pathname === '/sensual-vibes';
-
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="xmatch.pro" />
-        <meta name="application-name" content="xmatch.pro" />
-        <meta name="theme-color" content="#dc2626" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#dc2626" />
-        <meta name="msapplication-TileColor" content="#dc2626" />
-        <meta name="theme-color" content="#dc2626" />
-        <meta name="rating" content="RTA-5042-1996-1400-1577-RTA" />
-        <meta name="yandex-verification" content="4e50b414c62d2ced" />
-      </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
-      <LanguageProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark" // Changed from "system" to "dark"
-          enableSystem
-          disableTransitionOnChange
+        {/* Skip to main content link for accessibility */}
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+          aria-label="Skip to main content"
         >
-          <Suspense fallback={null}>
-            <Navbar />
-          </Suspense>
-          <main className="flex-1">
-            <AnalyticsLoader />
-            {children}
-          </main>
-          {!hideFooter && <Footer />} {/* Conditionally render Footer */}
-          <ScrollToTop />
-          <ConsentBanner />
-          <AgeVerification />
-          <Toaster />
-        </ThemeProvider>
-        </LanguageProvider>
+          Skip to main content
+        </a>
+        <ClientLayoutWrapper>
+          {children}
+        </ClientLayoutWrapper>
       </body>
     </html>
   );

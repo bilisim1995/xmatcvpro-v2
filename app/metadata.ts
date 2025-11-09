@@ -52,11 +52,12 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/m1.png',
-        width: 128,
-        height: 128,
-        alt: 'xmatch.pro AI Face Recognition',
+        width: 1200,
+        height: 630,
+        alt: 'xmatch.pro AI Face Recognition - Advanced Face Search Technology',
       },
     ],
+    alternateLocale: ['tr_TR', 'de_DE', 'ru_RU', 'hi_IN', 'zh_CN'],
   },
   twitter: {
     card: 'summary_large_image',
@@ -76,18 +77,41 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+    viewportFit: 'cover',
   },
-  category: 'technology',
-  classification: 'Adult Entertainment Technology',
+  icons: {
+    icon: [
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+      { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#dc2626' },
+    ],
+  },
+  manifest: '/site.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'xmatch.pro',
+  },
   other: {
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent',
     'apple-mobile-web-app-title': 'xmatch.pro',
     'application-name': 'xmatch.pro',
-    'msapplication-TileColor': '#000000',
-    'theme-color': '#000000',
+    'mobile-web-app-capable': 'yes',
+    'msapplication-TileColor': '#dc2626',
+    'theme-color': '#dc2626',
+    'rating': 'RTA-5042-1996-1400-1577-RTA',
+    'category': 'technology',
+    'classification': 'Adult Entertainment Technology',
   },
 };

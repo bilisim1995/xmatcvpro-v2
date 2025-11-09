@@ -264,6 +264,18 @@
     "status": "Durum:",
     "updating_message": "Modeller ve arama teknolojisi sürekli olarak güncellenmekte ve iyileştirilmektedir."
   },
+  "compliancebadges": {
+    "title": "Uyumluluk Desteği",
+    "wcag_title": "WCAG 2.1 AA",
+    "wcag_description": "Erişilebilirlik",
+    "pwa_title": "PWA",
+    "pwa_description": "Progressive Web App",
+    "w3c_title": "W3C",
+    "w3c_description": "Web Standards",
+    "https_title": "HTTPS",
+    "https_description": "Güvenli Bağlantı",
+    "footer_message": "Bu site modern web standartlarına ve erişilebilirlik gereksinimlerine uygundur."
+  },
   "advancedsearchresults": {
     "searching": "Model veritabanı aranıyor...",
     "new_search": "Yeni Arama"
