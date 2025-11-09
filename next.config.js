@@ -11,7 +11,7 @@
           appDir: true
         },
       
-        output: 'standalone',
+        // output: 'standalone', // Vercel için kaldırıldı
         reactStrictMode: true,
         swcMinify: true,
       
