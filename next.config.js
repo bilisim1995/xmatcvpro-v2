@@ -10,6 +10,7 @@
           middleware: true,
           appDir: true
         },
+        
       
         // output: 'standalone', // Vercel için kaldırıldı
         reactStrictMode: true,
