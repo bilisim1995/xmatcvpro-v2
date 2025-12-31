@@ -34,9 +34,11 @@ export function PremiumBanner() {
         priority 
         sizes="(max-width: 768px) 100vw, 895px"
         onError={(e) => {
-            // Fallback if image fails to load
-            e.currentTarget.src = 'https://via.placeholder.com/895x290.png?text=Advertisement+Banner+Not+Found';
-            e.currentTarget.srcset = '';
+            // Hide image if it fails to load instead of using external placeholder
+            const target = e.currentTarget as HTMLImageElement;
+            if (target.parentElement) {
+              target.parentElement.style.display = 'none';
+            }
           }}
       />
       {/* Overlay to darken the image slightly for better button visibility if needed */}

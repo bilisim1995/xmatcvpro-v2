@@ -40,8 +40,11 @@ function AdCard({ ad }: { ad: AdSlot }) {
           unoptimized={true} 
           onError={(e) => {
             console.error(`Error loading AdCard image (SVG) in Shared ModelCarousel: ${ad.imageUrl}`, e);
-            e.currentTarget.src = 'https://via.placeholder.com/300x400.png?text=Ad+SVG+Error';
-            e.currentTarget.srcset = '';
+            // Hide image if it fails to load instead of using external placeholder
+            const target = e.currentTarget as HTMLImageElement;
+            if (target.parentElement) {
+              target.parentElement.style.display = 'none';
+            }
           }}
         />
         <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
