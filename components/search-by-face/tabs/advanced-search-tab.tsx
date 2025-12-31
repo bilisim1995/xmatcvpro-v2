@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Search, X, Images, LayoutGrid, Megaphone, Dice1 as Dice, Loader2 } from 'lucide-react';
+import { Search, X, Images, LayoutGrid, Megaphone, Sparkles, Loader2, Filter } from 'lucide-react';
 import { SearchResult } from '@/lib/api/types';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { TopFilters } from '../advanced-search/filters/top-filters';
@@ -215,7 +215,8 @@ export default function AdvancedSearchTab() {
           <SheetTrigger asChild>
             <div className="flex gap-2">
               <Button variant="outline" className="gap-2 relative">
-                <span>{t('advancedsearch.more_filters')}</span>
+                <Filter className="w-4 h-4" />
+                <span className="hidden sm:inline">{t('advancedsearch.more_filters')}</span>
                 {hasActiveFilters && (
                   <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center">
                     {Object.keys(filters).length}
@@ -282,28 +283,25 @@ export default function AdvancedSearchTab() {
           <Search className="w-4 h-4 mr-2" />
           {t('advancedsearch.search')}
         </Button>
-      </div>
 
-      <div className="mt-4">
-        <div className="w-full">
-          <Button
-            onClick={handleRandomSearch}
-            disabled={isLoadingRandom}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-6"
-          >
-            {isLoadingRandom ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                {t('advancedsearch.loading_random_models')}
-              </>
-            ) : (
-              <>
-                <Dice className="w-4 h-4 mr-2 animate-bounce" />
-                {t('advancedsearch.feeling_lucky')}
-              </>
-            )}
-          </Button>
-        </div>
+        <Button
+          onClick={handleRandomSearch}
+          disabled={isLoadingRandom}
+          className="flex-1 bg-red-600 hover:bg-red-700 text-white"
+        >
+          {isLoadingRandom ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              {t('advancedsearch.loading_random_models')}
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4 mr-2 animate-bounce" />
+              {t('advancedsearch.feeling_lucky')}
+            </>
+          )}
+        </Button>
+      </div>
 
         {hasSearched && (
           <div className="pt-6 border-t">
@@ -386,7 +384,6 @@ export default function AdvancedSearchTab() {
             )}
           </div>
         )}
-      </div>
       
       <AgeVerificationDialog 
         open={showAgeVerification} 
